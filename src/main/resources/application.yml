@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: Only-Admin
+  datasource:
+    url: jdbc:mysql://localhost:3306//only_admin
+    username: root
+    password: admin
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
+    show-sql: true
