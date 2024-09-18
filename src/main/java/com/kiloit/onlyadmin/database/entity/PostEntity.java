@@ -12,7 +12,8 @@ import java.util.Set;
 @Table(name = "Posts")
 public class PostEntity extends BaseEntity {
     private String title;
-    private String description;
+    @Column(name = "post_desc")
+    private String desc;
     private String thumbnail;
 
     @ManyToOne(fetch = FetchType.LAZY)
