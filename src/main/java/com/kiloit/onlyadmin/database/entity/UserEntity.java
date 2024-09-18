@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Date;
+import java.util.*;
 
 @Getter
 @Setter
@@ -28,5 +28,11 @@ public class UserEntity extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id")
     private RoleEntity role;
+
+    @OneToMany(mappedBy = "userEntity")
+    Set<PostEntity> postEntities = new HashSet<>();
+
+    @ManyToMany(mappedBy = "userEntities")
+    private Set<PostEntity> postEntity = new HashSet<>();
 
 }
