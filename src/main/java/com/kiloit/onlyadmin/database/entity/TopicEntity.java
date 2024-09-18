@@ -6,6 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -15,7 +18,10 @@ public class TopicEntity extends BaseEntity {
 
     private String name;
     @ManyToOne
-    @JoinColumn(name = "category_id)
+    @JoinColumn(name = "category_id")
     private CategoryEntity category;
+
+    @OneToMany(mappedBy = "topicEntity")
+    List<PostEntity> postEntities = new ArrayList<>();
 
 }
