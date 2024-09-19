@@ -118,3 +118,25 @@ ALTER TABLE role_has_permission
 
 ALTER TABLE role_has_permission
     ADD CONSTRAINT fk_rolhasper_on_role_entity FOREIGN KEY (role_id) REFERENCES `role` (id);
+
+
+
+/** Create file_media Table **/
+
+CREATE TABLE file_medias
+(
+    id            BIGINT AUTO_INCREMENT NOT NULL,
+    file_name     VARCHAR(255) NULL,
+    file_type     VARCHAR(255) NOT NULL,
+    file_path     VARCHAR(255) NOT NULL,
+    post_id       BIGINT NULL,
+    file_size     BIGINT NOT NULL,
+    upload_date   DATE NOT NULL
+    CONSTRAINT PK_POST_ID PRIMARY KEY (id)
+);
+
+/** Add constraint into file_media table**/
+
+ALTER TABLE file_medias
+    ADD CONSTRAINT FK_FILE_MEDIA_ON_POST FOREIGN KEY (post_id) REFERENCES posts (id);
+
