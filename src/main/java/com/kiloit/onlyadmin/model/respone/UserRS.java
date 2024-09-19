@@ -14,4 +14,6 @@ public class UserRS {
     private String address;
     private String gender;
     private Date DoB;
+
+    private Long roleId;
 }
