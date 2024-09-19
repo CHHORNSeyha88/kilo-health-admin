@@ -1,7 +1,10 @@
 package com.kiloit.onlyadmin.model.respone;
 
+import lombok.Data;
+
 import java.util.Date;
 
+@Data
 public class UserRS {
     private String photo;
     private String firstname;
