@@ -1,9 +1,11 @@
 package com.kiloit.onlyadmin.model.request;
 
+import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
+@Data
 public class UserRQ {
     private String photo;
     private String firstname;
