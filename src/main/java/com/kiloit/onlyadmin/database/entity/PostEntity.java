@@ -4,7 +4,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.Instant;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Setter
@@ -16,6 +18,11 @@ public class PostEntity extends BaseEntity {
     @Column(name = "post_desc")
     private String desc;
     private String thumbnail;
+    private Boolean status;
+    private Integer listMediaId;
+
+    @Column(name = "public_at")
+    private Instant publicAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -29,15 +36,8 @@ public class PostEntity extends BaseEntity {
     @JoinColumn(name = "category_id")
     private CategoryEntity categoryEntity;
 
-    @ManyToMany
-    @JoinTable(name = "post_view",
-        joinColumns = @JoinColumn(name = "post_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
-    )
-    private Set<UserEntity> userEntities = new HashSet<>();
+    @OneToMany(mappedBy = "")
+    List<PostViewEntity> postViewEntities;
 
-
-    @OneToMany(mappedBy = "postEntity")
-    private Set<FileMedia> fileMedias = new HashSet<>();
 
 }

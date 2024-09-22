@@ -15,8 +15,13 @@ import java.util.List;
 @Entity
 @Table(name = "topics")
 public class TopicEntity extends BaseEntity {
-
     private String name;
+    private Integer listMediaId;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserEntity user;
+
     @ManyToOne
     @JoinColumn(name = "category_id")
     private CategoryEntity category;

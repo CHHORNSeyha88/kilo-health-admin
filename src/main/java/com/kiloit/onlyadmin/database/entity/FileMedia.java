@@ -1,5 +1,6 @@
 package com.kiloit.onlyadmin.database.entity;
 
+import com.kiloit.onlyadmin.base.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -16,11 +17,7 @@ import java.time.*;
 @Table(name="file_medias")
 @Setter
 @Getter
-public class FileMedia {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class FileMedia extends BaseEntity {
 
     @Column(nullable = false)
     private String fileName;
@@ -34,7 +31,7 @@ public class FileMedia {
     private LocalDateTime uploadDate;
 
     @ManyToOne
-    @JoinColumn(name = "post_id")
-    private PostEntity postEntity;
+    @JoinColumn(name = "list_id")
+    private ListMediaEntity listMedia;
     
 }

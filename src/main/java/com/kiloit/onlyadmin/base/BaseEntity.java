@@ -29,18 +29,18 @@ public abstract class BaseEntity {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "created_date", nullable = false, updatable = false)
+    @Column(name = "created_at", nullable = false, updatable = false)
     @CreatedDate
     @CurrentTimestamp
-    private Instant createdDate;
+    private Instant createdAt;
 
-    @Column(name = "modified_date")
+    @Column(name = "modified_at")
     @LastModifiedDate
     @CurrentTimestamp
-    private Instant modifiedDate;
+    private Instant modifiedAt;
 
-    @Column(name = "deleted_date")
-    private Instant deletedDate;
+    @Column(name = "deleted_at")
+    private Instant deletedAt;
 
 
 }

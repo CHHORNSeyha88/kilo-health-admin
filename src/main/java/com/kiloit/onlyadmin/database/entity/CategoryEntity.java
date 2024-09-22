@@ -1,13 +1,10 @@
 package com.kiloit.onlyadmin.database.entity;
 
 import com.kiloit.onlyadmin.base.BaseEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -18,9 +15,17 @@ public class CategoryEntity extends BaseEntity {
 
     private String name;
     private String thumbnail;
+    private int ListMediaId;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserEntity user;
+
     @OneToMany(mappedBy = "category")
-    private List<TopicEntity> topicList;
+    private List<TopicEntity> topicList ;
 
     @OneToMany(mappedBy = "categoryEntity")
-    List<PostEntity> postEntities = new ArrayList<>();
+    private List<PostEntity> postEntities ;
+
+
 }
