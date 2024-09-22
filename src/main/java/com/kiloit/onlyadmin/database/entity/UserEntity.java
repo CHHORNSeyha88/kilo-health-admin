@@ -30,9 +30,10 @@ public class UserEntity extends BaseEntity {
     private RoleEntity role;
 
     @OneToMany(mappedBy = "userEntity")
-    Set<PostEntity> postEntities = new HashSet<>();
+    private Set<PostEntity> postEntities = new HashSet<>();
 
-    @ManyToMany(mappedBy = "userEntities")
-    private Set<PostEntity> postEntity = new HashSet<>();
+    @OneToMany(mappedBy = "user")
+    private List<PostViewEntity> postViews ;
+
 
 }

@@ -2,15 +2,15 @@ spring:
   application:
     name: Only-Admin
   datasource:
-    url: jdbc:mysql://localhost:3306/only_admin
+    url: jdbc:mysql://localhost:3304/only_admin
     username: root
-    password: admin
+    password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
   flyway:
     url: ${JDBC_URL:jdbc:mysql://localhost:3306}
     schemas: ${DB:only_admin}
     user: ${DB_USERNAME:root}
-    password: ${DB_PASSWORD:admin}
+    password: ${DB_PASSWORD:root}
 
   jpa:
     show-sql: true

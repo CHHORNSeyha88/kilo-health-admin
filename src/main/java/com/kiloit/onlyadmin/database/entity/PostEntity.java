@@ -19,6 +19,7 @@ public class PostEntity extends BaseEntity {
     private String desc;
     private String thumbnail;
     private Boolean status;
+    @Column(name = "media_id")
     private Integer listMediaId;
 
     @Column(name = "public_at")
@@ -36,8 +37,8 @@ public class PostEntity extends BaseEntity {
     @JoinColumn(name = "category_id")
     private CategoryEntity categoryEntity;
 
-    @OneToMany(mappedBy = "")
-    List<PostViewEntity> postViewEntities;
+    @OneToMany(mappedBy = "post")
+    List<PostViewEntity> postView;
 
 
 }

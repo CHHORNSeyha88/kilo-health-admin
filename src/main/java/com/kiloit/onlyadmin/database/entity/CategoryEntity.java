@@ -15,6 +15,7 @@ public class CategoryEntity extends BaseEntity {
 
     private String name;
     private String thumbnail;
+    @Column(name = "media_id")
     private int ListMediaId;
 
     @ManyToOne

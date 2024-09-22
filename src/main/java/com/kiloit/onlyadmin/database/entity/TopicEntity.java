@@ -16,6 +16,7 @@ import java.util.List;
 @Table(name = "topics")
 public class TopicEntity extends BaseEntity {
     private String name;
+    @Column(name = "media_id")
     private Integer listMediaId;
 
     @ManyToOne
@@ -27,6 +28,6 @@ public class TopicEntity extends BaseEntity {
     private CategoryEntity category;
 
     @OneToMany(mappedBy = "topicEntity")
-    List<PostEntity> postEntities = new ArrayList<>();
+    List<PostEntity> postEntities;
 
 }
