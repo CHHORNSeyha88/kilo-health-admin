@@ -15,8 +15,7 @@ import java.util.Set;
 @Table(name = "Posts")
 public class PostEntity extends BaseEntity {
     private String title;
-    @Column(name = "post_desc")
-    private String desc;
+    private String description;
     private String thumbnail;
     private Boolean status;
     @Column(name = "media_id")
