@@ -1,5 +1,7 @@
 package com.kiloit.onlyadmin.model.request;
 
+import com.kiloit.onlyadmin.database.entity.RoleEntity;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -17,5 +19,8 @@ public class UserRQ {
     private String address;
     private String gender;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @NotNull
     private Date DoB;
+    private Long roleId;
+
 }
