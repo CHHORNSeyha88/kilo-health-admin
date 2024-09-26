@@ -73,11 +73,11 @@
             <artifactId>mapstruct</artifactId>
             <version>${org.mapstruct.version}</version>
         </dependency>
-        <dependency>
+        <!-- <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
-        </dependency>
+        </dependency> -->
     </dependencies>
 
     <build>
@@ -126,9 +126,9 @@
                 <groupId>org.flywaydb</groupId>
                 <artifactId>flyway-maven-plugin</artifactId>
                 <configuration>
-                    <url>jdbc:mysql://localhost:3304/only_admin</url>
+                    <url>jdbc:mysql://localhost:3306/only_admin</url>
                     <user>root</user>
-                    <password>root</password>
+                    <password>R@mySql@0900</password>
                     <!-- disable in production -->
                     <cleanDisabled>false</cleanDisabled>
                     <baselineOnMigrate>true</baselineOnMigrate>

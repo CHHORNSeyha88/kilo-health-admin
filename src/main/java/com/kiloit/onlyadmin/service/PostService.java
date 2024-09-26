@@ -13,7 +13,6 @@ import com.kiloit.onlyadmin.model.post.request.PostUpdateRequest;
 import com.kiloit.onlyadmin.model.post.response.PostDetailResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -42,13 +41,14 @@ public class PostService extends BaseService {
 
     public StructureRS getPostDetail(){
         List<PostEntity> postEntities = postRepository.findAll();
-        List<PostDetailResponse> postDetailResponses = postEntities.stream().map(
-                p -> {
+        List<PostDetailResponse> postDetailResponses = postEntities.stream()
+                    .map(p -> 
+                    {
                     PostDetailResponse postDetailResponse = new PostDetailResponse();
                     postDetailResponse.setTitle(p.getTitle());
                     postDetailResponse.setThumbnail(p.getThumbnail());
-
-                }
+                    return postDetailResponse;
+                 }
         ).toList();
         return response();
     }

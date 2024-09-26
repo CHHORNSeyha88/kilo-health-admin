@@ -24,8 +24,8 @@ public class UserEntity extends BaseEntity {
     private String gender;
     private Date DoB;
 
-    @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+    // @JsonIgnore
+    @ManyToOne()
     @JoinColumn(name = "role_id")
     private RoleEntity role;
 

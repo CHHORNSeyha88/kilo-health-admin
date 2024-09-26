@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("api/v1/user")
+@RequestMapping("api/v1/users")
 @RequiredArgsConstructor
 public class UserController extends BaseController {
     private final UserService userService;
@@ -21,12 +21,23 @@ public class UserController extends BaseController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<StructureRS> detail(@PathVariable Long id) {
-        return response(userService.detail(id));
+    public ResponseEntity<StructureRS> detail(@PathVariable("id") String id) {
+        return response(userService.detail(Long.parseLong(id)));
     }
 
     @PostMapping
     public ResponseEntity<StructureRS> create(@RequestBody UserRQ request){
         return response(userService.create(request));
     }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<StructureRS> update(@PathVariable("id") String id){
+        return null;
+    }
+
+    @PatchMapping("/{id}/soft-delete")
+    public void delete(@PathVariable("id") Long id){
+        userService.delete(id);
+    }
+
 }
