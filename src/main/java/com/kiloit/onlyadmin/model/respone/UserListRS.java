@@ -5,15 +5,11 @@ import lombok.Data;
 import java.util.Date;
 
 @Data
-public class UserRS {
+public class UserListRS {
     private String photo;
     private String firstname;
     private String lastname;
-    private String email;
-    private String phone;
-    private String address;
     private String gender;
-    private Date DoB;
-
     private Long roleId;
+    private String roleName;
 }
