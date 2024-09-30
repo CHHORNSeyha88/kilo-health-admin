@@ -4,7 +4,10 @@ import com.kiloit.onlyadmin.base.BaseController;
 import com.kiloit.onlyadmin.base.BaseListingRQ;
 import com.kiloit.onlyadmin.base.StructureRS;
 import com.kiloit.onlyadmin.model.request.UserRQ;
+import com.kiloit.onlyadmin.model.request.UserUpdateRequest;
 import com.kiloit.onlyadmin.service.UserService;
+
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +19,7 @@ public class UserController extends BaseController {
     private final UserService userService;
 
     @GetMapping
-    public ResponseEntity<StructureRS> list(BaseListingRQ request) {
+    public ResponseEntity<StructureRS> list(@Valid BaseListingRQ request) {
         return response(userService.list(request));
     }
 
@@ -26,13 +29,13 @@ public class UserController extends BaseController {
     }
 
     @PostMapping
-    public ResponseEntity<StructureRS> create(@RequestBody UserRQ request){
+    public ResponseEntity<StructureRS> create(@Valid @RequestBody UserRQ request){
         return response(userService.create(request));
     }
 
-    @PatchMapping("/{id}")
-    public ResponseEntity<StructureRS> update(@PathVariable("id") String id){
-        return null;
+    @PatchMapping("/{id}/update")
+    public ResponseEntity<StructureRS> update(@PathVariable("id") String id,@Valid @RequestBody UserUpdateRequest userUpdateRequest){
+        return response(userService.update(Long.parseLong(id),userUpdateRequest));
     }
 
     @PatchMapping("/{id}/soft-delete")

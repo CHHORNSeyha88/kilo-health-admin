@@ -22,7 +22,7 @@ public class UserEntity extends BaseEntity {
     private String phone;
     private String address;
     private String gender;
-    private Date DoB;
+    private Date dob;
 
     // @JsonIgnore
     @ManyToOne()
