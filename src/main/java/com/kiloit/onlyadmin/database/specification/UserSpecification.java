@@ -13,7 +13,7 @@ public class UserSpecification {
     public static Specification<UserEntity> filter(String query){
         return(root,cq,cb) -> {
             List<Predicate> predicates = new ArrayList<>();
-            predicates.add(cb.and(cb.isNull(root.get("deletedDate"))));
+            predicates.add(cb.and(cb.isNull(root.get("deletedAt"))));
             if (!Objects.equals(query, "ALL"))
                 predicates.add(cb.or(cb.like(root.get("firstname"), query + "%"),
                         cb.like(root.get("lastname"), "%" + query + "%")));
