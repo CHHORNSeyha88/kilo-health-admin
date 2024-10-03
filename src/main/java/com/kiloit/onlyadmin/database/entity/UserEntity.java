@@ -23,6 +23,7 @@ public class UserEntity extends BaseEntity {
     private String address;
     private String gender;
     private Date dob;
+    private Boolean isVerification;
 
     // @JsonIgnore
     @ManyToOne()

@@ -49,6 +49,7 @@ public class ExceptionAdvices {
 
     // validation
 
+    @SuppressWarnings("null")
     @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ResponseEntity<StructureRS> httpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException ex) {
@@ -86,6 +87,7 @@ public class ExceptionAdvices {
         return new ResponseEntity<>(structureRS, HttpStatus.UNSUPPORTED_MEDIA_TYPE);
     }
 
+    @SuppressWarnings("null")
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<StructureRS> methodArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex) {

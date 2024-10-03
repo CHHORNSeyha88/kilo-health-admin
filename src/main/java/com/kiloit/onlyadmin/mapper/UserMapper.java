@@ -2,6 +2,7 @@ package com.kiloit.onlyadmin.mapper;
 
 import com.kiloit.onlyadmin.model.request.UserRQ;
 import com.kiloit.onlyadmin.model.request.UserUpdateRequest;
+import com.kiloit.onlyadmin.model.request.auth.RegisterRequest;
 import com.kiloit.onlyadmin.model.respone.UserListRS;
 
 import org.mapstruct.BeanMapping;
@@ -25,5 +26,7 @@ public interface UserMapper {
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "role.id",source = "roleId")
     void fromUserUpdateRequest(UserUpdateRequest userUpdateRequest,@MappingTarget UserEntity userEntity);
+
+    UserEntity fromRegisterRequest(RegisterRequest registerRequest);
 
 }

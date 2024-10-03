@@ -13,6 +13,15 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<UserEntity, Long> ,JpaSpecificationExecutor<UserEntity> {
     Optional<UserEntity> findByIdAndDeletedAtNull(Long id);
     
-    @Query("SELECT u FROM UserEntity u WHERE u.deletedAt IS NULL")
-    Page<UserEntity> findAllByDeletedAtNull(Specification<UserEntity> specification,PageRequest pageRequest);
+    // @Query("SELECT u FROM UserEntity u WHERE u.deletedAt IS NULL")
+    // Page<UserEntity> findAll(Specification<UserEntity> specification,PageRequest pageRequest);
+
+    boolean existsByPhone(
+            String phoneNumber);
+
+    boolean existsByEmail(String email);
+
+    Optional<UserEntity> findByEmail(String email);
+
+    Optional<UserEntity> findByPhone(String phoneNumber);
 }

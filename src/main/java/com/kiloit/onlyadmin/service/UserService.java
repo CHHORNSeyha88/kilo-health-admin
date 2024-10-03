@@ -13,6 +13,7 @@ import com.kiloit.onlyadmin.exception.httpstatus.BadRequestException;
 import com.kiloit.onlyadmin.mapper.UserMapper;
 import com.kiloit.onlyadmin.model.request.UserRQ;
 import com.kiloit.onlyadmin.model.request.UserUpdateRequest;
+import com.kiloit.onlyadmin.model.respone.UserListRS;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -20,9 +21,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -32,10 +35,11 @@ public class UserService extends BaseService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
 
     public StructureRS list(BaseListingRQ request){
-        Specification<UserEntity> specification = UserSpecification.filter(request.getQuery());
-        Page<UserEntity> userEntitys = userRepository.findAllByDeletedAtNull(specification,(PageRequest)request.getPageable("id"));
+        Specification<UserEntity> specification = UserSpecification.hasNotBeenDeleted().and(UserSpecification.dynamicQuery(request.getQuery()));
+        Page<UserEntity> userEntitys = userRepository.findAll(specification,(PageRequest)(request.getPageable("id")));
         return response(userEntitys.map(userMapper::fromUserList),userEntitys);
     }
 
@@ -57,6 +61,7 @@ public class UserService extends BaseService {
                                 orElseThrow(()->new BadRequestException(MessageConstant.ROLE.ROLE_NOT_FOUND));
 
         UserEntity userEntity = userMapper.fromUser(request);
+        userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
         userEntity.setRole(roleEntity);
         return response(userMapper.fromUserList(userRepository.save(userEntity)));
     }
@@ -85,5 +90,11 @@ public class UserService extends BaseService {
 
         user.get().setDeletedAt(Instant.now());
         userRepository.save(user.get());
+    }
+
+    public List<UserListRS> getAll(String query) {
+        Specification<UserEntity> specification = UserSpecification.hasNotBeenDeleted().and(UserSpecification.dynamicQuery(query));
+        List<UserEntity> userEntitys = userRepository.findAll(specification);
+        return userEntitys.stream().map(userMapper::fromUserList).toList();
     }
 }
