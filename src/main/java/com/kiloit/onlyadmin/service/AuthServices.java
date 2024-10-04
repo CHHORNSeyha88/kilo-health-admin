@@ -1,7 +1,7 @@
 package com.kiloit.onlyadmin.service;
 import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,15 +16,16 @@ import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.security.oauth2.server.resource.authentication.BearerTokenAuthenticationToken;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationProvider;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import com.kiloit.onlyadmin.base.BaseService;
 import com.kiloit.onlyadmin.base.StructureRS;
 import com.kiloit.onlyadmin.constant.MessageConstant;
+import com.kiloit.onlyadmin.database.entity.PasswordResetTokenEntity;
 import com.kiloit.onlyadmin.database.entity.RoleEntity;
 import com.kiloit.onlyadmin.database.entity.UserEntity;
 import com.kiloit.onlyadmin.database.entity.UserVerification;
+import com.kiloit.onlyadmin.database.repository.PasswordResetTokenRepository;
 import com.kiloit.onlyadmin.database.repository.RoleRepository;
 import com.kiloit.onlyadmin.database.repository.UserRepository;
 import com.kiloit.onlyadmin.database.repository.UserVerificationRepository;
@@ -33,6 +34,7 @@ import com.kiloit.onlyadmin.mapper.UserMapper;
 import com.kiloit.onlyadmin.model.request.auth.LoginRequest;
 import com.kiloit.onlyadmin.model.request.auth.RefreshTokenRequest;
 import com.kiloit.onlyadmin.model.request.auth.RegisterRequest;
+import com.kiloit.onlyadmin.model.request.auth.ResetPasswordRequest;
 import com.kiloit.onlyadmin.model.request.auth.SendVerificationRequest;
 import com.kiloit.onlyadmin.model.request.auth.VerificationRequest;
 import com.kiloit.onlyadmin.model.respone.auth.AuthResponse;
@@ -44,9 +46,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.HashMap;
-import java.nio.file.OpenOption;
 import java.time.*;
 import java.util.List;
 import java.time.temporal.ChronoUnit;
@@ -67,6 +69,7 @@ public class AuthServices extends BaseService{
     private final JwtEncoder accessTokenJwtEncoder;
     private final JwtEncoder refreshTokenJwtEncoder;
     private final JwtAuthenticationProvider jwtAuthenticationProvider;
+    private final PasswordResetTokenRepository  passwordResetTokenRepository;
 
     @Value("${spring.mail.username}")
     private String adminEmail;
@@ -74,17 +77,17 @@ public class AuthServices extends BaseService{
     public StructureRS register(RegisterRequest registerRequest) {
         // Validate Phone Number
         if(userRepository.existsByPhone(registerRequest.phone())){
-            throw new BadRequestException("Phone Number has been already exist...");
+            throw new BadRequestException("Phone Number has been already exist");
         }
 
         // Validate Email
         if(userRepository.existsByEmail(registerRequest.email())){
-            throw new BadRequestException("Emaile has been already exist...");
+            throw new BadRequestException("Emaile has been already exist");
         }
 
         // Validate user's Password
         if(!registerRequest.confirmPassword().equals(registerRequest.password())){
-            throw new BadRequestException("Password has not been match...");
+            throw new BadRequestException("Password has not been match");
         }
 
         UserEntity user = userMapper.fromRegisterRequest(registerRequest);
@@ -101,7 +104,7 @@ public class AuthServices extends BaseService{
         userRepository.save(user);
 
         return response(RegisterResponse.builder()
-        .message("You register has been successfully...")
+        .message("You register has been successfully")
         .email(user.getEmail()).build());
     }
 
@@ -110,7 +113,7 @@ public class AuthServices extends BaseService{
         //Validate email
         UserEntity user = userRepository.findByEmail(email)
                     .orElseThrow(
-                        ()-> new ResponseStatusException(HttpStatus.NOT_FOUND ,MessageConstant.USER.USER_NOT_FOUND)
+                        ()-> new BadRequestException("Email has not been found")
                     );
 
         String codeRandom= RandomUntil.random6Digits();
@@ -142,7 +145,7 @@ public class AuthServices extends BaseService{
             String htmlContent = templateEngine.process("email-template", context);
 
             // Prepare email for sending
-            prepareMailSend(email, htmlContent);
+            prepareMailSend(email, htmlContent,"User Verification","html");
 
             return response("Email sent!");
         } catch (MessagingException e) {
@@ -151,55 +154,58 @@ public class AuthServices extends BaseService{
         }
     }
 
-    public void prepareMailSend(String toMail,String htmlContent) throws MessagingException{
+    public void prepareMailSend(String toMail,String htmlContent,String subject,String type) throws MessagingException{
 
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(message,true);
 
         mimeMessageHelper.setFrom(adminEmail);
         mimeMessageHelper.setTo(toMail);
-        mimeMessageHelper.setSubject("User Verification");
-        mimeMessageHelper.setText(htmlContent,true);
+        mimeMessageHelper.setSubject(subject);
+        if(type=="html"){
+            mimeMessageHelper.setText(htmlContent,true);
+        }
+        mimeMessageHelper.setText(htmlContent);
         javaMailSender.send(message);
     }
 
-    public void verify(VerificationRequest verificationRequest) {
+    public StructureRS verify(VerificationRequest verificationRequest) {
 
           //Validate email
           UserEntity user = userRepository.findByEmail(verificationRequest.email())
           .orElseThrow(
-              ()-> new ResponseStatusException(HttpStatus.NOT_FOUND ,MessageConstant.USER.USER_NOT_FOUND)
+              ()-> new BadRequestException("Email has not been found")
           );
 
           //Validate verified code
           UserVerification verification = userVerificationRepository.findByUserAndVerifiedCode(user,verificationRequest.verifiedCode())
           .orElseThrow(
-              ()-> new ResponseStatusException(HttpStatus.NOT_FOUND ,MessageConstant.USER.USER_NOT_FOUND)
+              ()-> new BadRequestException("Verified code has expired")
           );
 
           //Is verified code expired
           if(LocalTime.now().isAfter(verification.getExpiryTime())){
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,"Verified code has expired");
+            throw new BadRequestException("Verified code has expired");
           }
 
           user.setIsVerification(true);
           userRepository.save(user);
 
           userVerificationRepository.delete(verification);
-
+          return response();
     }
 
     public StructureRS resendVerification(SendVerificationRequest sendVerificationRequest) {
           //Validate email
           UserEntity user = userRepository.findByEmail(sendVerificationRequest.email())
           .orElseThrow(
-              ()-> new ResponseStatusException(HttpStatus.NOT_FOUND ,MessageConstant.USER.USER_NOT_FOUND)
+              ()-> new BadRequestException("Email has not been found")
           );
 
           //Validate verified code
           UserVerification verification = userVerificationRepository.findByUser(user)
           .orElseThrow(
-              ()-> new ResponseStatusException(HttpStatus.NOT_FOUND ,MessageConstant.USER.USER_NOT_FOUND)
+              ()-> new BadRequestException("Verified code has been expired")
           );
 
           String codeRandom= RandomUntil.random6Digits();
@@ -291,6 +297,52 @@ public class AuthServices extends BaseService{
         .claim("isAdmin", claimValue1)
         .claim("scope", claimValue2)
         .build();
+    }
+
+    public StructureRS resetPassword(ResetPasswordRequest resetPasswordRequest){
+         //Validate email
+         UserEntity user = userRepository.findByEmail(resetPasswordRequest.email())
+         .orElseThrow(
+             ()-> new BadRequestException("Email has not been found")
+         );
+
+        String token = UUID.randomUUID().toString();
+        PasswordResetTokenEntity passwordResetToken = new PasswordResetTokenEntity();
+        passwordResetToken.setToken(token);
+        passwordResetToken.setUser(user);
+        passwordResetToken.setExpiryTime(LocalTime.now().plusHours(24));
+
+        passwordResetTokenRepository.save(passwordResetToken);
+
+        try {
+            String resetUrl = "http://localhost:8080/api/v1/auth/reset-password?token=" + token;
+
+            // Prepare email for sending
+            prepareMailSend(user.getEmail(), resetUrl, "Password Reset Request", "");
+
+            return response("Password reset email sent.");
+
+        } catch (MessagingException e) {
+            e.printStackTrace();
+            return response("Error password reset sending email!");
+        }
+    }
+
+    public StructureRS handlePasswordReset(String token,String newPassword){
+        // Validate token
+        Optional<PasswordResetTokenEntity> passwordResetToken = passwordResetTokenRepository.findByToken(token);
+        if (passwordResetToken.isEmpty()) {
+            return response(new BadRequestException("Invalid Token"));
+        }
+
+        // Save new password
+        UserEntity user = passwordResetToken.get().getUser();
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+
+        // Delete token
+        passwordResetTokenRepository.delete(passwordResetToken.get());
+        return response("Password reset successful!");
     }
     
 }

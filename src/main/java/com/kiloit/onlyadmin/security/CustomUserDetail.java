@@ -17,6 +17,11 @@ import lombok.extern.slf4j.Slf4j;
 public class CustomUserDetail implements UserDetails{
 
     private UserEntity user;
+    private String type;
+
+    public CustomUserDetail(String type){
+        this.type=type;
+    }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Set<GrantedAuthority> authorities = new HashSet<>();
@@ -31,7 +36,10 @@ public class CustomUserDetail implements UserDetails{
 
     @Override
     public String getUsername() {
-        return user.getPhone();
+        if(type=="email"){
+            return user.getEmail();
+        }
+        return user.getUsername();
     }
     @Override
     
