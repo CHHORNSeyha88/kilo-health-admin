@@ -1,5 +1,6 @@
 package com.kiloit.onlyadmin.model.request;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
@@ -31,8 +32,8 @@ public class UserRQ {
     private String address;
     @NotBlank(message = "Gender is required!!!")
     private String gender;
+    @NotNull(message = "Date of Birth is required")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @NotBlank(message = "Date of Birth is required")
     private Date dob;
 
     @Positive(message = "RoleId must be negative number!!!")

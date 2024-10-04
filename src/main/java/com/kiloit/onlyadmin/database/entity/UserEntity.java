@@ -1,6 +1,4 @@
 package com.kiloit.onlyadmin.database.entity;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.kiloit.onlyadmin.base.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -23,8 +21,8 @@ public class UserEntity extends BaseEntity {
     private String address;
     private String gender;
     private Date dob;
+    private Boolean isVerification;
 
-    // @JsonIgnore
     @ManyToOne()
     @JoinColumn(name = "role_id")
     private RoleEntity role;
