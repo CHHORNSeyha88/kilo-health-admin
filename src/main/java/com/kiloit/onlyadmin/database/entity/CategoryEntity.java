@@ -27,6 +27,4 @@ public class CategoryEntity extends BaseEntity {
 
     @OneToMany(mappedBy = "categoryEntity")
     private List<PostEntity> postEntities ;
-
-
 }
