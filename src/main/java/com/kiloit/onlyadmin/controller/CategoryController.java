@@ -3,7 +3,6 @@ package com.kiloit.onlyadmin.controller;
 import com.kiloit.onlyadmin.base.BaseController;
 import com.kiloit.onlyadmin.base.StructureRS;
 import com.kiloit.onlyadmin.model.Category.request.CategoryRQ;
-import com.kiloit.onlyadmin.model.Category.respone.CategoryRS_List;
 import com.kiloit.onlyadmin.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -25,8 +24,6 @@ public class CategoryController extends BaseController {
     public ResponseEntity<StructureRS> getList(@PathVariable Long id){
         return response(categoryService.getListById(id));
     }
-
-
 
 
 

@@ -9,7 +9,6 @@ import com.kiloit.onlyadmin.database.repository.UserRepository;
 import com.kiloit.onlyadmin.exception.httpstatus.NotFoundException;
 import com.kiloit.onlyadmin.model.Category.mapper.CategoryMapper;
 import com.kiloit.onlyadmin.model.Category.request.CategoryRQ;
-import com.kiloit.onlyadmin.model.Category.request.CategoryRQ_Update;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
