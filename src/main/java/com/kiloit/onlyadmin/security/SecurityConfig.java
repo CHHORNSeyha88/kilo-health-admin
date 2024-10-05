@@ -42,18 +42,18 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain configureApiSecurity(HttpSecurity httpSecurity,@Qualifier("accessTokenJwtDecoder") JwtDecoder jwtDecoder) throws Exception{
 
-        httpSecurity.authorizeHttpRequests(endpoint-> endpoint
+        // httpSecurity.authorizeHttpRequests(endpoint-> endpoint
 
-        .requestMatchers("api/v1/auth/**")
-        .permitAll()
+        // .requestMatchers("api/v1/auth/**")
+        // .permitAll()
 
-        .requestMatchers("api/v1/users/**")
-        .hasAuthority("SCOPE_ROLE_Administrator")
+        // .requestMatchers("api/v1/users/**")
+        // .hasAuthority("SCOPE_ROLE_Administrator")
 
-        .anyRequest().authenticated());
-        httpSecurity.csrf(token -> token.disable());
+        // .anyRequest().authenticated());
+        // httpSecurity.csrf(token -> token.disable());
 
-        httpSecurity.oauth2ResourceServer(jwt->jwt.jwt(jwtConfigurer->jwtConfigurer.decoder(jwtDecoder)));
+        // httpSecurity.oauth2ResourceServer(jwt->jwt.jwt(jwtConfigurer->jwtConfigurer.decoder(jwtDecoder)));
 
         httpSecurity.sessionManagement(session-> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         
