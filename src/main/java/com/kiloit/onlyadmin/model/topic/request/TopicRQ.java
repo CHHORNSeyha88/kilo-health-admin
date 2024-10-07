@@ -7,7 +7,6 @@ import lombok.Data;
 @Data
 public class TopicRQ {
     private String name;
-    private CategoryEntity category;
-    private String description;
-    private UserEntity user;
+    private Long categoryId;
+    private Long userId;
 }
