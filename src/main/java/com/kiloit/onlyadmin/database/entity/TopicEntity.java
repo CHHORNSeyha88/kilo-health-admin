@@ -15,7 +15,8 @@ import java.util.List;
 public class TopicEntity extends BaseEntity {
     private String name;
     @Column(name = "media_id")
-    private Long listMediaId;
+    @OneToOne
+    private FileMedia fileMediaId;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

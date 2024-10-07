@@ -4,7 +4,6 @@ import com.kiloit.onlyadmin.base.BaseService;
 import com.kiloit.onlyadmin.base.StructureRS;
 import com.kiloit.onlyadmin.database.entity.CategoryEntity;
 import com.kiloit.onlyadmin.database.entity.FileMedia;
-import com.kiloit.onlyadmin.database.entity.ListMediaEntity;
 import com.kiloit.onlyadmin.database.entity.UserEntity;
 import com.kiloit.onlyadmin.database.repository.CategoryRepository;
 import com.kiloit.onlyadmin.database.repository.FileMediaRepository;

@@ -1,6 +1,4 @@
 package com.kiloit.onlyadmin.database.entity;
-
-import com.kiloit.onlyadmin.base.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,7 +11,10 @@ import java.time.Instant;
 @Table(name = "post_view")
 @Getter
 @Setter
-public class PostViewEntity extends BaseEntity {
+public class PostViewEntity{
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     @ManyToOne
     @JoinColumn(name = "user_id")
     private UserEntity user;

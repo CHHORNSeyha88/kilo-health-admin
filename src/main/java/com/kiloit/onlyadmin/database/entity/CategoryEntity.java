@@ -15,7 +15,8 @@ public class CategoryEntity extends BaseEntity {
 
     private String name;
     @Column(name = "media_id")
-    private Long ListMediaId;
+    @OneToOne
+    private FileMedia fileMediaId;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

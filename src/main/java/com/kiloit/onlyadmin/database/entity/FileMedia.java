@@ -1,11 +1,7 @@
 package com.kiloit.onlyadmin.database.entity;
 
 import com.kiloit.onlyadmin.base.BaseEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import java.time.*;
@@ -24,11 +20,5 @@ public class FileMedia extends BaseEntity {
     private String filePath;
     @Column(nullable = false)
     private Long fileSize;
-    @Column(nullable = false)
-    private LocalDateTime uploadDate;
 
-    @ManyToOne
-    @JoinColumn(name = "list_id")
-    private ListMediaEntity listMedia;
-    
 }

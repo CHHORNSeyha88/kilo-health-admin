@@ -13,11 +13,9 @@ import java.util.List;
 public class PostEntity extends BaseEntity {
     private String title;
     private String description;
-    private String thumbnail;
     private Boolean status;
-    @Column(name = "media_id")
-    private Long listMediaId;
-
+    @OneToOne
+    private FileMedia fileMedia;
     @Column(name = "public_at")
     private Instant publicAt;
 

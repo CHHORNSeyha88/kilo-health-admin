@@ -2,7 +2,7 @@ spring:
   application:
     name: Only-Admin
   datasource:
-    url: jdbc:mysql://localhost:3306/only_admin
+    url: jdbc:mysql://localhost:3304/only_admin
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -23,7 +23,7 @@ spring:
     debug: true
     
   flyway:
-    url: jdbc:mysql://localhost:3306
+    url: jdbc:mysql://localhost:3304
     schemas: only_admin
     user: root
     password: root
