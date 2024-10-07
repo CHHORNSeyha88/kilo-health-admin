@@ -1,12 +1,10 @@
-package com.kiloit.onlyadmin.model.Category.request;
+package com.kiloit.onlyadmin.model.Category.respone;
 
 import lombok.Data;
 
 @Data
-public class CategoryRQ {
-
+public class CategoryRS_List {
     private String name;
     private String thumbnail;
     private Long userId;
-
 }
