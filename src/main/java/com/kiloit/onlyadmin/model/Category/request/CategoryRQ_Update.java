@@ -6,5 +6,5 @@ import lombok.Data;
 public class CategoryRQ_Update {
 
     private String name;
-    private String thumbnail;
+    private Long userId;
 }

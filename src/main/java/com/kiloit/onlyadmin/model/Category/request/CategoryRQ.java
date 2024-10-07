@@ -4,9 +4,11 @@ import lombok.Data;
 
 @Data
 public class CategoryRQ {
-
     private String name;
-    private String thumbnail;
     private Long userId;
+    private String fileName;
+    private String fileType;
+    private String filePath;
+    private Long fileSize;
 
 }

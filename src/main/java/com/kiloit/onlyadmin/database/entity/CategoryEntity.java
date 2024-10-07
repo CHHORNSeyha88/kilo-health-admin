@@ -14,9 +14,8 @@ import java.util.List;
 public class CategoryEntity extends BaseEntity {
 
     private String name;
-    private String thumbnail;
     @Column(name = "media_id")
-    private int ListMediaId;
+    private Long ListMediaId;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

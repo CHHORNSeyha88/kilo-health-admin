@@ -51,7 +51,7 @@ public class SecurityConfig {
         // .hasAuthority("SCOPE_ROLE_Administrator")
 
         // .anyRequest().authenticated());
-        // httpSecurity.csrf(token -> token.disable());
+        httpSecurity.csrf(token -> token.disable());
 
         // httpSecurity.oauth2ResourceServer(jwt->jwt.jwt(jwtConfigurer->jwtConfigurer.decoder(jwtDecoder)));
 

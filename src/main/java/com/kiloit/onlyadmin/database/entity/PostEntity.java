@@ -16,7 +16,7 @@ public class PostEntity extends BaseEntity {
     private String thumbnail;
     private Boolean status;
     @Column(name = "media_id")
-    private Integer listMediaId;
+    private Long listMediaId;
 
     @Column(name = "public_at")
     private Instant publicAt;
