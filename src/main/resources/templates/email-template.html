@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Custom Email</title>
+</head>
+<body>
+    <h1>Welcome, <span th:text="${userName}"></span>!</h1>
+    <p>Thank you for registering with us. Here are your details:</p>
+    <ul>
+        <li>Email: <span th:text="${userEmail}"></span></li>
+        <li>Registration Date: <span th:text="${registrationDate}"></span></li>
+        <li>Code: <span th:text="${code}"></span></li>
+    </ul>
+    <p>We are excited to have you on board!</p>
+</body>
+</html>

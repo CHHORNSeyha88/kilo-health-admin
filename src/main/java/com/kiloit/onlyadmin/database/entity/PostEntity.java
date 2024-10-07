@@ -3,11 +3,8 @@ import com.kiloit.onlyadmin.base.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-
 import java.time.Instant;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Setter
 @Getter
@@ -19,7 +16,7 @@ public class PostEntity extends BaseEntity {
     private String thumbnail;
     private Boolean status;
     @Column(name = "media_id")
-    private Integer listMediaId;
+    private Long listMediaId;
 
     @Column(name = "public_at")
     private Instant publicAt;

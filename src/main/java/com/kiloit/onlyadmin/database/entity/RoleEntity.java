@@ -8,11 +8,13 @@ import lombok.Setter;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.security.core.GrantedAuthority;
+
 @Getter
 @Setter
 @Entity
 @Table(name = "role")
-public class RoleEntity extends BaseEntity {
+public class RoleEntity extends BaseEntity implements GrantedAuthority{
     private String code;
     private String name;
     private String module;
@@ -27,4 +29,9 @@ public class RoleEntity extends BaseEntity {
 
     @OneToMany(mappedBy = "role")
     List<UserEntity> users = new ArrayList<>();
+
+    @Override
+    public String getAuthority() {
+        return "ROLE_"+name;
+    }
 }
