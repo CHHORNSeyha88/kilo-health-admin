@@ -11,13 +11,12 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel="spring")
 public interface CategoryMapper{
 
-    @Mapping(target = "user", source = "userId")
     CategoryEntity toEntity(CategoryRQ request);
     CategoryRS toResponse(CategoryEntity categoryEntity);
 
 
     CategoryEntity toUpdateEntity(CategoryRQ_Update request);
-    @Mapping(target = "userId", source = "user")
+    @Mapping(target = "userId", source = "user.id")
     CategoryRS_List toResponseUpdate(CategoryEntity category);
 
 }
