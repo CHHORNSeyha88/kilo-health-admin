@@ -14,17 +14,19 @@ import java.util.List;
 public class CategoryEntity extends BaseEntity {
 
     private String name;
-    @OneToOne
-    @JoinColumn(name = "media_id")
-    private FileMedia fileMediaId;
+    @OneToOne(optional = true)
+    @JoinColumn(name = "media_id", nullable = true)
+    private FileMedia media;
 
-    @ManyToOne
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
-    @OneToMany(mappedBy = "category")
+
+    @OneToMany(mappedBy = "category",fetch = FetchType.EAGER)
     private List<TopicEntity> topicList ;
 
-    @OneToMany(mappedBy = "categoryEntity")
+    @OneToMany(mappedBy = "categoryEntity",fetch = FetchType.EAGER)
     private List<PostEntity> postEntities ;
 }

@@ -4,6 +4,7 @@ import com.kiloit.onlyadmin.base.BaseController;
 import com.kiloit.onlyadmin.base.StructureRS;
 import com.kiloit.onlyadmin.model.Category.request.CategoryRQ;
 import com.kiloit.onlyadmin.service.CategoryService;
+import jakarta.persistence.Id;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,11 +21,14 @@ public class CategoryController extends BaseController {
         return response(categoryService.create(request));
     }
 
-    @GetMapping("{id}")
-    public ResponseEntity<StructureRS> getList(@PathVariable Long id){
-        return response(categoryService.getListById(id));
+    @GetMapping()
+    public ResponseEntity<StructureRS> getLists(){
+        return response(categoryService.getList());
     }
-
+    @GetMapping("{id}")
+    public ResponseEntity<StructureRS> getDetailById(@PathVariable Long id){
+        return response(categoryService.getDetail(id));
+    }
 
 
 }

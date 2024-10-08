@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -34,14 +35,23 @@ public class CategoryService extends BaseService {
         return response(categoryMapper.toResponse(categoryEntity));
 
     }
-    public StructureRS getListById(Long id){
-        Optional<CategoryEntity> categoryEntity = categoryRepository.findById(id);
-        if(categoryEntity.isEmpty()){
-            throw new NotFoundException("Category id not found");
-        }
-        return response(categoryMapper.toResponse(categoryEntity.get()));
+    public StructureRS getList(){
+        List<CategoryEntity> categoryEntity = categoryRepository.findAll();
+        return response(categoryEntity.stream().map(categoryMapper::toResponse).toList());
     }
 
+    public StructureRS getDetail(Long id){
+        Optional<CategoryEntity> categoryEntity = categoryRepository.findById(id);
+        if(categoryEntity.isEmpty()){
+            throw new NotFoundException("Category not found...");
+        }
+        return response(categoryMapper.from(categoryEntity.get()));
+    }
+
+//    public StructureRS update(CategoryRQ request){
+//        CategoryEntity categoryEntity = categoryMapper.toEntity(request);
+//
+//    }
 //    public StructureRS updateById(Long id, CategoryRQ_Update request){
 //    Optional<CategoryEntity> categoryEntity = categoryRepository.findById(id);
 //    if(categoryEntity.isEmpty()){
