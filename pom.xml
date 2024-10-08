@@ -137,11 +137,11 @@
                 <groupId>org.flywaydb</groupId>
                 <artifactId>flyway-maven-plugin</artifactId>
                 <configuration>
-                    <url>jdbc:mysql://localhost:3304/only_admin</url>
+                    <url>jdbc:mysql://localhost:3306/only_admin</url>
                     <user>root</user>
-                    <password>root</password>
+                    <password>phary1709</password>
                     <!-- disable in production -->
-                    <cleanDisabled>false</cleanDisabled>
+                    <cleanDisabled>true</cleanDisabled>
                     <baselineOnMigrate>true</baselineOnMigrate>
                 </configuration>
             </plugin>

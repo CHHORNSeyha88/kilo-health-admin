@@ -46,7 +46,7 @@ public class PostService extends BaseService {
                     {
                     PostDetailResponse postDetailResponse = new PostDetailResponse();
                     postDetailResponse.setTitle(p.getTitle());
-                    postDetailResponse.setThumbnail(p.getThumbnail());
+//                    postDetailResponse.setThumbnail(p.getThumbnail());
                     return postDetailResponse;
                  }
         ).toList();
