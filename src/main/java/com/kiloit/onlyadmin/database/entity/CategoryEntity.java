@@ -14,8 +14,8 @@ import java.util.List;
 public class CategoryEntity extends BaseEntity {
 
     private String name;
-    @Column(name = "media_id")
     @OneToOne
+    @JoinColumn(name = "media_id")
     private FileMedia fileMediaId;
 
     @ManyToOne

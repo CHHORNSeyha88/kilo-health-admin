@@ -15,6 +15,7 @@ public class PostEntity extends BaseEntity {
     private String description;
     private Boolean status;
     @OneToOne
+    @JoinColumn(name = "media_id")
     private FileMedia fileMedia;
     @Column(name = "public_at")
     private Instant publicAt;
