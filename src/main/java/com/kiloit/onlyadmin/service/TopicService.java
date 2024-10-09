@@ -2,10 +2,12 @@ package com.kiloit.onlyadmin.service;
 
 import com.kiloit.onlyadmin.base.BaseService;
 import com.kiloit.onlyadmin.base.StructureRS;
+import com.kiloit.onlyadmin.constant.MessageConstant;
 import com.kiloit.onlyadmin.database.entity.TopicEntity;
 import com.kiloit.onlyadmin.database.entity.UserEntity;
 import com.kiloit.onlyadmin.database.repository.TopicRepository;
 import com.kiloit.onlyadmin.database.repository.UserRepository;
+import com.kiloit.onlyadmin.exception.httpstatus.BadRequestException;
 import com.kiloit.onlyadmin.model.topic.mapper.TopicMapper;
 import com.kiloit.onlyadmin.model.topic.request.TopicRQ;
 import com.kiloit.onlyadmin.model.topic.response.TopicRSById;
@@ -13,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -73,5 +75,14 @@ public class TopicService extends BaseService {
         BeanUtils.copyProperties(NewEntity,OldEntity, "id", "created_at", "updated_at","categoryId", "userId");
         OldEntity = topicRepository.save(OldEntity);
         return  response(topicMapper.to(OldEntity));
+    }
+
+    public String deleteTopicById(Long id){
+        Optional<TopicEntity> topicEntity = topicRepository.findByIdAndDelete(id);
+        if (topicEntity.isEmpty())
+            throw new BadRequestException(MessageConstant.USER.USER_NOT_FOUND);
+        topicEntity.get().setDeletedAt(Instant.now());
+        topicRepository.save(topicEntity.get());
+        return "topic has been deleted with id " + id;
     }
 }
