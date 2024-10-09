@@ -4,7 +4,7 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:3306/only_admin
     username: root
-    password: phary1709
+    password: seyha
     driver-class-name: com.mysql.cj.jdbc.Driver
     spring:
 
@@ -26,7 +26,7 @@ spring:
     url: jdbc:mysql://localhost:3306/only_admin
     schemas: only_admin
     user: root
-    password: phary1709
+    password: seyha
 
   jpa:
     show-sql: true

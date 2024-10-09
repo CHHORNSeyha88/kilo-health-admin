@@ -1,6 +1,6 @@
 package com.kiloit.onlyadmin.controller;
 
-
+import com.kiloit.onlyadmin.base.BaseEntity;
 import com.kiloit.onlyadmin.base.BaseController;
 import com.kiloit.onlyadmin.base.StructureRS;
 import com.kiloit.onlyadmin.model.topic.request.TopicRQ;

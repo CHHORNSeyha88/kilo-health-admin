@@ -139,9 +139,9 @@
                 <configuration>
                     <url>jdbc:mysql://localhost:3306/only_admin</url>
                     <user>root</user>
-                    <password>phary1709</password>
+                    <password>seyha</password>
                     <!-- disable in production -->
-                    <cleanDisabled>true</cleanDisabled>
+                    <cleanDisabled>false</cleanDisabled>
                     <baselineOnMigrate>true</baselineOnMigrate>
                 </configuration>
             </plugin>
