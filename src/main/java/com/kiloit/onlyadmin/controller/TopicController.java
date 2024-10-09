@@ -41,6 +41,11 @@ public class TopicController extends BaseController {
         return response(topicService.updateTopicById(id, topicRQ));
     }
 
+    @DeleteMapping("soft-delete/{id}")
+    public ResponseEntity<StructureRS> DeleteNotNullTopicById(@PathVariable Long id){
+       return response(topicService.deleteTopicByIdNotNull(id));
+    }
+
 
 
 
