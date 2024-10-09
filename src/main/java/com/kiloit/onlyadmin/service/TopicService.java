@@ -78,7 +78,7 @@ public class TopicService extends BaseService {
     }
 
     public String deleteTopicByIdNotNull(Long id){
-        Optional<TopicEntity> topicEntity = topicRepository.findByIdAndDelete(id);
+        Optional<TopicEntity> topicEntity = topicRepository.findByIdAndDeletedAtNull(id);
         if (topicEntity.isEmpty())
             throw new BadRequestException(MessageConstant.USER.USER_NOT_FOUND);
         topicEntity.get().setDeletedAt(Instant.now());

@@ -1,5 +1,6 @@
 package com.kiloit.onlyadmin.base;
 
+import com.kiloit.onlyadmin.base.BaseEntity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
