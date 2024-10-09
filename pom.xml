@@ -141,7 +141,7 @@
                     <user>root</user>
                     <password>root</password>
                     <!-- disable in production -->
-                    <cleanDisabled>true</cleanDisabled>
+                    <cleanDisabled>false</cleanDisabled>
                     <baselineOnMigrate>true</baselineOnMigrate>
                 </configuration>
             </plugin>
