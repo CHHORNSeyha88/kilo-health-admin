@@ -6,4 +6,5 @@ import lombok.Data;
 public class CategoryRS_List {
     private String name;
     private Long userId;
+    private Long mediaId;
 }

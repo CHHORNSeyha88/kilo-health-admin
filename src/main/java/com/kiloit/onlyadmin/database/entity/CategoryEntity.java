@@ -18,13 +18,14 @@ public class CategoryEntity extends BaseEntity {
     @JoinColumn(name = "media_id")
     private FileMedia fileMediaId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
-    @OneToMany(mappedBy = "category")
+
+    @OneToMany(mappedBy = "category",fetch = FetchType.EAGER)
     private List<TopicEntity> topicList ;
 
-    @OneToMany(mappedBy = "categoryEntity")
+    @OneToMany(mappedBy = "categoryEntity",fetch = FetchType.EAGER)
     private List<PostEntity> postEntities ;
 }
