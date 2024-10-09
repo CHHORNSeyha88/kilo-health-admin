@@ -2,6 +2,7 @@ package com.kiloit.onlyadmin.service;
 
 import com.kiloit.onlyadmin.base.BaseService;
 import com.kiloit.onlyadmin.base.StructureRS;
+import com.kiloit.onlyadmin.constant.MessageConstant;
 import com.kiloit.onlyadmin.database.entity.CategoryEntity;
 import com.kiloit.onlyadmin.database.entity.UserEntity;
 import com.kiloit.onlyadmin.database.repository.CategoryRepository;
@@ -10,10 +11,13 @@ import com.kiloit.onlyadmin.exception.httpstatus.BadRequestException;
 import com.kiloit.onlyadmin.exception.httpstatus.NotFoundException;
 import com.kiloit.onlyadmin.model.Category.mapper.CategoryMapper;
 import com.kiloit.onlyadmin.model.Category.request.CategoryRQ;
+import com.kiloit.onlyadmin.model.Category.request.CategoryRQ_Update;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,30 +45,30 @@ public class CategoryService extends BaseService {
     }
 
     public StructureRS getDetail(Long id){
-        Optional<CategoryEntity> categoryEntity = categoryRepository.findById(id);
+        Optional<CategoryEntity> categoryEntity = categoryRepository.findByID(id);
         if(categoryEntity.isEmpty()){
             throw new NotFoundException("Category not found...");
         }
         return response(categoryMapper.from(categoryEntity.get()));
     }
 
-//    public StructureRS update(CategoryRQ request){
-//        CategoryEntity categoryEntity = categoryMapper.toEntity(request);
-//
-//    }
-//    public StructureRS updateById(Long id, CategoryRQ_Update request){
-//    Optional<CategoryEntity> categoryEntity = categoryRepository.findById(id);
-//    if(categoryEntity.isEmpty()){
-//        throw new NotFoundException("Category id not found");
-//    }
-//
-//        return response(categoryMapper.toResponseUpdate(categoryEntity));
-//    }
-
-
-
-
-
-
-
+    public StructureRS updateById(Long id, CategoryRQ_Update request){
+        Optional<CategoryEntity> categoryEntity = categoryRepository.findById(id);
+        if(categoryEntity.isEmpty()){
+            throw new NotFoundException("Category id not found");
+        }
+        CategoryEntity categoryOld = categoryEntity.get();
+        categoryMapper.fromUpdate(request, categoryOld);
+        categoryOld = categoryRepository.save(categoryOld);
+        return response(categoryMapper.toResponse(categoryOld));
+    }
+    public StructureRS deleteById(Long id){
+        Optional<CategoryEntity> categoryEntity = categoryRepository.findById(id);
+        if(categoryEntity.isEmpty()){
+            throw new NotFoundException("Category id not found");
+        }
+        categoryEntity.get().setDeletedAt(Instant.now());
+        categoryRepository.save(categoryEntity.get());
+        return response(HttpStatus.NO_CONTENT);
+    }
 }

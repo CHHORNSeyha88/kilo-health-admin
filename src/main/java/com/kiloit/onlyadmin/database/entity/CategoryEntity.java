@@ -14,10 +14,9 @@ import java.util.List;
 public class CategoryEntity extends BaseEntity {
 
     private String name;
-    @OneToOne(optional = true)
-    @JoinColumn(name = "media_id", nullable = true)
-    private FileMedia media;
-
+    @OneToOne
+    @JoinColumn(name = "media_id")
+    private FileMedia fileMediaId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")

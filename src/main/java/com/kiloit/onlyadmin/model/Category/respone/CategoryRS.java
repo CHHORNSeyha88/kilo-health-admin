@@ -12,5 +12,5 @@ public class CategoryRS {
     private String name;
     private List<TopicEntity> topicEntities;
     private List<PostEntity> postEntities;
-    private List<FileMedia> fileMedia;
+    private FileMedia fileMedia;
 }

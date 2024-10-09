@@ -1,12 +1,12 @@
 package com.kiloit.onlyadmin.model.Category.mapper;
 
 import com.kiloit.onlyadmin.database.entity.CategoryEntity;
+import com.kiloit.onlyadmin.database.entity.RoleEntity;
 import com.kiloit.onlyadmin.model.Category.request.CategoryRQ;
 import com.kiloit.onlyadmin.model.Category.request.CategoryRQ_Update;
 import com.kiloit.onlyadmin.model.Category.respone.CategoryRS;
 import com.kiloit.onlyadmin.model.Category.respone.CategoryRS_List;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import org.mapstruct.*;
 
 import java.util.List;
 
@@ -23,6 +23,9 @@ public interface CategoryMapper{
 
 
     CategoryEntity toUpdateEntity(CategoryRQ_Update request);
+    @Mapping(target = "fileMedia",source = "fileMediaId")
     CategoryRS from(CategoryEntity entity);
 
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    void fromUpdate(CategoryRQ_Update categoryRQ, @MappingTarget CategoryEntity category);
 }
