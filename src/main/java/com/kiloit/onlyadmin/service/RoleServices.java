@@ -35,7 +35,7 @@ public class RoleServices extends BaseService {
 
     // Method to get all roles
     public StructureRS getAll(BaseListingRQ request) {
-        Page<RoleEntity> roleEntities = roleRepository.findByNameContainsOrderByNameAsc(request.getQuery(), request.getPageable());
+        Page<RoleEntity> roleEntities = roleRepository.findByNameContainsOrderByNameAsc(request.getQuery(), request.getPageable("id"));
         return response(roleEntities.map(roleMapper::fromRoleEntity).getContent(),roleEntities);
     }
     
