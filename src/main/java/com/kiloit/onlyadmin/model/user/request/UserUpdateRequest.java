@@ -1,6 +1,5 @@
 package com.kiloit.onlyadmin.model.user.request;
-import java.util.Date;
-import org.springframework.format.annotation.DateTimeFormat;
+import java.time.LocalDate;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -18,8 +17,7 @@ public class UserUpdateRequest {
     private String address;
     @NotBlank(message = "Gender is required")
     private String gender;
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @NotNull
-    private Date dob;
+    private LocalDate dob;
     private Long roleId;
 }

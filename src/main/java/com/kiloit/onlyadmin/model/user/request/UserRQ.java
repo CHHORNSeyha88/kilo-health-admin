@@ -5,9 +5,7 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
-import org.springframework.format.annotation.DateTimeFormat;
-
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
 public class UserRQ {
@@ -33,8 +31,7 @@ public class UserRQ {
     @NotBlank(message = "Gender is required!!!")
     private String gender;
     @NotNull(message = "Date of Birth is required")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date dob;
+    private LocalDate dob;
 
     @Positive(message = "RoleId must be negative number!!!")
     private Long roleId;

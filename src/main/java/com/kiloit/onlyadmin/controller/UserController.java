@@ -38,8 +38,8 @@ public class UserController extends BaseController {
     }
 
     @PatchMapping("/{id}/soft-delete")
-    public void delete(@PathVariable("id") Long id){
-        userService.delete(id);
+    public ResponseEntity<StructureRS> delete(@PathVariable("id") Long id){
+        return response(userService.delete(id));
     }
 
 }

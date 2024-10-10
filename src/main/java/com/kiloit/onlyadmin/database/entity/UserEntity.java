@@ -3,7 +3,7 @@ import com.kiloit.onlyadmin.base.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-
+import java.time.LocalDate;
 import java.util.*;
 
 @Getter
@@ -20,7 +20,7 @@ public class UserEntity extends BaseEntity {
     private String phone;
     private String address;
     private String gender;
-    private Date dob;
+    private LocalDate dob;
     private Boolean isVerification;
 
     @ManyToOne()

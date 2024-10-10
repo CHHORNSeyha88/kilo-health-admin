@@ -17,6 +17,7 @@ import com.kiloit.onlyadmin.model.user.mapper.UserMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
@@ -38,7 +39,7 @@ public class UserService extends BaseService {
     public StructureRS list(BaseListingRQ request){
         Specification<UserEntity> specification = UserSpecification.hasNotBeenDeleted().and(UserSpecification.dynamicQuery(request.getQuery()));
         Page<UserEntity> userEntitys = userRepository.findAll(specification,(PageRequest)(request.getPageable("id")));
-        return response(userEntitys.map(userMapper::fromUserList),userEntitys);
+        return response(userEntitys.map(userMapper::fromUserList).getContent(),userEntitys);
     }
 
     public StructureRS detail(Long id) {
@@ -58,6 +59,15 @@ public class UserService extends BaseService {
                                 findById(request.getRoleId()).
                                 orElseThrow(()->new BadRequestException(MessageConstant.ROLE.ROLE_NOT_FOUND));
 
+        // Validate email
+        if(userRepository.existsByEmail(request.getEmail())){
+            throw new BadRequestException("Email has already existing...");
+        }
+
+        // Validate username
+        if(userRepository.existsByUsername(request.getUsername())){
+            throw new BadRequestException("User name not valid...");
+        }
         UserEntity userEntity = userMapper.fromUser(request);
         userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
         userEntity.setRole(roleEntity);
@@ -81,13 +91,15 @@ public class UserService extends BaseService {
         return response(userMapper.fromUserList(userRepository.save(user)));
     }
 
-    public void delete(Long id){
+    public StructureRS delete(Long id){
         Optional<UserEntity> user = userRepository.findByIdAndDeletedAtNull(id);
         if (user.isEmpty())
             throw new BadRequestException(MessageConstant.USER.USER_NOT_FOUND);
 
         user.get().setDeletedAt(Instant.now());
         userRepository.save(user.get());
+        
+        return response(MessageConstant.ROLE.ROLE_DELETED_SUCCESSFULLY);
     }
 
     public List<UserListRS> getAll(String query) {

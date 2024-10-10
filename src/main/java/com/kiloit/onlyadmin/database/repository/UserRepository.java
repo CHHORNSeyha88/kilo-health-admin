@@ -23,4 +23,6 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> ,JpaSpec
 
     @Query("SELECT u FROM UserEntity AS u WHERE email=:userName OR username=:userName")
     Optional<UserEntity> findUserOrEmail(@Param("userName") String userName);
+
+    boolean existsByUsername(String username);
 }
