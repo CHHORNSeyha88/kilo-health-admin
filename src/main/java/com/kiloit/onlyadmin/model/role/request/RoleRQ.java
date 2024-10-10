@@ -1,4 +1,4 @@
-package com.kiloit.onlyadmin.model.request;
+package com.kiloit.onlyadmin.model.role.request;
 
 import lombok.Data;
 
@@ -9,5 +9,5 @@ import java.util.List;
 public class RoleRQ {
     private String code;
     private String name;
-    private List<Long> permissionsId = new ArrayList<>();
+    private String module;
 }

@@ -1,4 +1,4 @@
-package com.kiloit.onlyadmin.model.respone.auth;
+package com.kiloit.onlyadmin.model.user.respone.auth;
 
 import lombok.Builder;
 

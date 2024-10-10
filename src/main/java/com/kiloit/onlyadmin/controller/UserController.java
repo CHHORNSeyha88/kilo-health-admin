@@ -3,8 +3,8 @@ package com.kiloit.onlyadmin.controller;
 import com.kiloit.onlyadmin.base.BaseController;
 import com.kiloit.onlyadmin.base.BaseListingRQ;
 import com.kiloit.onlyadmin.base.StructureRS;
-import com.kiloit.onlyadmin.model.request.UserRQ;
-import com.kiloit.onlyadmin.model.request.UserUpdateRequest;
+import com.kiloit.onlyadmin.model.user.request.UserRQ;
+import com.kiloit.onlyadmin.model.user.request.UserUpdateRequest;
 import com.kiloit.onlyadmin.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -38,8 +38,8 @@ public class UserController extends BaseController {
     }
 
     @PatchMapping("/{id}/soft-delete")
-    public void delete(@PathVariable("id") Long id){
-        userService.delete(id);
+    public ResponseEntity<StructureRS> delete(@PathVariable("id") Long id){
+        return response(userService.delete(id));
     }
 
 }

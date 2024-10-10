@@ -1,4 +1,4 @@
-package com.kiloit.onlyadmin.model.request;
+package com.kiloit.onlyadmin.model.role.request;
 
 import lombok.Data;
 
