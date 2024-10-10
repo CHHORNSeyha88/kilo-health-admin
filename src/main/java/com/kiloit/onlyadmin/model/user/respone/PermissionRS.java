@@ -1,4 +1,4 @@
-package com.kiloit.onlyadmin.model.respone;
+package com.kiloit.onlyadmin.model.user.respone;
 
 import lombok.Data;
 

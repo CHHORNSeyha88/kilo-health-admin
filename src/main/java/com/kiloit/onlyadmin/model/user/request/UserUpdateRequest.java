@@ -1,10 +1,9 @@
-package com.kiloit.onlyadmin.model.request;
+package com.kiloit.onlyadmin.model.user.request;
 import java.util.Date;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
 import lombok.Data;
 
 @Data

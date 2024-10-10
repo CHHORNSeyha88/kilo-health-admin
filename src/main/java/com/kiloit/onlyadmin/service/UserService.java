@@ -10,11 +10,10 @@ import com.kiloit.onlyadmin.database.repository.RoleRepository;
 import com.kiloit.onlyadmin.database.repository.UserRepository;
 import com.kiloit.onlyadmin.database.specification.UserSpecification;
 import com.kiloit.onlyadmin.exception.httpstatus.BadRequestException;
+import com.kiloit.onlyadmin.model.user.request.UserRQ;
+import com.kiloit.onlyadmin.model.user.request.UserUpdateRequest;
+import com.kiloit.onlyadmin.model.user.respone.UserListRS;
 import com.kiloit.onlyadmin.model.user.mapper.UserMapper;
-import com.kiloit.onlyadmin.model.request.UserRQ;
-import com.kiloit.onlyadmin.model.request.UserUpdateRequest;
-import com.kiloit.onlyadmin.model.respone.UserListRS;
-
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +22,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;

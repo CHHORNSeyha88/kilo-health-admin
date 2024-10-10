@@ -1,4 +1,4 @@
-package com.kiloit.onlyadmin.model.request.auth;
+package com.kiloit.onlyadmin.model.user.request.auth;
 
 import jakarta.validation.constraints.NotBlank;
 
