@@ -23,9 +23,9 @@ public class CategoryEntity extends BaseEntity {
     private UserEntity user;
 
 
-    @OneToMany(mappedBy = "category",fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "category",fetch = FetchType.EAGER,cascade = CascadeType.MERGE, orphanRemoval = true)
     private List<TopicEntity> topicList ;
 
-    @OneToMany(mappedBy = "categoryEntity",fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "categoryEntity",fetch = FetchType.EAGER,cascade = CascadeType.MERGE, orphanRemoval = true)
     private List<PostEntity> postEntities ;
 }

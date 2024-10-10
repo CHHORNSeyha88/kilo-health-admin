@@ -1,6 +1,7 @@
 package com.kiloit.onlyadmin.controller;
 
 import com.kiloit.onlyadmin.base.BaseController;
+import com.kiloit.onlyadmin.base.BaseListingRQ;
 import com.kiloit.onlyadmin.base.StructureRS;
 import com.kiloit.onlyadmin.model.Category.request.CategoryRQ;
 import com.kiloit.onlyadmin.model.Category.request.CategoryRQ_Update;
@@ -23,8 +24,8 @@ public class CategoryController extends BaseController {
     }
 
     @GetMapping()
-    public ResponseEntity<StructureRS> getLists(){
-        return response(categoryService.getList());
+    public ResponseEntity<StructureRS> getLists(BaseListingRQ request){
+        return response(categoryService.getList(request));
     }
     @GetMapping("{id}")
     public ResponseEntity<StructureRS> getDetailById(@PathVariable Long id){
