@@ -117,7 +117,6 @@ public class MessageConstant {
     }
     public static class FILEMEDIA{
         public static final String FILE_MEDIA_NOT_FOUNT = "file media not fount";
-
     }
 
 }
