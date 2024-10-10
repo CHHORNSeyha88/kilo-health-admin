@@ -115,5 +115,9 @@ public class MessageConstant {
         public static final String ORDER_NOT_FOUND = "order could not be found";
         public static final String ORDER_HAS_BEEN_UPDATE = "order has been update";
     }
+    public static class FILEMEDIA{
+        public static final String FILE_MEDIA_NOT_FOUNT = "file media not fount";
+
+    }
 
 }

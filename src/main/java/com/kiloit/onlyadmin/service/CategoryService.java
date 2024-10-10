@@ -37,11 +37,11 @@ public class CategoryService extends BaseService {
     public StructureRS create(CategoryRQ request){
         Optional<UserEntity> user = userRepository.findByIdAndDeletedAtNull(request.getUserId());
         if(user.isEmpty()){
-            throw new NotFoundException(MessageConstant.CATEGORY.CATEGORY_COULD_NOT_BE_FOUND);
+            throw new NotFoundException(MessageConstant.USER.USER_NOT_FOUND);
         }
         Optional<FileMedia> fileMedia = fileMediaRepository.findByIdAndDeletedAtIsNull(request.getMediaId());
         if(fileMedia.isEmpty()){
-            throw new NotFoundException(MessageConstant.CATEGORY.CATEGORY_COULD_NOT_BE_FOUND);
+            throw new NotFoundException(MessageConstant.FILEMEDIA.FILE_MEDIA_NOT_FOUNT);
         }
         CategoryEntity categoryEntity = categoryMapper.toEntity(request);
         categoryEntity.setUser(user.get());
