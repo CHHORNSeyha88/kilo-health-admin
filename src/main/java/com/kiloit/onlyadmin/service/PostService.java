@@ -7,7 +7,7 @@ import com.kiloit.onlyadmin.database.entity.TopicEntity;
 import com.kiloit.onlyadmin.database.repository.PostRepository;
 import com.kiloit.onlyadmin.database.repository.TopicRepository;
 import com.kiloit.onlyadmin.exception.httpstatus.NotFoundException;
-import com.kiloit.onlyadmin.model.PostMapper.PostMapper;
+import com.kiloit.onlyadmin.model.post.mapper.PostMapper;
 import com.kiloit.onlyadmin.model.post.request.PostCreateRequest;
 import com.kiloit.onlyadmin.model.post.request.PostUpdateRequest;
 import com.kiloit.onlyadmin.model.post.response.PostDetailResponse;

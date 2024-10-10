@@ -1,4 +1,4 @@
-package com.kiloit.onlyadmin.mapper;
+package com.kiloit.onlyadmin.model.user.mapper;
 
 import com.kiloit.onlyadmin.model.request.UserRQ;
 import com.kiloit.onlyadmin.model.request.UserUpdateRequest;

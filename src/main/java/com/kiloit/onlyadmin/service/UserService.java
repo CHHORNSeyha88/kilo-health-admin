@@ -10,7 +10,7 @@ import com.kiloit.onlyadmin.database.repository.RoleRepository;
 import com.kiloit.onlyadmin.database.repository.UserRepository;
 import com.kiloit.onlyadmin.database.specification.UserSpecification;
 import com.kiloit.onlyadmin.exception.httpstatus.BadRequestException;
-import com.kiloit.onlyadmin.mapper.UserMapper;
+import com.kiloit.onlyadmin.model.user.mapper.UserMapper;
 import com.kiloit.onlyadmin.model.request.UserRQ;
 import com.kiloit.onlyadmin.model.request.UserUpdateRequest;
 import com.kiloit.onlyadmin.model.respone.UserListRS;

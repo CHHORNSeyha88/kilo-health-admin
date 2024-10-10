@@ -1,4 +1,4 @@
-package com.kiloit.onlyadmin.mapper;
+package com.kiloit.onlyadmin.model.user.mapper;
 
 import org.mapstruct.Mapper;
 

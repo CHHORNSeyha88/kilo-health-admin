@@ -1,4 +1,4 @@
-package com.kiloit.onlyadmin.model.PostMapper;
+package com.kiloit.onlyadmin.model.post.mapper;
 
 import com.kiloit.onlyadmin.database.entity.PostEntity;
 import com.kiloit.onlyadmin.model.post.request.PostCreateRequest;

@@ -30,7 +30,7 @@ import com.kiloit.onlyadmin.database.repository.RoleRepository;
 import com.kiloit.onlyadmin.database.repository.UserRepository;
 import com.kiloit.onlyadmin.database.repository.UserVerificationRepository;
 import com.kiloit.onlyadmin.exception.httpstatus.BadRequestException;
-import com.kiloit.onlyadmin.mapper.UserMapper;
+import com.kiloit.onlyadmin.model.user.mapper.UserMapper;
 import com.kiloit.onlyadmin.model.request.auth.LoginRequest;
 import com.kiloit.onlyadmin.model.request.auth.RefreshTokenRequest;
 import com.kiloit.onlyadmin.model.request.auth.RegisterRequest;
