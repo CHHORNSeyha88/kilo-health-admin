@@ -12,6 +12,7 @@ import java.util.List;
 
 @Data
 public class CategoryRS {
+    private Integer id;
     private String name;
     private FileMedia fileMedia;
     private CategoryRS_user user;
