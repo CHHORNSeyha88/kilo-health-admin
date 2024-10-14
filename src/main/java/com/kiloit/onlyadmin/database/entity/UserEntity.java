@@ -23,7 +23,7 @@ public class UserEntity extends BaseEntity {
     private LocalDate dob;
     private Boolean isVerification;
 
-    @ManyToOne()
+    @ManyToOne
     @JoinColumn(name = "role_id")
     private RoleEntity role;
 
@@ -33,5 +33,7 @@ public class UserEntity extends BaseEntity {
     @OneToMany(mappedBy = "user")
     private List<PostViewEntity> postViews ;
 
+    @OneToMany(fetch = FetchType.EAGER,mappedBy = "user")
+    private List<TopicEntity> topics ;
 
 }

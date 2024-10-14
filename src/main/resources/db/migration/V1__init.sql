@@ -88,7 +88,8 @@ CREATE TABLE `role`
 CREATE TABLE role_has_permission
 (
     permission_id BIGINT NOT NULL,
-    role_id       BIGINT NOT NULL
+    role_id       BIGINT NOT NULL,
+    CONSTRAINT pk_role_has_permission PRIMARY KEY (permission_id, role_id)
 );
 
 CREATE TABLE topics
@@ -119,7 +120,7 @@ CREATE TABLE user
     phone           VARCHAR(255) NULL,
     address         VARCHAR(255) NULL,
     gender          VARCHAR(255) NULL,
-    dob             datetime NULL,
+    dob             date NULL,
     is_verification BIT(1) NULL,
     role_id         BIGINT NULL,
     CONSTRAINT pk_user PRIMARY KEY (id)
