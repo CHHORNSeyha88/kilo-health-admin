@@ -194,3 +194,6 @@ ALTER TABLE role_has_permission
 
 ALTER TABLE role_has_permission
     ADD CONSTRAINT fk_rolhasper_on_role_entity FOREIGN KEY (role_id) REFERENCES `role` (id);
+
+
+************************************************************************************************
