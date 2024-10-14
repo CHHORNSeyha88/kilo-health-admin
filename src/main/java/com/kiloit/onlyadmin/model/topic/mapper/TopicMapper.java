@@ -14,13 +14,13 @@ import org.mapstruct.Mapping;
 
 @Mapper
 public interface TopicMapper {
-    TopicEntity to(TopicRQ topicRQ);
 
+    TopicEntity to(TopicRQ topicRQ);
     @Mapping(target = "userEntity", source = "user")
     TopicRSById to(TopicEntity topicEntity);
     CustomTopicCategory to(CategoryEntity categoryEntity);
     CustomTopicUser to(UserEntity userEntity);
-
+    
     @Mapping(target = "categoryName",source = "category.name")
     @Mapping(target = "userName" , source = "user.firstname")
     TopictResponseList toResponse(TopicEntity topicEntity);

@@ -124,7 +124,7 @@ public class AuthServices extends BaseService{
  
         userVerificationRepository.save(userVerification);
 
-        return response(prepareTemplateMail(email, user, codeRandom));
+        return prepareTemplateMail(email, user, codeRandom);
 
     }
     
@@ -147,7 +147,7 @@ public class AuthServices extends BaseService{
             // Prepare email for sending
             prepareMailSend(email, htmlContent,"User Verification","html");
 
-            return response("Email sent!");
+            return response(("Email sent!"));
         } catch (MessagingException e) {
             e.printStackTrace();
             return response("Error sending email!");
@@ -165,7 +165,9 @@ public class AuthServices extends BaseService{
         if(type=="html"){
             mimeMessageHelper.setText(htmlContent,true);
         }
-        mimeMessageHelper.setText(htmlContent);
+        else{
+            mimeMessageHelper.setText(htmlContent);
+        }
         javaMailSender.send(message);
     }
 
