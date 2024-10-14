@@ -6,7 +6,6 @@ import com.kiloit.onlyadmin.base.StructureRS;
 import com.kiloit.onlyadmin.model.Category.request.CategoryRQ;
 import com.kiloit.onlyadmin.model.Category.request.CategoryRQ_Update;
 import com.kiloit.onlyadmin.service.CategoryService;
-import jakarta.persistence.Id;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

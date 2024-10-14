@@ -7,16 +7,30 @@ import com.kiloit.onlyadmin.model.topic.request.TopicRQ;
 import com.kiloit.onlyadmin.model.topic.response.CustomTopicCategory;
 import com.kiloit.onlyadmin.model.topic.response.CustomTopicUser;
 import com.kiloit.onlyadmin.model.topic.response.TopicRSById;
-import com.kiloit.onlyadmin.model.user.respone.UserDetailRS;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.Mappings;
 
 @Mapper
 public interface TopicMapper {
 
+      @Mappings({
+        @Mapping(target = "createdAt",ignore = true),
+        @Mapping(target = "deletedAt",ignore = true),
+        @Mapping(target="id",ignore = true),
+        @Mapping(target = "modifiedAt",ignore = true),
+        @Mapping(target = "fileMediaId",ignore = true),
+        @Mapping(target = "category",ignore = true),
+        @Mapping(target="user",ignore = true),
+        @Mapping(target = "postEntities",ignore = true)
+    })
     TopicEntity to(TopicRQ topicRQ);
+
     @Mapping(target = "userEntity", source = "user")
+    @Mapping(target = "description",ignore = true)
+    @Mapping(target = "status",ignore=true)
     TopicRSById to(TopicEntity topicEntity);
+
     CustomTopicCategory to(CategoryEntity categoryEntity);
     CustomTopicUser to(UserEntity userEntity);
 

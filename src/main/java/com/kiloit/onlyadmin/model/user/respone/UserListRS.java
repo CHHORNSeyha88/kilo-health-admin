@@ -6,6 +6,7 @@ import java.util.Date;
 
 @Data
 public class UserListRS {
+    private Long id;
     private String firstname;
     private String lastname;
     private String gender;

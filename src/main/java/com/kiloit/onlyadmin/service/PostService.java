@@ -1,6 +1,4 @@
 package com.kiloit.onlyadmin.service;
-
-import com.kiloit.onlyadmin.base.BaseListingRQ;
 import com.kiloit.onlyadmin.base.BaseService;
 import com.kiloit.onlyadmin.base.StructureRS;
 import com.kiloit.onlyadmin.constant.MessageConstant;

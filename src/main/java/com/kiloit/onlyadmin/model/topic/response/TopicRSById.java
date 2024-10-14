@@ -1,6 +1,4 @@
 package com.kiloit.onlyadmin.model.topic.response;
-
-import com.kiloit.onlyadmin.database.entity.CategoryEntity;
 import lombok.Data;
 
 @Data

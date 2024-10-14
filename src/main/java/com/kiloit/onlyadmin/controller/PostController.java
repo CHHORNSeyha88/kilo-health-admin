@@ -1,7 +1,6 @@
 package com.kiloit.onlyadmin.controller;
 
 import com.kiloit.onlyadmin.base.BaseController;
-import com.kiloit.onlyadmin.base.BaseListingRQ;
 import com.kiloit.onlyadmin.base.StructureRS;
 import com.kiloit.onlyadmin.model.post.request.PostCreateRequest;
 import com.kiloit.onlyadmin.model.post.request.PostUpdateRequest;

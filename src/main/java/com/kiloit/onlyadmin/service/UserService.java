@@ -13,12 +13,10 @@ import com.kiloit.onlyadmin.exception.httpstatus.BadRequestException;
 import com.kiloit.onlyadmin.model.user.request.UserRQ;
 import com.kiloit.onlyadmin.model.user.request.UserUpdateRequest;
 import com.kiloit.onlyadmin.model.user.respone.UserDetailRS;
-import com.kiloit.onlyadmin.model.user.respone.UserListRS;
 import com.kiloit.onlyadmin.model.user.mapper.UserMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;

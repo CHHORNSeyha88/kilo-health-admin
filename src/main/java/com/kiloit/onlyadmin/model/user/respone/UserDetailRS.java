@@ -6,6 +6,7 @@ import com.kiloit.onlyadmin.model.role.response.RoleRS;
 
 @Data
 public class UserDetailRS {
+    private Long id;
     private String photo;
     private String firstname;
     private String lastname;
