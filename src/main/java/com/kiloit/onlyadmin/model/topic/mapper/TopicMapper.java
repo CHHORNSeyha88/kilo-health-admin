@@ -7,6 +7,7 @@ import com.kiloit.onlyadmin.model.topic.request.TopicRQ;
 import com.kiloit.onlyadmin.model.topic.response.CustomTopicCategory;
 import com.kiloit.onlyadmin.model.topic.response.CustomTopicUser;
 import com.kiloit.onlyadmin.model.topic.response.TopicRSById;
+import com.kiloit.onlyadmin.model.topic.response.TopictResponseList;
 import com.kiloit.onlyadmin.model.user.respone.UserDetailRS;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -19,5 +20,9 @@ public interface TopicMapper {
     TopicRSById to(TopicEntity topicEntity);
     CustomTopicCategory to(CategoryEntity categoryEntity);
     CustomTopicUser to(UserEntity userEntity);
+    
+    @Mapping(target = "categoryName",source = "category.name")
+    @Mapping(target = "userName" , source = "user.firstname")
+    TopictResponseList toResponse(TopicEntity topicEntity);
 
 }
