@@ -4,6 +4,7 @@ import com.kiloit.onlyadmin.base.BaseService;
 import com.kiloit.onlyadmin.base.StructureRS;
 import com.kiloit.onlyadmin.constant.MessageConstant;
 import com.kiloit.onlyadmin.database.entity.CategoryEntity;
+import com.kiloit.onlyadmin.database.entity.PostEntity;
 import com.kiloit.onlyadmin.database.entity.TopicEntity;
 import com.kiloit.onlyadmin.database.entity.UserEntity;
 import com.kiloit.onlyadmin.database.repository.CategoryRepository;
@@ -14,14 +15,20 @@ import com.kiloit.onlyadmin.model.topic.mapper.TopicMapper;
 import com.kiloit.onlyadmin.model.topic.request.TopicRQ;
 import com.kiloit.onlyadmin.model.topic.response.CustomTopicUser;
 import com.kiloit.onlyadmin.model.topic.response.TopicRSById;
+import com.kiloit.onlyadmin.util.FilterTopic;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
+
+import static com.kiloit.onlyadmin.database.specification.TopicSpecification.filter;
 
 @Service
 @RequiredArgsConstructor
@@ -51,7 +58,6 @@ public class TopicService extends BaseService {
         topic.setCategory(topicMapper.to(topicEntity.getCategory()));
         return response(topic);
     }
-
 
     public StructureRS getAllTopics() {
         List<TopicEntity> allTopics = topicRepository.findAll();
@@ -96,4 +102,11 @@ public class TopicService extends BaseService {
         topicRepository.save(topicEntity.get());
         return "topic has been deleted with id " + id;
     }
+    @Transactional(readOnly = true)
+    public StructureRS getTopidList(FilterTopic filterTopic){
+        Page<TopicEntity> topicList = topicRepository.findAll(filter(filterTopic.getQuery(),filterTopic.getUserId(),filterTopic.getCategoryId()),filterTopic.getPageable());
+        return response(topicList.stream().map(topicMapper::to),topicList);
+    }
+
+
 }
