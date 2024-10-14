@@ -4,6 +4,7 @@ import com.kiloit.onlyadmin.base.BaseController;
 import com.kiloit.onlyadmin.base.StructureRS;
 import com.kiloit.onlyadmin.model.topic.request.TopicRQ;
 import com.kiloit.onlyadmin.service.TopicService;
+import com.kiloit.onlyadmin.util.FilterTopic;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -44,8 +45,9 @@ public class TopicController extends BaseController {
     public ResponseEntity<StructureRS> DeleteNotNullTopicById(@PathVariable Long id){
        return response(topicService.deleteTopicByIdNotNull(id));
     }
-
-
-
+    @GetMapping("getList")
+    public ResponseEntity<StructureRS>getList(FilterTopic filterTopic){
+        return response(topicService.getTopidList(filterTopic));
+    }
 
 }
