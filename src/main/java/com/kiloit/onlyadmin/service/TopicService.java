@@ -41,7 +41,6 @@ public class TopicService extends BaseService {
 
     }
 
-
     public StructureRS getAllTopics() {
         List<TopicEntity> allTopics = topicRepository.findAll();
         List<TopicRSById> topicRSByIdList = allTopics.stream().map(topicMapper::to).toList();

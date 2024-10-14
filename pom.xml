@@ -139,7 +139,7 @@
                 <configuration>
                     <url>jdbc:mysql://localhost:3306/only_admin</url>
                     <user>root</user>
-                    <password>phary1709</password>
+                    <password>Panha@168</password>
                     <!-- disable in production -->
                     <cleanDisabled>false</cleanDisabled>
                     <baselineOnMigrate>true</baselineOnMigrate>

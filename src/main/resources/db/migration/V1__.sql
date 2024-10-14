@@ -1,49 +1,49 @@
 CREATE TABLE category
 (
     id          BIGINT AUTO_INCREMENT NOT NULL,
-    created_at  datetime NOT NULL,
-    modified_at datetime NULL,
-    deleted_at  datetime NULL,
     name        VARCHAR(255) NULL,
     media_id    BIGINT NULL,
     user_id     BIGINT NULL,
+    created_at  datetime NOT NULL,
+    modified_at datetime NULL,
+    deleted_at  datetime NULL,
     CONSTRAINT pk_category PRIMARY KEY (id)
 );
 
 CREATE TABLE file_medias
 (
     id          BIGINT AUTO_INCREMENT NOT NULL,
-    created_at  datetime     NOT NULL,
-    modified_at datetime NULL,
-    deleted_at  datetime NULL,
     file_name   VARCHAR(255) NOT NULL,
     file_type   VARCHAR(255) NOT NULL,
     file_path   VARCHAR(255) NOT NULL,
     file_size   BIGINT       NOT NULL,
+    created_at  datetime     NOT NULL,
+    modified_at datetime NULL,
+    deleted_at  datetime NULL,
     CONSTRAINT pk_file_medias PRIMARY KEY (id)
 );
 
 CREATE TABLE password_reset_tokens
 (
     id          BIGINT AUTO_INCREMENT NOT NULL,
-    created_at  datetime NOT NULL,
-    modified_at datetime NULL,
-    deleted_at  datetime NULL,
     token       VARCHAR(255) NULL,
     expiry_time time NULL,
     user_id     BIGINT NULL,
+    created_at  datetime NOT NULL,
+    modified_at datetime NULL,
+    deleted_at  datetime NULL,
     CONSTRAINT pk_password_reset_tokens PRIMARY KEY (id)
 );
 
 CREATE TABLE permission
 (
     id          BIGINT AUTO_INCREMENT NOT NULL,
-    created_at  datetime NOT NULL,
-    modified_at datetime NULL,
-    deleted_at  datetime NULL,
     code        VARCHAR(255) NULL,
     name        VARCHAR(255) NULL,
     module      VARCHAR(255) NULL,
+    created_at  datetime NOT NULL,
+    modified_at datetime NULL,
+    deleted_at  datetime NULL,
     CONSTRAINT pk_permission PRIMARY KEY (id)
 );
 
@@ -59,9 +59,6 @@ CREATE TABLE post_view
 CREATE TABLE posts
 (
     id            BIGINT AUTO_INCREMENT NOT NULL,
-    created_at    datetime NOT NULL,
-    modified_at   datetime NULL,
-    deleted_at    datetime NULL,
     title         VARCHAR(255) NULL,
     `description` VARCHAR(255) NULL,
     status        BIT(1) NULL,
@@ -70,18 +67,22 @@ CREATE TABLE posts
     user_id       BIGINT NULL,
     top_id        BIGINT NULL,
     category_id   BIGINT NULL,
+    created_at    datetime NOT NULL,
+    modified_at   datetime NULL,
+    deleted_at    datetime NULL,
+
     CONSTRAINT pk_posts PRIMARY KEY (id)
 );
 
 CREATE TABLE `role`
 (
     id          BIGINT AUTO_INCREMENT NOT NULL,
-    created_at  datetime NOT NULL,
-    modified_at datetime NULL,
-    deleted_at  datetime NULL,
     code        VARCHAR(255) NULL,
     name        VARCHAR(255) NULL,
     module      VARCHAR(255) NULL,
+    created_at  datetime NOT NULL,
+    modified_at datetime NULL,
+    deleted_at  datetime NULL,
     CONSTRAINT pk_role PRIMARY KEY (id)
 );
 
@@ -94,22 +95,19 @@ CREATE TABLE role_has_permission
 CREATE TABLE topics
 (
     id          BIGINT AUTO_INCREMENT NOT NULL,
-    created_at  datetime NOT NULL,
-    modified_at datetime NULL,
-    deleted_at  datetime NULL,
     name        VARCHAR(255) NULL,
     media_id    BIGINT NULL,
     user_id     BIGINT NULL,
     category_id BIGINT NULL,
+    created_at  datetime NOT NULL,
+    modified_at datetime NULL,
+    deleted_at  datetime NULL,
     CONSTRAINT pk_topics PRIMARY KEY (id)
 );
 
 CREATE TABLE user
 (
     id              BIGINT AUTO_INCREMENT NOT NULL,
-    created_at      datetime NOT NULL,
-    modified_at     datetime NULL,
-    deleted_at      datetime NULL,
     photo           VARCHAR(255) NULL,
     firstname       VARCHAR(255) NULL,
     lastname        VARCHAR(255) NULL,
@@ -122,18 +120,21 @@ CREATE TABLE user
     dob             datetime NULL,
     is_verification BIT(1) NULL,
     role_id         BIGINT NULL,
+    created_at      datetime NOT NULL,
+    modified_at     datetime NULL,
+    deleted_at      datetime NULL,
     CONSTRAINT pk_user PRIMARY KEY (id)
 );
 
 CREATE TABLE user_verifications
 (
     id            BIGINT AUTO_INCREMENT NOT NULL,
-    created_at    datetime NOT NULL,
-    modified_at   datetime NULL,
-    deleted_at    datetime NULL,
     verified_code VARCHAR(255) NULL,
     expiry_time   time NULL,
     user_id       BIGINT NULL,
+    created_at    datetime NOT NULL,
+    modified_at   datetime NULL,
+    deleted_at    datetime NULL,
     CONSTRAINT pk_user_verifications PRIMARY KEY (id)
 );
 
