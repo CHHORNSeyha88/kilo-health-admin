@@ -40,6 +40,12 @@ public class MessageConstant {
         public static final String CATEGORY_UNKNOWN_STATUS = "unknown status";
     }
 
+    public static class POST{
+        public static final String POST_HAS_BEEN_CREATED = "Post has been created";
+        public static final String POST_COULD_NOT_BE_FOUND = "Post could nt be found";
+        public static final String POST_HAS_BEEN_DELETED = "Post has been deleted";
+    }
+
     public static class PRODUCT{
         public static final String PRODUCT_HAS_BEEN_CREATED = "Product has been created";
         public static final String PRODUCT_HAS_BEEN_UPDATED = "Product has been updated";

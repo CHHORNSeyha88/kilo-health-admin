@@ -20,15 +20,15 @@ public class PostEntity extends BaseEntity {
     @Column(name = "public_at")
     private Instant publicAt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private UserEntity userEntity;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "top_id")
     private TopicEntity topicEntity;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "category_id")
     private CategoryEntity categoryEntity;
 
