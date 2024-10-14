@@ -1,5 +1,7 @@
 package com.kiloit.onlyadmin.database.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.kiloit.onlyadmin.base.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;

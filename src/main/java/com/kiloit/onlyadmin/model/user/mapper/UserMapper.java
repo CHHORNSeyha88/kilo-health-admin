@@ -14,8 +14,6 @@ import com.kiloit.onlyadmin.model.user.respone.UserListRS;
 
 @Mapper(componentModel="spring")
 public interface UserMapper {
-    
-    @Mapping(target = "dob",source = "dob")
     UserEntity fromUser(UserRQ request);
 
     @Mapping(target = "roleId",source = "role.id")

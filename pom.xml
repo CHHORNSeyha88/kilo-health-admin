@@ -141,6 +141,7 @@
                     <user>root</user>
                     <password>Panha@168</password>
                     <!-- disable in production -->
+                    <password></password>
                     <cleanDisabled>false</cleanDisabled>
                     <baselineOnMigrate>true</baselineOnMigrate>
                 </configuration>
