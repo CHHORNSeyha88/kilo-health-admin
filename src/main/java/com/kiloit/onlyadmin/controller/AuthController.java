@@ -44,7 +44,6 @@ public class AuthController extends BaseController {
     }
 
     @PostMapping("/send-verification")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<StructureRS> verification(@Valid @RequestBody SendVerificationRequest sendVerificationRequest) throws MessagingException{
         return response(authService.sendVerification(sendVerificationRequest.email()));
     }

@@ -10,5 +10,6 @@ import java.util.List;
 public interface PermissionMapper {
     
     PermissionRS formPermissionEntity(PermissionEntity permissionEntity);
+    
     List<PermissionRS> fromPermissionList(List<PermissionEntity> listPermissionEntity);
 }

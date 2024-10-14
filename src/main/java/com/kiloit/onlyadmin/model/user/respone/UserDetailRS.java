@@ -1,9 +1,8 @@
 package com.kiloit.onlyadmin.model.user.respone;
 
 import lombok.Data;
-
-import java.time.Instant;
 import java.util.Date;
+import com.kiloit.onlyadmin.model.role.response.RoleRS;
 
 @Data
 public class UserDetailRS {
@@ -14,9 +13,6 @@ public class UserDetailRS {
     private String phone;
     private String address;
     private String gender;
-    private Date DoB;
-    private Instant createdAt;
-    private Instant updatedAt;
-
-    private Long roleId;
+    private Date dob;
+    private RoleRS role;
 }

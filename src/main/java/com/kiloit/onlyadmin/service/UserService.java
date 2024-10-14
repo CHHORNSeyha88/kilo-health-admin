@@ -12,6 +12,7 @@ import com.kiloit.onlyadmin.database.specification.UserSpecification;
 import com.kiloit.onlyadmin.exception.httpstatus.BadRequestException;
 import com.kiloit.onlyadmin.model.user.request.UserRQ;
 import com.kiloit.onlyadmin.model.user.request.UserUpdateRequest;
+import com.kiloit.onlyadmin.model.user.respone.UserDetailRS;
 import com.kiloit.onlyadmin.model.user.respone.UserListRS;
 import com.kiloit.onlyadmin.model.user.mapper.UserMapper;
 import jakarta.transaction.Transactional;
@@ -102,7 +103,7 @@ public class UserService extends BaseService {
         return response(MessageConstant.ROLE.ROLE_DELETED_SUCCESSFULLY);
     }
 
-    public List<UserListRS> getAll(String query) {
+    public List<UserDetailRS> getAll(String query) {
         Specification<UserEntity> specification = UserSpecification.hasNotBeenDeleted().and(UserSpecification.dynamicQuery(query));
         List<UserEntity> userEntitys = userRepository.findAll(specification);
         return userEntitys.stream().map(userMapper::fromUserList).toList();

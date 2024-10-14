@@ -27,8 +27,6 @@ public class TopicService extends BaseService {
     private final TopicMapper topicMapper;
     private final UserRepository userRepository;
 
-
-
     public StructureRS createTopic (TopicRQ topicRQ){
         TopicEntity topicEntity = topicMapper.to(topicRQ);
         Optional<UserEntity> user = userRepository.findById(topicRQ.getUserId());

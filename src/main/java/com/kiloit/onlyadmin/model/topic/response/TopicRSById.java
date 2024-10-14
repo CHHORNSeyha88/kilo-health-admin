@@ -8,8 +8,8 @@ import lombok.Data;
 public class TopicRSById {
     private Integer id;
     private String name;
-    private CategoryEntity category;
+    // private CategoryEntity category;
     private String description;
     private boolean status;
-    private UserEntity userEntity;
+    private CustomTopicUser userEntity;
 }
