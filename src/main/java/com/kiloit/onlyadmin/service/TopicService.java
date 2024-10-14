@@ -3,15 +3,19 @@ package com.kiloit.onlyadmin.service;
 import com.kiloit.onlyadmin.base.BaseService;
 import com.kiloit.onlyadmin.base.StructureRS;
 import com.kiloit.onlyadmin.constant.MessageConstant;
+import com.kiloit.onlyadmin.database.entity.CategoryEntity;
 import com.kiloit.onlyadmin.database.entity.TopicEntity;
 import com.kiloit.onlyadmin.database.entity.UserEntity;
+import com.kiloit.onlyadmin.database.repository.CategoryRepository;
 import com.kiloit.onlyadmin.database.repository.TopicRepository;
 import com.kiloit.onlyadmin.database.repository.UserRepository;
 import com.kiloit.onlyadmin.exception.httpstatus.BadRequestException;
 import com.kiloit.onlyadmin.model.topic.mapper.TopicMapper;
 import com.kiloit.onlyadmin.model.topic.request.TopicRQ;
+import com.kiloit.onlyadmin.model.topic.response.CustomTopicUser;
 import com.kiloit.onlyadmin.model.topic.response.TopicRSById;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +25,9 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class TopicService extends BaseService {
+    private final CategoryRepository categoryRepository;
 
     private final TopicRepository topicRepository;
     private final TopicMapper topicMapper;
@@ -33,12 +39,18 @@ public class TopicService extends BaseService {
         if (user.isEmpty()) {
             throw new IllegalArgumentException("User ID not found.");
         }
+        Optional<CategoryEntity> categoryEntity = categoryRepository.findById(topicRQ.getCategoryId());
+        if(categoryEntity.isPresent()){
+            topicEntity.setCategory(categoryEntity.get());
+        }
         topicEntity.setUser(user.get());
         topicEntity = topicRepository.save(topicEntity);
-        return response(topicMapper.to(topicEntity));
 
+        TopicRSById topic = topicMapper.to(topicEntity);
+        topic.setUserEntity(topicMapper.to(topicEntity.getUser()));
+        topic.setCategory(topicMapper.to(topicEntity.getCategory()));
+        return response(topic);
     }
-
 
     public StructureRS getAllTopics() {
         List<TopicEntity> allTopics = topicRepository.findAll();

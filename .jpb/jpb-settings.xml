@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+<<<<<<< HEAD
+=======
+  <component name="DatabaseMigrationSettings" lastSelectedDirectory="src\main\resources\db\migration" />
+>>>>>>> 81395c95b83e117051d7271505b501300e31b619
+  <component name="PersistenceUnitSettings">
+    <persistence-units>
+      <persistence-unit moduleName="Only-Admin" name="Default">
+        <packages>
+          <package value="com.kiloit.onlyadmin" />
+        </packages>
+      </persistence-unit>
+    </persistence-units>
+  </component>
+</project>

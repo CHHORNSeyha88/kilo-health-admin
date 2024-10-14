@@ -5,6 +5,7 @@ import com.kiloit.onlyadmin.model.Category.request.CategoryRQ;
 import com.kiloit.onlyadmin.model.Category.request.CategoryRQ_Update;
 import com.kiloit.onlyadmin.model.Category.respone.CategoryRS;
 import com.kiloit.onlyadmin.model.Category.respone.CategoryRS_List;
+import com.kiloit.onlyadmin.model.user.respone.CategoryRS_user;
 import org.mapstruct.*;
 
 @Mapper(componentModel="spring")

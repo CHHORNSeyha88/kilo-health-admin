@@ -52,7 +52,7 @@ public class CategoryService extends BaseService {
     @Transactional(readOnly = true)
     public StructureRS getList(BaseListingRQ request){
         Page<CategoryEntity> listCategory = categoryRepository.findAll(filter(request.getQuery()), request.getPageable());
-        return response(listCategory.stream().map(categoryMapper::from),listCategory);
+        return response(listCategory.stream().map(categoryMapper::toResponse),listCategory);
 
     }
     @Transactional(readOnly = true)

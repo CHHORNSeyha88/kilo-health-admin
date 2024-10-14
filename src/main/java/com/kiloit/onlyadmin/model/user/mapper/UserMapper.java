@@ -13,8 +13,6 @@ import com.kiloit.onlyadmin.model.user.respone.UserDetailRS;
 
 @Mapper(componentModel="spring")
 public interface UserMapper {
-    
-    @Mapping(target = "dob",source = "dob")
     UserEntity fromUser(UserRQ request);
 
     UserDetailRS fromUserList(UserEntity entity);
