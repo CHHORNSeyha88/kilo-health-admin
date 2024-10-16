@@ -62,19 +62,10 @@ public class TopicService extends BaseService {
     public StructureRS getById(Long id) {
         Optional<TopicEntity> topicEntity = topicRepository.findById(id);
         if (topicEntity.isEmpty()) {
-            throw new IllegalArgumentException("Topic ID not found.");
+           throw new NotFoundException("Topic not found.");
         }
         TopicEntity topic = topicEntity.get();
         return response(topicMapper.to(topic));
-    }
-
-    public StructureRS DeleteById(Long id) {
-        Optional<TopicEntity> topicEntity = topicRepository.findById(id);
-        if (topicEntity.isEmpty()) {
-            throw new IllegalArgumentException("Topic ID not found.");
-        }
-        topicRepository.delete(topicEntity.get());
-        return response("DeleteById"+topicEntity.get());
     }
 
     public StructureRS updateTopicById(Long id, TopicRQ topicRQ) {
@@ -82,11 +73,8 @@ public class TopicService extends BaseService {
         if (topicEntity.isEmpty()) {
             throw new IllegalArgumentException("Topic ID not found.");
         }
-        TopicEntity OldEntity = topicEntity.get();
-        TopicEntity NewEntity = topicMapper.to(topicRQ);
-        BeanUtils.copyProperties(NewEntity,OldEntity, "id", "created_at", "updated_at","categoryId", "userId");
-        OldEntity = topicRepository.save(OldEntity);
-        return  response(topicMapper.to(OldEntity));
+        topicEntity.get().setName(topicRQ.getName());
+        return  response(topicMapper.to(topicRepository.save(topicEntity.get())));
     }
 
     public String deleteTopicByIdNotNull(Long id){

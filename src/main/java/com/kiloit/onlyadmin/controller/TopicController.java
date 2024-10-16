@@ -28,7 +28,7 @@ public class TopicController extends BaseController {
 
     @DeleteMapping("delete/{id}")
     public ResponseEntity<StructureRS> DeleteTopicById(@PathVariable Long id){
-        return response(topicService.DeleteById(id));
+        return response(topicService.deleteTopicByIdNotNull(id));
     }
 
     @PutMapping("update/{id}")
@@ -36,10 +36,6 @@ public class TopicController extends BaseController {
         return response(topicService.updateTopicById(id, topicRQ));
     }
 
-    @DeleteMapping("soft-delete/{id}")
-    public ResponseEntity<StructureRS> DeleteNotNullTopicById(@PathVariable Long id){
-       return response(topicService.deleteTopicByIdNotNull(id));
-    }
     @GetMapping()
     public ResponseEntity<StructureRS>getList(FilterTopic filterTopic){
         return response(topicService.getTopicList(filterTopic));
