@@ -14,6 +14,7 @@ public class PostEntity extends BaseEntity {
     private String title;
     private String description;
     private Boolean status;
+    private Integer time_read;
     @OneToOne
     @JoinColumn(name = "media_id")
     private FileMedia fileMedia;

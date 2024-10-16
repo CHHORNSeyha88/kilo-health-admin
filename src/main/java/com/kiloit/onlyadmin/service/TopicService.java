@@ -11,6 +11,7 @@ import com.kiloit.onlyadmin.database.repository.CategoryRepository;
 import com.kiloit.onlyadmin.database.repository.TopicRepository;
 import com.kiloit.onlyadmin.database.repository.UserRepository;
 import com.kiloit.onlyadmin.exception.httpstatus.BadRequestException;
+import com.kiloit.onlyadmin.exception.httpstatus.NotFoundException;
 import com.kiloit.onlyadmin.model.topic.mapper.TopicMapper;
 import com.kiloit.onlyadmin.model.topic.request.TopicRQ;
 import com.kiloit.onlyadmin.model.topic.response.TopicRSById;
@@ -22,6 +23,8 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -43,10 +46,11 @@ public class TopicService extends BaseService {
         if (user.isEmpty()) {
             throw new IllegalArgumentException("User ID not found.");
         }
-        Optional<CategoryEntity> categoryEntity = categoryRepository.findById(topicRQ.getCategoryId());
-        if(categoryEntity.isPresent()){
-            topicEntity.setCategory(categoryEntity.get());
+        Optional<CategoryEntity> categoryEntity = categoryRepository.findByID(topicRQ.getCategoryId());
+        if(categoryEntity.isEmpty()){
+            throw new NotFoundException(MessageConstant.CATEGORY.CATEGORY_COULD_NOT_BE_FOUND);
         }
+        topicEntity.setCategory(categoryEntity.get());
         topicEntity.setUser(user.get());
         topicEntity = topicRepository.save(topicEntity);
 
@@ -54,12 +58,6 @@ public class TopicService extends BaseService {
         topic.setUserEntity(topicMapper.to(topicEntity.getUser()));
         topic.setCategory(topicMapper.to(topicEntity.getCategory()));
         return response(topic);
-    }
-
-    public StructureRS getAllTopics() {
-        List<TopicEntity> allTopics = topicRepository.findAll();
-        List<TopicRSById> topicRSByIdList = allTopics.stream().map(topicMapper::to).toList();
-        return response(topicRSByIdList);
     }
     public StructureRS getById(Long id) {
         Optional<TopicEntity> topicEntity = topicRepository.findById(id);
@@ -100,7 +98,7 @@ public class TopicService extends BaseService {
         return "topic has been deleted with id " + id;
     }
     @Transactional(readOnly = true)
-    public StructureRS getTopidList(FilterTopic filterTopic){
+    public StructureRS getTopicList(FilterTopic filterTopic){
         Page<TopicEntity> topicList = topicRepository.findAll(filter(filterTopic.getQuery(),filterTopic.getUserId(),filterTopic.getCategoryId()),filterTopic.getPageable());
         return response(topicList.stream().map(topicMapper::to),topicList);
     }

@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.kiloit.onlyadmin.database.specification.PostSpecification.filter;
+import static com.kiloit.onlyadmin.util.CalculateWordAndTime.*;
 
 @Service
 @RequiredArgsConstructor
@@ -53,8 +54,11 @@ public class PostService extends BaseService {
         if (fileMedia.isEmpty()) {
             throw new NotFoundException("Media Id not found");
         }
-
-//        postEntityList.setCategoryEntity(topicEntity.get().getCategory());
+        if(request.getDescription() == null){
+            throw new NotFoundException("Description not found");
+        }
+        int timeRead = calculateReadingTime(request.getDescription());
+        postEntityList.setTime_read(timeRead);
         postEntityList.setStatus(request.isStatus());
         postEntityList.setPublicAt(request.getPublicAt());
         postEntityList.setUserEntity(userEntity.get());
