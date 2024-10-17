@@ -12,6 +12,7 @@ public class PostDetailResponse {
     private String title;
     private String description;
     private boolean status;
+    private Integer time_read;
     private Instant publicAt;
 
     private UserListResponse userListResponse;

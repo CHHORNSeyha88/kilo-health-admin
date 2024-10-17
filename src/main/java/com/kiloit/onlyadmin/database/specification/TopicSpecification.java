@@ -23,7 +23,7 @@ public class TopicSpecification {
             if(categoryId != null && categoryId != 0){
                 predicates.add(cb.equal(joinCategoryEntity.get("id"),categoryId));
             }
-            Join<TopicEntity, UserEntity> joinUserEntity = root.join(("userId"), JoinType.INNER);
+            Join<TopicEntity, UserEntity> joinUserEntity = root.join(("user"), JoinType.INNER);
             if(userId != null && userId != 0){
                 predicates.add(cb.equal(joinUserEntity.get("id"), userId));
             }

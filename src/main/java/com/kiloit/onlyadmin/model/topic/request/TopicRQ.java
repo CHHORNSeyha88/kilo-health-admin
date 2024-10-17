@@ -6,4 +6,5 @@ public class TopicRQ {
     private String name;
     private Long categoryId;
     private Long userId;
+    private Long fileMediaId;
 }

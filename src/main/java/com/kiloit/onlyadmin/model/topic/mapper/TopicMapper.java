@@ -4,10 +4,11 @@ import com.kiloit.onlyadmin.database.entity.CategoryEntity;
 import com.kiloit.onlyadmin.database.entity.TopicEntity;
 import com.kiloit.onlyadmin.database.entity.UserEntity;
 import com.kiloit.onlyadmin.model.topic.request.TopicRQ;
+import com.kiloit.onlyadmin.model.topic.request.TopicUpdateRQ;
 import com.kiloit.onlyadmin.model.topic.response.CustomTopicCategory;
 import com.kiloit.onlyadmin.model.topic.response.CustomTopicUser;
 import com.kiloit.onlyadmin.model.topic.response.TopicRSById;
-import com.kiloit.onlyadmin.model.topic.response.TopictResponseList;
+import com.kiloit.onlyadmin.model.topic.response.TopicResponseList;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
@@ -37,6 +38,6 @@ public interface TopicMapper {
     
     @Mapping(target = "categoryName",source = "category.name")
     @Mapping(target = "userName" , source = "user.firstname")
-    TopictResponseList toResponse(TopicEntity topicEntity);
+    TopicResponseList toResponse(TopicEntity topicEntity);
 
 }

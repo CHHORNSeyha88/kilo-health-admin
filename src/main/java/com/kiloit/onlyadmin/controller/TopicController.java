@@ -21,11 +21,6 @@ public class TopicController extends BaseController {
        return response(topicService.createTopic(topicRQ));
    }
 
-   @GetMapping
-    public ResponseEntity<StructureRS> listAllTopics(){
-       return response(topicService.getAllTopics());
-   }
-
    @GetMapping("/{id}")
    public ResponseEntity<StructureRS> getTopicById(@PathVariable Long id){
        return response(topicService.getById(id));
@@ -33,7 +28,7 @@ public class TopicController extends BaseController {
 
     @DeleteMapping("delete/{id}")
     public ResponseEntity<StructureRS> DeleteTopicById(@PathVariable Long id){
-        return response(topicService.DeleteById(id));
+        return response(topicService.deleteTopicByIdNotNull(id));
     }
 
     @PutMapping("update/{id}")
@@ -41,13 +36,9 @@ public class TopicController extends BaseController {
         return response(topicService.updateTopicById(id, topicRQ));
     }
 
-    @DeleteMapping("soft-delete/{id}")
-    public ResponseEntity<StructureRS> DeleteNotNullTopicById(@PathVariable Long id){
-       return response(topicService.deleteTopicByIdNotNull(id));
-    }
-    @GetMapping("getList")
+    @GetMapping()
     public ResponseEntity<StructureRS>getList(FilterTopic filterTopic){
-        return response(topicService.getTopidList(filterTopic));
+        return response(topicService.getTopicList(filterTopic));
     }
 
 }
