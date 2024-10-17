@@ -9,7 +9,6 @@ import org.mapstruct.*;
 
 @Mapper(componentModel="spring")
 public interface CategoryMapper{
-
     
     @Mappings({
         @Mapping(target = "createdAt",ignore = true),
