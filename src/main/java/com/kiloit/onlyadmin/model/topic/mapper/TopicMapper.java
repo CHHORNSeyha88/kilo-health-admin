@@ -4,6 +4,7 @@ import com.kiloit.onlyadmin.database.entity.CategoryEntity;
 import com.kiloit.onlyadmin.database.entity.TopicEntity;
 import com.kiloit.onlyadmin.database.entity.UserEntity;
 import com.kiloit.onlyadmin.model.topic.request.TopicRQ;
+import com.kiloit.onlyadmin.model.topic.request.TopicUpdateRQ;
 import com.kiloit.onlyadmin.model.topic.response.CustomTopicCategory;
 import com.kiloit.onlyadmin.model.topic.response.CustomTopicUser;
 import com.kiloit.onlyadmin.model.topic.response.TopicRSById;

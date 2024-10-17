@@ -10,9 +10,11 @@ import com.kiloit.onlyadmin.model.post.request.PostCreateRequest;
 import com.kiloit.onlyadmin.model.post.request.PostUpdateRequest;
 import com.kiloit.onlyadmin.model.post.response.PostDetailResponse;
 import com.kiloit.onlyadmin.util.FilterPost;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -58,8 +60,12 @@ public class PostService extends BaseService {
             throw new NotFoundException("Description not found");
         }
         int timeRead = calculateReadingTime(request.getDescription());
+        postEntityList.setStatus(false);
+        if (request.getPublicAt().equals(Instant.now()) || request.getPublicAt().isBefore(Instant.now())) {
+            postEntityList.setStatus(true);
+        }
+        postEntityList.setPublicAt(request.getPublicAt());
         postEntityList.setTime_read(timeRead);
-        postEntityList.setStatus(request.isStatus());
         postEntityList.setPublicAt(request.getPublicAt());
         postEntityList.setUserEntity(userEntity.get());
         postEntityList.setTopicEntity(topicEntity.get());
@@ -121,6 +127,17 @@ public class PostService extends BaseService {
         postEntity.get().setDeletedAt(Instant.now());
         postRepository.save(postEntity.get());
         return response(HttpStatus.ACCEPTED,MessageConstant.POST.POST_HAS_BEEN_DELETED);
+    }
+
+    @Scheduled(fixedRate = 6000)
+    @Transactional
+    public void updateStatus(){
+        Instant now = Instant.now();
+        List<PostEntity> postsToUpdate = postRepository.findPostsToPublish(now);
+        for (PostEntity post : postsToUpdate) {
+            post.setStatus(true);
+            postRepository.save(post);
+        }
     }
 
 }

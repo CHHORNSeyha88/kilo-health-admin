@@ -8,7 +8,6 @@ import java.time.Instant;
 public class PostCreateRequest {
     private String title;
     private String description;
-    private boolean status;
     private Instant publicAt;
 
     private Long mediaId;
