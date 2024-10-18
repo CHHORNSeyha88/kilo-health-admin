@@ -4,7 +4,6 @@ import com.kiloit.onlyadmin.database.entity.CategoryEntity;
 import com.kiloit.onlyadmin.database.entity.TopicEntity;
 import com.kiloit.onlyadmin.database.entity.UserEntity;
 import com.kiloit.onlyadmin.model.topic.request.TopicRQ;
-import com.kiloit.onlyadmin.model.topic.request.TopicUpdateRQ;
 import com.kiloit.onlyadmin.model.topic.response.CustomTopicCategory;
 import com.kiloit.onlyadmin.model.topic.response.CustomTopicUser;
 import com.kiloit.onlyadmin.model.topic.response.TopicRSById;
@@ -29,8 +28,8 @@ public interface TopicMapper {
     TopicEntity to(TopicRQ topicRQ);
 
     @Mapping(target = "userEntity", source = "user")
-//    @Mapping(target = "description",ignore = true)
-//    @Mapping(target = "status",ignore=true)
+    @Mapping(target = "description",ignore = true)
+    @Mapping(target = "status",ignore=true)
     TopicRSById to(TopicEntity topicEntity);
 
     CustomTopicCategory to(CategoryEntity categoryEntity);

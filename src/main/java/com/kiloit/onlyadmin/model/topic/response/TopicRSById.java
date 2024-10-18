@@ -7,4 +7,6 @@ public class TopicRSById {
     private String name;
     private CustomTopicCategory category;
     private CustomTopicUser userEntity;
+    private String description;
+    private Boolean status;
 }
