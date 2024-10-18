@@ -29,8 +29,8 @@ public interface TopicMapper {
     TopicEntity to(TopicRQ topicRQ);
 
     @Mapping(target = "userEntity", source = "user")
-    @Mapping(target = "description",ignore = true)
-    @Mapping(target = "status",ignore=true)
+//    @Mapping(target = "description",ignore = true)
+//    @Mapping(target = "status",ignore=true)
     TopicRSById to(TopicEntity topicEntity);
 
     CustomTopicCategory to(CategoryEntity categoryEntity);
