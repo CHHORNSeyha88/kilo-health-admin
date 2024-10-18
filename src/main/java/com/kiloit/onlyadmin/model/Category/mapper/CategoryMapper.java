@@ -1,25 +1,28 @@
 package com.kiloit.onlyadmin.model.Category.mapper;
 
 import com.kiloit.onlyadmin.database.entity.CategoryEntity;
+import com.kiloit.onlyadmin.database.entity.PostEntity;
+import com.kiloit.onlyadmin.database.entity.TopicEntity;
 import com.kiloit.onlyadmin.model.Category.request.CategoryRQ;
 import com.kiloit.onlyadmin.model.Category.request.CategoryRQ_Update;
 import com.kiloit.onlyadmin.model.Category.respone.CategoryRS;
 import com.kiloit.onlyadmin.model.Category.respone.CategoryRS_List;
+import com.kiloit.onlyadmin.model.post.response.PostListResponse;
+import com.kiloit.onlyadmin.model.topic.response.TopicResponseList;
 import org.mapstruct.*;
 
-@Mapper(componentModel="spring")
-public interface CategoryMapper{
+@Mapper(componentModel = "spring")
+public interface CategoryMapper {
 
-    
     @Mappings({
-        @Mapping(target = "createdAt",ignore = true),
-        @Mapping(target = "deletedAt",ignore = true),
-        @Mapping(target="id",ignore = true),
-        @Mapping(target = "user.id", source = "userId"),
-        @Mapping(target = "modifiedAt",ignore = true),
-        @Mapping(target = "fileMediaId",ignore = true),
-        @Mapping(target="postEntities",ignore = true),
-        @Mapping(target = "topicList",ignore = true)
+            @Mapping(target = "createdAt", ignore = true),
+            @Mapping(target = "deletedAt", ignore = true),
+            @Mapping(target = "id", ignore = true),
+            @Mapping(target = "user.id", source = "userId"),
+            @Mapping(target = "modifiedAt", ignore = true),
+            @Mapping(target = "fileMediaId", ignore = true),
+            @Mapping(target = "postEntities", ignore = true),
+            @Mapping(target = "topicList", ignore = true)
     })
     CategoryEntity toEntity(CategoryRQ request);
 
@@ -27,22 +30,31 @@ public interface CategoryMapper{
     @Mapping(target = "mediaId", source = "fileMediaId.id")
     CategoryRS_List toResponse(CategoryEntity categoryEntity);
 
-    @Mapping(target = "fileMedia",source = "fileMediaId")
+    @Mapping(target = "fileMedia", source = "fileMediaId")
     @Mapping(target = "user", source = "user")
-    @Mapping(target = "topicEntities",ignore = true)
+    @Mapping(target = "topicResponseLists", source = "topicList")
+    @Mapping(target = "postResponseLists", source = "postEntities")
     CategoryRS from(CategoryEntity entity);
+
+    @Mapping(target = "categoryName", source = "category.name")
+    @Mapping(target = "userName", source = "user.username")
+    TopicResponseList toTopicResponseList(TopicEntity topic);
+
+    @Mapping(target = "categoryName", source = "categoryEntity.name")
+    @Mapping(target = "userName", source = "userEntity.username")
+    @Mapping(target = "topicName", source = "topicEntity.name")
+    PostListResponse toPostListResponse(PostEntity post);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mappings({
-        @Mapping(target = "createdAt",ignore = true),
-        @Mapping(target = "deletedAt",ignore = true),
-        @Mapping(target="id",ignore = true),
-        @Mapping(target = "user", ignore=true),
-        @Mapping(target = "modifiedAt",ignore = true),
-        @Mapping(target = "fileMediaId",ignore = true),
-        @Mapping(target="postEntities",ignore = true),
-        @Mapping(target = "topicList",ignore = true)
+            @Mapping(target = "createdAt", ignore = true),
+            @Mapping(target = "deletedAt", ignore = true),
+            @Mapping(target = "id", ignore = true),
+            @Mapping(target = "user", ignore = true),
+            @Mapping(target = "modifiedAt", ignore = true),
+            @Mapping(target = "fileMediaId", ignore = true),
+            @Mapping(target = "postEntities", ignore = true),
+            @Mapping(target = "topicList", ignore = true)
     })
     void fromUpdate(CategoryRQ_Update categoryRQ, @MappingTarget CategoryEntity category);
-
 }
