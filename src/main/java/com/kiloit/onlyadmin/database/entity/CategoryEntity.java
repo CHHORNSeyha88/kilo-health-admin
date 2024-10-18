@@ -22,7 +22,6 @@ public class CategoryEntity extends BaseEntity {
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
-
     @OneToMany(mappedBy = "category",fetch = FetchType.EAGER,cascade = CascadeType.MERGE, orphanRemoval = true)
     private List<TopicEntity> topicList ;
 

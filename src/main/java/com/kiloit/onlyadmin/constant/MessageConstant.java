@@ -124,5 +124,9 @@ public class MessageConstant {
     public static class FILEMEDIA{
         public static final String FILE_MEDIA_NOT_FOUNT = "file media not fount";
     }
+    public static class TOPIC{
+        public static final String TOPIC_NOT_FOUND = "Topic not found";
+        public static final String TOPIC_HAS_BEEN_CREATE = "Topic has been create";
+    }
 
 }
