@@ -24,6 +24,9 @@ public class MessageConstant {
     }
 
     public static class CATEGORY {
+        public final static String NAME_IS_NULL = "Name is null";
+        public final static String USER_ID_IS_NULL = "UserID is null";
+        public final static String MEDIA_ID_IS_NULL = "MediaID is null";
         public static final String CATEGORY_HAS_BEEN_CREATED = "Category has been created";
         public static final String CATEGORY_HAS_BEEN_UPDATED = "Category has been updated";
         public static final String CATEGORY_COULD_NOT_BE_FOUND = "Category could not be found";

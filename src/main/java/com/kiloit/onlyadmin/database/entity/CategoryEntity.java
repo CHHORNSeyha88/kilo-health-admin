@@ -4,7 +4,6 @@ import com.kiloit.onlyadmin.base.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-
 import java.util.List;
 
 @Entity
@@ -21,7 +20,6 @@ public class CategoryEntity extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private UserEntity user;
-
 
     @OneToMany(mappedBy = "category",fetch = FetchType.EAGER,cascade = CascadeType.MERGE, orphanRemoval = true)
     private List<TopicEntity> topicList ;
