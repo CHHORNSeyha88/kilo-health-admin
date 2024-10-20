@@ -1,10 +1,10 @@
 package com.kiloit.onlyadmin.service;
 
+import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.kiloit.onlyadmin.base.BaseListingRQ;
 import com.kiloit.onlyadmin.base.BaseService;
 import com.kiloit.onlyadmin.base.StructureRS;
@@ -17,11 +17,15 @@ import com.kiloit.onlyadmin.exception.httpstatus.BadRequestException;
 import com.kiloit.onlyadmin.model.role.mapper.PermissionMapper;
 import com.kiloit.onlyadmin.model.role.mapper.RoleMapper;
 import com.kiloit.onlyadmin.model.role.request.RoleRQ;
+import com.kiloit.onlyadmin.model.role.request.RoleRequestUpdate;
+import com.kiloit.onlyadmin.model.role.request.SetPermissionItemRequest;
+import com.kiloit.onlyadmin.model.role.request.SetPermissionRequest;
 import com.kiloit.onlyadmin.model.role.response.PermissionRS;
 import com.kiloit.onlyadmin.model.role.response.RoleRS;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -42,7 +46,7 @@ public class RoleServices extends BaseService {
     // Method to get a role by id
     public StructureRS getRoleById(Long Id) {
 
-        List<Object[]> results = roleRepository.findByIdFetchPermission(Id);
+        List<Object[]> results = roleRepository.findByIdFetchPermissions(Id);
         if(results.isEmpty()){
             throw new BadRequestException(MessageConstant.ROLE.ROLE_NOT_FOUND);
         }
@@ -80,72 +84,69 @@ public class RoleServices extends BaseService {
         return response(HttpStatus.OK, MessageConstant.ROLE.ROLE_CREATED_SUCCESSFULLY,roleRepository.save(roleEntity));
     }
 
+    public StructureRS update(Long id,RoleRequestUpdate roleRequestUpdate) {
+        // Check if the tag exists
+        RoleEntity roleEntity = roleRepository
+                                .findById(id)
+                                .orElseThrow(() -> new BadRequestException(MessageConstant.ROLE.ROLE_NOT_FOUND));
+
+        // Update the tag entity
+        roleMapper.fromRoleRequestUpdate(roleRequestUpdate, roleEntity);
+        // Save the updated tag entity
+        roleRepository.save(roleEntity);
+
+        return response(HttpStatus.OK, MessageConstant.ROLE.ROLE_UPDATED_SUCCESSFULLY);
+    }
+
     // Method to delete a role 
     public StructureRS delete(Long Id) {
-        // Check exists
+        // Check if the tag exists
         RoleEntity roleEntity = roleRepository.findById(Id).orElseThrow(() ->
                 new BadRequestException(MessageConstant.ROLE.ROLE_NOT_FOUND));
-        // Delete  entity
+        // Delete the tag entity
         roleRepository.delete(roleEntity);
         return response(HttpStatus.OK, MessageConstant.ROLE.ROLE_DELETED_SUCCESSFULLY);
     }
 
-    // Method to assign a permission to a role
-    public StructureRS assignPermissionToRole(String roleName, String permissionName) {
-        RoleEntity role = roleRepository.findByName(roleName);
-        PermissionEntity permission = permissionRepository.findByName(permissionName);
-
-        // Validate existing permission
-        for(PermissionEntity permissionEntity:role.getPermissions()){
-            if(permissionEntity.getId()== permission.getId()){
-                return response("Permission has already been assign...");
-            }
-        }
-
-        if (role != null && permission != null) {
-            role.getPermissions().add(permission);
-            roleRepository.save(role);
-            return response("Permission has been assign successfully...");
-        }
-        throw new BadRequestException("Role or Permission has not been found");
-    }
-
-    // Method to remove a permission from a role
     @Transactional
-    public StructureRS removePermissionFromRole(String roleName, String permissionName) {
-
-        RoleEntity role = roleRepository.findByName(roleName);
-        PermissionEntity permission = permissionRepository.findByName(permissionName);
-
-        if (role != null && permission != null) {
-            role.getPermissions().remove(permission);
-            roleRepository.save(role);
-            return response("Permission has been remove successfully...");
-        }
-        throw new BadRequestException("Role or Permission has not been found");
+    public StructureRS setPermission(SetPermissionRequest setPermissionRequest) {
+    
+    // Fetch role entity with permissions
+    RoleEntity roleEntity = roleRepository.findByIdFetchPermission(setPermissionRequest.getRoleId());
+    if (roleEntity == null) {
+        return response(HttpStatus.NOT_FOUND, MessageConstant.ROLE.ROLE_NOT_FOUND);
     }
 
-    // Method to update a role's permissions (override existing ones)
-    public StructureRS updatePermissionsForRole(String roleName, List<String> permissionNames) {
-        RoleEntity role = roleRepository.findByName(roleName);
+    // Extract permission IDs from the request
+    Set<Long> requestedPermissionIds = setPermissionRequest.getItems().stream()
+            .map(SetPermissionItemRequest::getId)
+            .collect(Collectors.toSet());
 
-        if (role != null) {
-            // Clear existing permissions
-            role.getPermissions().clear();
-
-            // Add new permissions
-            for (String permissionName : permissionNames) {
-                PermissionEntity permission = permissionRepository.findByName(permissionName);
-                if (permission != null) {
-                    role.getPermissions().add(permission);
-                }
-            }
-
-            roleRepository.save(role);
-
-            return response("Permission has been update successfully...");
-        }
-        throw new BadRequestException(MessageConstant.ROLE.ROLE_NOT_FOUND);
+    // Fetch permission entities based on request IDs
+    Set<PermissionEntity> requestedPermissions = permissionRepository.findAllByIdIn(requestedPermissionIds);
+    if (requestedPermissions.isEmpty()) {
+        return response(HttpStatus.BAD_REQUEST, "Permission has not been found");
     }
+
+    // Separate permissions to remove based on status
+    Set<Long> removeIds = setPermissionRequest.getItems().stream()
+            .filter(item -> !item.getStatus()) // Filter items with status false
+            .map(SetPermissionItemRequest::getId)
+            .collect(Collectors.toSet());
+
+    Set<PermissionEntity> toRemove = requestedPermissions.stream()
+            .filter(permission -> removeIds.contains(permission.getId()))
+            .collect(Collectors.toSet());
+
+    // Update the role's permission se
+    roleEntity.getPermissions().addAll(requestedPermissions); // Add all requested permissions
+    roleEntity.getPermissions().removeAll(toRemove); // Remove unwanted permissions
+
+    // Save the updated role entity
+    roleRepository.save(roleEntity);
+
+    return response(HttpStatus.OK, MessageConstant.ROLE.ROLE_UPDATED_SUCCESSFULLY);
+}
+
 
 }

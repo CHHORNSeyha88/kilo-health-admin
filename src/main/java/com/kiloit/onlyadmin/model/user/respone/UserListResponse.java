@@ -1,8 +1,7 @@
 package com.kiloit.onlyadmin.model.user.respone;
 
 import lombok.Data;
-
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
 public class UserListResponse {
@@ -10,6 +9,6 @@ public class UserListResponse {
     private String firstname;
     private String lastname;
     private String gender;
-    private Date dob;
+    private LocalDate dob;
     private String photo;
 }

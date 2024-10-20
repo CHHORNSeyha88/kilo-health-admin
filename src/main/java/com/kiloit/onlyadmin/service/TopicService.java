@@ -4,7 +4,6 @@ import com.kiloit.onlyadmin.base.BaseService;
 import com.kiloit.onlyadmin.base.StructureRS;
 import com.kiloit.onlyadmin.constant.MessageConstant;
 import com.kiloit.onlyadmin.database.entity.CategoryEntity;
-import com.kiloit.onlyadmin.database.entity.PostEntity;
 import com.kiloit.onlyadmin.database.entity.TopicEntity;
 import com.kiloit.onlyadmin.database.entity.UserEntity;
 import com.kiloit.onlyadmin.database.repository.CategoryRepository;
@@ -19,7 +18,6 @@ import com.kiloit.onlyadmin.util.FilterTopic;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
-import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -81,7 +79,7 @@ public class TopicService extends BaseService {
         Optional<TopicEntity> topicEntity = topicRepository.findByIdAndDeletedAtNull(id);
         if (topicEntity.isEmpty())
             throw new BadRequestException(MessageConstant.USER.USER_NOT_FOUND);
-        topicEntity.get().setDeletedAt(Instant.now());
+        // topicEntity.get().setDeletedAt();
         topicRepository.save(topicEntity.get());
         return "topic has been deleted with id " + id;
     }

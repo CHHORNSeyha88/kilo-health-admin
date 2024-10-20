@@ -1,8 +1,10 @@
 package com.kiloit.onlyadmin.model.user.request.auth;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import java.time.LocalDate;
 
 public record RegisterRequest(
     @NotBlank(message = "Phone Number is required")
@@ -19,7 +21,9 @@ public record RegisterRequest(
     @NotBlank(message = "Name is required")
     String username,
     @NotBlank(message = "Gender is required")
-    String gender
+    String gender,
+    @NotNull
+    LocalDate dob
     ){
 
     }

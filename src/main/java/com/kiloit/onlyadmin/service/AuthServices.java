@@ -96,7 +96,7 @@ public class AuthServices extends BaseService{
         // Validate role's user
         if(role.isEmpty()) throw new BadRequestException(MessageConstant.ROLE.ROLE_NOT_FOUND);
 
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setPassword(passwordEncoder.encode(registerRequest.password()));
         user.setRole(role.get());
         user.setCreatedAt(Instant.now());
         user.setModifiedAt(Instant.now());
@@ -105,7 +105,7 @@ public class AuthServices extends BaseService{
 
         return response(RegisterResponse.builder()
         .message("You register has been successfully")
-        .email(user.getEmail()).build());
+        .email(registerRequest.email()).build());
     }
 
     public StructureRS sendVerification(String email) throws MessagingException{

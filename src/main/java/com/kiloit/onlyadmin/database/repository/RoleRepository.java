@@ -17,7 +17,10 @@ public interface RoleRepository extends JpaRepository<RoleEntity, Long> {
     RoleEntity findByUsers(UserEntity userEntity);
 
     @Query("select r.id,r.code,r.name,r.module,p.id from RoleEntity r join r.permissions as p where r.id = :id")
-    List<Object[]> findByIdFetchPermission(@Param("id") Long id);
+    List<Object[]> findByIdFetchPermissions(@Param("id") Long id);
+
+    @Query("select r from RoleEntity r join r.permissions as p where r.id = :id")
+    RoleEntity findByIdFetchPermission(@Param("id") Long id);
 
     @Query("select r from RoleEntity r where (:name='all' or r.name like concat('%', :name, '%')) order by r.id")
     Page<RoleEntity> findByNameContainsOrderByNameAsc(@Param("name") String name, Pageable pageable);

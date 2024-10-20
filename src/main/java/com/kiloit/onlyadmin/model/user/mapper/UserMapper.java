@@ -6,14 +6,13 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.Mappings;
 import org.mapstruct.NullValuePropertyMappingStrategy;
-
 import com.kiloit.onlyadmin.database.entity.PermissionEntity;
 import com.kiloit.onlyadmin.database.entity.UserEntity;
 import com.kiloit.onlyadmin.model.role.response.PermissionRS;
 import com.kiloit.onlyadmin.model.user.request.UserRQ;
 import com.kiloit.onlyadmin.model.user.request.UserUpdateRequest;
 import com.kiloit.onlyadmin.model.user.request.auth.RegisterRequest;
-import com.kiloit.onlyadmin.model.user.respone.UserDetailRS;
+import com.kiloit.onlyadmin.model.user.respone.UserListRS;
 
 @Mapper(componentModel="spring")
 public interface UserMapper {
@@ -32,7 +31,10 @@ public interface UserMapper {
 
     @Mapping(target = "status",ignore = true)
     PermissionRS from(PermissionEntity permissionEntity);
-    UserDetailRS fromUserList(UserEntity entity);
+
+    @Mapping(target = "roleId",source = "role.id")
+    @Mapping(target = "roleName",source = "role.name")
+    UserListRS fromUserList(UserEntity entity);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mappings({
@@ -44,7 +46,6 @@ public interface UserMapper {
         @Mapping(target="topics",ignore = true),
         @Mapping(target = "postEntities",ignore = true),
         @Mapping(target="postViews",ignore=true),
-        @Mapping(target="role",ignore=true),
         @Mapping(target = "email",ignore = true),
         @Mapping(target="password",ignore=true),
         @Mapping(target="username",ignore=true),
@@ -63,10 +64,6 @@ public interface UserMapper {
         @Mapping(target = "postEntities",ignore = true),
         @Mapping(target="postViews",ignore=true),
         @Mapping(target="role",ignore=true),
-        @Mapping(target = "email",ignore = true),
-        @Mapping(target="password",ignore=true),
-        @Mapping(target="username",ignore=true),
-        @Mapping(target="dob",ignore=true),
         @Mapping(target="firstname",ignore=true),
         @Mapping(target = "lastname",ignore = true),
         @Mapping(target="address",ignore=true),

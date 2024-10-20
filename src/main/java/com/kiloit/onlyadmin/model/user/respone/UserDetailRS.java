@@ -1,7 +1,7 @@
 package com.kiloit.onlyadmin.model.user.respone;
 
-import lombok.Data;
-import java.util.Date;
+import lombok.Data; 
+import java.time.LocalDate;
 import com.kiloit.onlyadmin.model.role.response.RoleRS;
 
 @Data
@@ -14,6 +14,6 @@ public class UserDetailRS {
     private String phone;
     private String address;
     private String gender;
-    private Date dob;
+    private LocalDate dob;
     private RoleRS role;
 }

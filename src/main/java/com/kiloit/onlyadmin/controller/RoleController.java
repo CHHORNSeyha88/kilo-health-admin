@@ -4,6 +4,8 @@ import com.kiloit.onlyadmin.base.BaseController;
 import com.kiloit.onlyadmin.base.BaseListingRQ;
 import com.kiloit.onlyadmin.base.StructureRS;
 import com.kiloit.onlyadmin.model.role.request.RoleRQ;
+import com.kiloit.onlyadmin.model.role.request.RoleRequestUpdate;
+import com.kiloit.onlyadmin.model.role.request.SetPermissionRequest;
 import com.kiloit.onlyadmin.service.RoleServices;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -15,9 +17,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import java.util.List;
+
 
 @RestController
 @RequestMapping("api/v1/roles")
@@ -41,23 +42,18 @@ public class RoleController extends BaseController {
         return response(roleServices.getAll(baseListingRQ));
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<StructureRS> updateRole(Long id,@RequestBody RoleRequestUpdate roleRequestUpdate){
+        return response(roleServices.update(id,roleRequestUpdate));
+    }
+
     @DeleteMapping("/{id}/soft-delete")
     public ResponseEntity<StructureRS> delete(@PathVariable("id") String id){
         return response(roleServices.delete(Long.parseLong(id)));
     }
 
-    @PostMapping("/assignPermission")
-    public ResponseEntity<StructureRS> assignPermissionToRole(@RequestParam String roleName, @RequestParam String permissionName) {
-        return response(roleServices.assignPermissionToRole(roleName, permissionName));
-    }
-
-    @DeleteMapping("/removePermission")
-    public ResponseEntity<StructureRS> removePermissionFromRole(@RequestParam String roleName, @RequestParam String permissionName){
-        return response(roleServices.removePermissionFromRole(roleName,permissionName));
-    }
-
-    @PutMapping("/updatePermission")
-    public ResponseEntity<StructureRS> updatePermissionFromRole(@RequestParam String roleName, @RequestBody List<String> permissionNames){
-        return response(roleServices.updatePermissionsForRole(roleName,permissionNames));
+    @PutMapping("/assignPermission")
+    public ResponseEntity<StructureRS> assignPermission(@RequestBody SetPermissionRequest setPermissionRequest) {
+        return response(roleServices.setPermission(setPermissionRequest));
     }
 }

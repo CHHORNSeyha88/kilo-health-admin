@@ -60,7 +60,7 @@ CREATE TABLE posts
 (
     id            BIGINT AUTO_INCREMENT NOT NULL,
     title         VARCHAR(255)          NULL,
-    `description` VARCHAR(255)          NULL,
+    description   VARCHAR(255)          NULL,
     status        BIT(1)                NULL,
     time_read     INT                   NULL,
     media_id      BIGINT                NULL,
