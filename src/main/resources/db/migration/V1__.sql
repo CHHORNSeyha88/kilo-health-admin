@@ -15,7 +15,7 @@ CREATE TABLE file_medias
     id          BIGINT AUTO_INCREMENT NOT NULL,
     file_name   VARCHAR(255)          NOT NULL,
     file_type   VARCHAR(255)          NOT NULL,
-    file_path   VARCHAR(255)          NOT NULL,
+    file_url   VARCHAR(255)          NOT NULL,
     file_size   BIGINT                NOT NULL,
     created_at  datetime              NOT NULL,
     modified_at datetime              NULL,

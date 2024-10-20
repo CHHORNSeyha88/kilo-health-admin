@@ -1,12 +1,12 @@
-package com.kiloit.onlyadmin.model.Category.mapper;
+package com.kiloit.onlyadmin.model.category.mapper;
 
 import com.kiloit.onlyadmin.database.entity.CategoryEntity;
 import com.kiloit.onlyadmin.database.entity.PostEntity;
 import com.kiloit.onlyadmin.database.entity.TopicEntity;
-import com.kiloit.onlyadmin.model.Category.request.CategoryRQ;
-import com.kiloit.onlyadmin.model.Category.request.CategoryRQ_Update;
-import com.kiloit.onlyadmin.model.Category.respone.CategoryRS;
-import com.kiloit.onlyadmin.model.Category.respone.CategoryRS_List;
+import com.kiloit.onlyadmin.model.category.request.CategoryRQ;
+import com.kiloit.onlyadmin.model.category.request.CategoryRQ_Update;
+import com.kiloit.onlyadmin.model.category.respone.CategoryRS;
+import com.kiloit.onlyadmin.model.category.respone.CategoryRS_List;
 import com.kiloit.onlyadmin.model.post.response.PostListResponse;
 import com.kiloit.onlyadmin.model.topic.response.TopicResponseList;
 import org.mapstruct.*;

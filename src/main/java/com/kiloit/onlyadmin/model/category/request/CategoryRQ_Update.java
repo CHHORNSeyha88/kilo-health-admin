@@ -1,4 +1,4 @@
-package com.kiloit.onlyadmin.model.Category.request;
+package com.kiloit.onlyadmin.model.category.request;
 
 import com.kiloit.onlyadmin.constant.MessageConstant;
 import jakarta.validation.constraints.NotNull;

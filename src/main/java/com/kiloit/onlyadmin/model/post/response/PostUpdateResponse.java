@@ -7,6 +7,5 @@ import lombok.Data;
 public class PostUpdateResponse {
     private String title;
     private String description;
-
     private FileMedia fileMedia;
 }

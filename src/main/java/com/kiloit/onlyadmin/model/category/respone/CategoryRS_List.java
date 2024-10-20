@@ -1,4 +1,4 @@
-package com.kiloit.onlyadmin.model.Category.respone;
+package com.kiloit.onlyadmin.model.category.respone;
 
 import lombok.Data;
 

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Setter
@@ -18,8 +19,9 @@ public class PostEntity extends BaseEntity {
     @OneToOne
     @JoinColumn(name = "media_id")
     private FileMedia fileMedia;
+
     @Column(name = "public_at")
-    private Instant publicAt;
+    private LocalDateTime publicAt;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

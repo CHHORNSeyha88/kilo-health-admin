@@ -11,9 +11,9 @@ import com.kiloit.onlyadmin.database.repository.CategoryRepository;
 import com.kiloit.onlyadmin.database.repository.FileMediaRepository;
 import com.kiloit.onlyadmin.database.repository.UserRepository;
 import com.kiloit.onlyadmin.exception.httpstatus.NotFoundException;
-import com.kiloit.onlyadmin.model.Category.mapper.CategoryMapper;
-import com.kiloit.onlyadmin.model.Category.request.CategoryRQ;
-import com.kiloit.onlyadmin.model.Category.request.CategoryRQ_Update;
+import com.kiloit.onlyadmin.model.category.mapper.CategoryMapper;
+import com.kiloit.onlyadmin.model.category.request.CategoryRQ;
+import com.kiloit.onlyadmin.model.category.request.CategoryRQ_Update;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -64,7 +64,7 @@ public class CategoryService extends BaseService {
 
     @Transactional
     public StructureRS updateById(Long id, CategoryRQ_Update request){
-        Optional<CategoryEntity> categoryEntity = categoryRepository.findById(id);
+        Optional<CategoryEntity> categoryEntity = categoryRepository.findByID(id);
         if(categoryEntity.isEmpty()){
             throw new NotFoundException(MessageConstant.CATEGORY.CATEGORY_COULD_NOT_BE_FOUND);
         }

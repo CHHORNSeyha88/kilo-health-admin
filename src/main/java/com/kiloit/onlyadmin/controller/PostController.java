@@ -6,6 +6,7 @@ import com.kiloit.onlyadmin.model.post.request.PostCreateRequest;
 import com.kiloit.onlyadmin.model.post.request.PostUpdateRequest;
 import com.kiloit.onlyadmin.service.PostService;
 import com.kiloit.onlyadmin.util.FilterPost;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,23 +17,28 @@ import org.springframework.web.bind.annotation.*;
 public class PostController extends BaseController {
     private final PostService postService;
     @PostMapping
-    public ResponseEntity<StructureRS> createPost(@RequestBody PostCreateRequest request){
+    public ResponseEntity<StructureRS> createPost(@Valid @RequestBody PostCreateRequest request){
         StructureRS post = postService.createPost(request);
         return response(post);
     }
 
-    @GetMapping("{id}/getDetail")
+    @GetMapping("{id}/view")
     public ResponseEntity<StructureRS> getDetailById(@PathVariable Long id,@RequestParam Long userId){
-        return response(postService.getPostDetail(id,userId));
+        return response(postService.getView(id,userId));
     }
 
-    @PutMapping("{id}/updatePost")
-    public ResponseEntity<StructureRS> PostUpdate(@PathVariable Long id,@RequestBody PostUpdateRequest request){
+    @PutMapping("{id}/update")
+    public ResponseEntity<StructureRS> PostUpdate(@Valid @PathVariable Long id,@RequestBody PostUpdateRequest request){
         return response(postService.PostUpdate(id,request));
     }
     @GetMapping
     public ResponseEntity<StructureRS> getPostList(FilterPost filterPost){
         return response(postService.getList(filterPost));
+    }
+
+    @GetMapping("{id}/detail")
+    public ResponseEntity<StructureRS> getDetailById(@PathVariable Long id){
+        return response(postService.getDetail(id));
     }
 
     @DeleteMapping("{id}/deletedPost")
