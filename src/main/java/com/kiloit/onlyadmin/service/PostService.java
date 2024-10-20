@@ -10,15 +10,15 @@ import com.kiloit.onlyadmin.model.post.request.PostCreateRequest;
 import com.kiloit.onlyadmin.model.post.request.PostUpdateRequest;
 import com.kiloit.onlyadmin.model.post.response.PostDetailResponse;
 import com.kiloit.onlyadmin.util.FilterPost;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,34 +39,26 @@ public class PostService extends BaseService {
     @Transactional
     public StructureRS createPost(PostCreateRequest request) {
         PostEntity postEntityList = postMapper.toEntity(request);
-
         Optional<UserEntity> userEntity = userRepository.findById(request.getUser_id());
         if (userEntity.isEmpty()) {
-            throw new NotFoundException("User ID not found");
+            throw new NotFoundException(MessageConstant.USER.USER_NOT_FOUND);
         }
         Optional<TopicEntity> topicEntity = topicRepository.findById(request.getTopic_id());
         if (topicEntity.isEmpty()) {
-            throw new NotFoundException("Topic ID not found.");
+            throw new NotFoundException(MessageConstant.TOPIC.TOPIC_NOT_FOUND);
         }
         Optional<CategoryEntity> categoryEntity = categoryRepository.findById(topicEntity.get().getCategory().getId());
         if (categoryEntity.isEmpty()) {
-            throw new NotFoundException("Category Id not found");
+            throw new NotFoundException(MessageConstant.CATEGORY.CATEGORY_COULD_NOT_BE_FOUND);
         }
         Optional<FileMedia> fileMedia = fileMediaRepository.findById(request.getMediaId());
         if (fileMedia.isEmpty()) {
-            throw new NotFoundException("Media Id not found");
-        }
-        if(request.getDescription() == null){
-            throw new NotFoundException("Description not found");
+            throw new NotFoundException(MessageConstant.FILEMEDIA.FILE_MEDIA_NOT_FOUNT);
         }
         int timeRead = calculateReadingTime(request.getDescription());
-        postEntityList.setStatus(false);
-        if (request.getPublicAt().equals(Instant.now()) || request.getPublicAt().isBefore(Instant.now())) {
-            postEntityList.setStatus(true);
-        }
+        postEntityList.setStatus(request.getStatus());
         postEntityList.setPublicAt(request.getPublicAt());
         postEntityList.setTime_read(timeRead);
-        postEntityList.setPublicAt(request.getPublicAt());
         postEntityList.setUserEntity(userEntity.get());
         postEntityList.setTopicEntity(topicEntity.get());
         postEntityList.setCategoryEntity(categoryEntity.get());
@@ -78,28 +70,28 @@ public class PostService extends BaseService {
     public StructureRS PostUpdate(Long id, PostUpdateRequest request) {
         Optional<PostEntity> postEntity = postRepository.findById(id);
         if (postEntity.isEmpty()) {
-            throw new NotFoundException("Post Id not found");
+            throw new NotFoundException(MessageConstant.POST.POST_ID_NOT_FOUND);
         }
         Optional<FileMedia> fileMedia = fileMediaRepository.findById(request.getMediaId());
         if(fileMedia.isEmpty()){
-            throw new NotFoundException(MessageConstant.CATEGORY.CATEGORY_COULD_NOT_BE_FOUND);
+            throw new NotFoundException(MessageConstant.FILEMEDIA.FILE_MEDIA_NOT_FOUNT);
         }
+        postEntity.get().setStatus(request.getStatus());
         postEntity.get().setTitle(request.getTitle());
         postEntity.get().setDescription(request.getDescription());
         postEntity.get().setFileMedia(fileMedia.get());
-        PostUpdateRequest updateResponse = postMapper.toUpdateResponse(postRepository.save(postEntity.get()));
-        return response(updateResponse);
+        return response(postMapper.toResponse(postRepository.save(postEntity.get())));
     }
 
     @Transactional
-    public StructureRS getPostDetail(Long id, Long userId) {
+    public StructureRS getView(Long id, Long userId) {
         Optional<PostEntity> postEntities = postRepository.findPostById(id);
         if (postEntities.isEmpty()) {
-            throw new NotFoundException("Post Id not found");
+            throw new NotFoundException(MessageConstant.POST.POST_ID_NOT_FOUND);
         }
         Optional<UserEntity> userEntity = userRepository.findById(userId);
         if (userEntity.isEmpty()) {
-            throw new NotFoundException("User Id not found");
+            throw new NotFoundException(MessageConstant.USER.USER_NOT_FOUND);
         }
         PostViewEntity postViewEntity = new PostViewEntity();
         postViewEntity.setPost(postEntities.get());
@@ -109,9 +101,17 @@ public class PostService extends BaseService {
         if (checkView.isEmpty()) {
             postViewRepository.save(postViewEntity);
         }
-        List<PostDetailResponse> postDetailResponses = postEntities.stream().map(postMapper::toResponse).toList();
-        return response(postDetailResponses);
+        return response(postMapper.toResponse(postEntities.get()));
     }
+    @Transactional(readOnly = true)
+    public StructureRS getDetail(Long id){
+        Optional<PostEntity> postEntities = postRepository.findByIdAndDeletedAtNull(id);
+        if (postEntities.isEmpty()) {
+            throw new NotFoundException(MessageConstant.POST.POST_COULD_NOT_BE_FOUND);
+        }
+        return response(postMapper.toResponse(postEntities.get()));
+    }
+
     @Transactional(readOnly = true)
     public StructureRS getList(FilterPost filterPost){
         Page<PostEntity> postList = postRepository.findAll(filter(filterPost.getQuery(),filterPost.getStatus(),filterPost.getUserId(),filterPost.getCategoryId(),filterPost.getTopicId()), filterPost.getPageable());
@@ -127,17 +127,6 @@ public class PostService extends BaseService {
         postEntity.get().setDeletedAt(Instant.now());
         postRepository.save(postEntity.get());
         return response(HttpStatus.ACCEPTED,MessageConstant.POST.POST_HAS_BEEN_DELETED);
-    }
-
-    @Scheduled(fixedRate = 6000)
-    @Transactional
-    public void updateStatus(){
-        Instant now = Instant.now();
-        List<PostEntity> postsToUpdate = postRepository.findPostsToPublish(now);
-        for (PostEntity post : postsToUpdate) {
-            post.setStatus(true);
-            postRepository.save(post);
-        }
     }
 
 }

@@ -10,13 +10,12 @@ import lombok.Setter;
 @Setter
 @Getter
 public class FileMedia extends BaseEntity {
-
     @Column(nullable = false)
     private String fileName;
     @Column(nullable = false)
     private String fileType;
     @Column(nullable = false)
-    private String filePath;
+    private String fileUrl;
     @Column(nullable = false)
     private Long fileSize;
 

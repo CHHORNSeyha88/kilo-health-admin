@@ -28,8 +28,11 @@ public interface TopicMapper {
     TopicEntity to(TopicRQ topicRQ);
 
     @Mapping(target = "userEntity", source = "user")
-    @Mapping(target = "description",ignore = true)
-    @Mapping(target = "status",ignore=true)
+    @Mapping(target = "category",source = "category")
+    @Mapping(target = "fileMedia",source = "fileMediaId")
+    @Mapping(target = "userEntity.id", source = "user.id")
+    @Mapping(target = "userEntity.firstname",source = "user.firstname")
+    @Mapping(target = "userEntity.lastname",source = "user.lastname")
     TopicRSById to(TopicEntity topicEntity);
 
     CustomTopicCategory to(CategoryEntity categoryEntity);

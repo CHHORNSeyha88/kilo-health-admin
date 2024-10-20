@@ -2,7 +2,7 @@ package com.kiloit.onlyadmin.model.post.mapper;
 
 import com.kiloit.onlyadmin.database.entity.CategoryEntity;
 import com.kiloit.onlyadmin.database.entity.PostEntity;
-import com.kiloit.onlyadmin.model.Category.respone.CategoryRS_List;
+import com.kiloit.onlyadmin.model.category.respone.CategoryRS_List;
 import com.kiloit.onlyadmin.model.post.request.PostCreateRequest;
 import com.kiloit.onlyadmin.model.post.request.PostUpdateRequest;
 import com.kiloit.onlyadmin.model.post.response.PostDetailResponse;
@@ -33,7 +33,6 @@ public interface PostMapper {
         @Mapping(target = "userListResponse",source = "userEntity"),
         @Mapping(target = "topicRSById", source = "topicEntity"),
         @Mapping(target = "categoryRS",source = "categoryEntity"),
-        @Mapping(target="topicRSById.status",ignore=true)
     })
     PostDetailResponse toResponse(PostEntity postEntity);
 
