@@ -22,12 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.time.Instant;
-import java.util.List;
 import java.util.Optional;
-
 import static com.kiloit.onlyadmin.database.specification.TopicSpecification.filter;
 
 @Service
@@ -40,7 +35,7 @@ public class TopicService extends BaseService {
     private final TopicMapper topicMapper;
     private final UserRepository userRepository;
 
-    @Transactional
+    @Transactional(readOnly = false)
     public StructureRS createTopic (TopicRQ topicRQ){
         TopicEntity topicEntity = topicMapper.to(topicRQ);
         Optional<UserEntity> user = userRepository.findByIdAndDeletedAtNull(topicRQ.getUserId());
@@ -71,7 +66,7 @@ public class TopicService extends BaseService {
         return response(topicMapper.to(topicEntity.get()));
     }
 
-    @Transactional
+    @Transactional(readOnly = false)
     public StructureRS updateTopicById(Long id, TopicUpdateRQ topicUpdateRQ) {
         Optional<TopicEntity> topicEntity = topicRepository.findByIdAndDeletedAtNull(id);
         if (topicEntity.isEmpty()) {
@@ -80,12 +75,12 @@ public class TopicService extends BaseService {
         topicEntity.get().setName(topicUpdateRQ.getName());
         return  response(topicMapper.to(topicRepository.save(topicEntity.get())));
     }
-    @Transactional
+    @Transactional(readOnly = false)
     public StructureRS deleteTopicByIdNotNull(Long id){
         Optional<TopicEntity> topicEntity = topicRepository.findByIdAndDeletedAtNull(id);
         if (topicEntity.isEmpty())
             throw new BadRequestException(MessageConstant.USER.USER_NOT_FOUND);
-        topicEntity.get().setDeletedAt(Instant.now());
+        // topicEntity.get().setDeletedAt();
         topicRepository.save(topicEntity.get());
         return response(HttpStatus.ACCEPTED,MessageConstant.TOPIC.TOPIC_HAVE_BEEN_DELETED);
     }

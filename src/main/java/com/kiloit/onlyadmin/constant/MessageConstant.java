@@ -16,7 +16,7 @@ public class MessageConstant {
 
         public static final String ROLE_CREATED_SUCCESSFULLY = "Role has been created";
         public static final String ROLE_NOT_FOUND = "Role could not be found";
-        public static final String ROLE_UPDATED_SUCCESSFULLY = "Successfully";
+        public static final String ROLE_UPDATED_SUCCESSFULLY = "Role has been updated";
         public static final String ROLE_DELETED_SUCCESSFULLY = "Role has been deleted";
         public static final String ROLE_HAS_USER = "Role has user delete user first";
     }

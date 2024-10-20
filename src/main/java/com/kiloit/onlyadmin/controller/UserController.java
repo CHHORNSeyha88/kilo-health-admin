@@ -32,12 +32,12 @@ public class UserController extends BaseController {
         return response(userService.create(request));
     }
 
-    @PatchMapping("/{id}/update")
+    @PutMapping("/{id}/update")
     public ResponseEntity<StructureRS> update(@PathVariable("id") String id,@Valid @RequestBody UserUpdateRequest userUpdateRequest){
         return response(userService.update(Long.parseLong(id),userUpdateRequest));
     }
 
-    @PatchMapping("/{id}/soft-delete")
+    @DeleteMapping("/{id}/soft-delete")
     public ResponseEntity<StructureRS> delete(@PathVariable("id") Long id){
         return response(userService.delete(id));
     }
