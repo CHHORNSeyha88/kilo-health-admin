@@ -47,7 +47,7 @@ public class SecurityConfig {
         .requestMatchers("api/v1/auth/**")
         .permitAll()
 
-        .requestMatchers("api/v1/upload/**")
+        .requestMatchers("api/v1/files/**")
         .permitAll()
          
         .requestMatchers("/upload/**")

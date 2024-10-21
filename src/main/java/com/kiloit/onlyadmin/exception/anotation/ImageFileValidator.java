@@ -9,8 +9,9 @@ package com.kiloit.onlyadmin.exception.anotation;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import org.springframework.web.multipart.MultipartFile;
+import java.util.List;
 
-public class ImageFileValidator implements ConstraintValidator<ValidImage, MultipartFile> {
+public class ImageFileValidator implements ConstraintValidator<ValidImage,List<MultipartFile>> {
 
     @Override
     public void initialize(ValidImage constraintAnnotation) {
@@ -18,7 +19,25 @@ public class ImageFileValidator implements ConstraintValidator<ValidImage, Multi
     }
 
     @Override
-    public boolean isValid(MultipartFile multipartFile, ConstraintValidatorContext context) {
+    public boolean isValid(List<MultipartFile> multipartFile, ConstraintValidatorContext context) {
+
+        if(multipartFile == null) {
+            context.disableDefaultConstraintViolation();
+            context.buildConstraintViolationWithTemplate(
+                    "Image is required.")
+                    .addConstraintViolation();
+            return false;
+        }
+        for (MultipartFile file : multipartFile) {
+            if (!isValidFile(file, context)) {
+                return false;
+            }
+        }
+        return true;
+       
+    }
+
+    public boolean isValidFile(MultipartFile multipartFile, ConstraintValidatorContext context) {
         boolean result = true;
 
         if(multipartFile == null) {
@@ -28,6 +47,7 @@ public class ImageFileValidator implements ConstraintValidator<ValidImage, Multi
                     .addConstraintViolation();
             return false;
         }
+
         String contentType = multipartFile.getContentType();
         assert contentType != null;
         if (!isSupportedContentType(contentType)) {
