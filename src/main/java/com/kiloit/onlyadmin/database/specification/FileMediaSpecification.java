@@ -1,6 +1,5 @@
 package com.kiloit.onlyadmin.database.specification;
 
-import com.kiloit.onlyadmin.database.entity.CategoryEntity;
 import com.kiloit.onlyadmin.database.entity.FileMedia;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
@@ -14,7 +13,7 @@ public class FileMediaSpecification {
         return (root, cq, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
             if (query != null && !query.equalsIgnoreCase("ALL")) {
-                Predicate namePredicate = cb.like(root.get("file_name"), "%" + query + "%");
+                Predicate namePredicate = cb.like(root.get("fileName"), "%" + query + "%");
                 predicates.add(cb.or(namePredicate));
             }
             predicates.add(cb.isNull(root.get("deletedAt")));

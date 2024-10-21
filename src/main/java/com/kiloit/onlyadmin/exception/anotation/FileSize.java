@@ -10,18 +10,16 @@ import jakarta.validation.Payload;
 
 import java.lang.annotation.*;
 
-@Target({ElementType.FIELD, ElementType.METHOD
-        , ElementType.ANNOTATION_TYPE})
+@Target({ ElementType.FIELD, ElementType.METHOD, ElementType.ANNOTATION_TYPE, ElementType.PARAMETER })
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = FileSizeValidator.class)
-@Documented
 public @interface FileSize {
 
     Class<? extends Payload>[] payload() default {};
 
     Class<?>[] groups() default {};
 
-    long maxSizeInMB() default 512;
+    long maxSizeInMB() default 5 * 1024 * 1024;
 
     String message() default "Max file size exceed";
 }

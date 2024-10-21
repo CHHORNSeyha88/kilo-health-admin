@@ -1,15 +1,3 @@
-CREATE TABLE category
-(
-    id          BIGINT AUTO_INCREMENT NOT NULL,
-    name        VARCHAR(255)          NULL,
-    media_id    BIGINT                NULL,
-    user_id     BIGINT                NULL,
-    created_at  datetime              NOT NULL,
-    modified_at datetime              NULL,
-    deleted_at  datetime              NULL,
-    CONSTRAINT pk_category PRIMARY KEY (id)
-);
-
 CREATE TABLE file_medias
 (
     id          BIGINT AUTO_INCREMENT NOT NULL,
@@ -21,6 +9,17 @@ CREATE TABLE file_medias
     modified_at datetime              NULL,
     deleted_at  datetime              NULL,
     CONSTRAINT pk_file_medias PRIMARY KEY (id)
+);
+CREATE TABLE category
+(
+    id          BIGINT AUTO_INCREMENT NOT NULL,
+    name        VARCHAR(255)          NULL,
+    media_id    BIGINT                NULL,
+    user_id     BIGINT                NULL,
+    created_at  datetime              NOT NULL,
+    modified_at datetime              NULL,
+    deleted_at  datetime              NULL,
+    CONSTRAINT pk_category PRIMARY KEY (id)
 );
 
 CREATE TABLE password_reset_tokens
