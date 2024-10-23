@@ -157,9 +157,8 @@ public class ExceptionAdvices extends BaseController {
     }
 
     @ExceptionHandler(MaxUploadSizeExceededException.class)
-    public ResponseEntity<String> handleMaxSizeException(MaxUploadSizeExceededException exc) {
-        return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE)
-                .body(exc.getMessage());
+    public ResponseEntity<StructureRS> handleMaxSizeException(MaxUploadSizeExceededException exc) {
+        return new ResponseEntity<>(new StructureRS(HttpStatus.PAYLOAD_TOO_LARGE,"Validation failed","File too large! Maximum allowed size is 1MB."),HttpStatus.PAYLOAD_TOO_LARGE);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
