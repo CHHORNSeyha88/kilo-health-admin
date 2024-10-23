@@ -1,16 +1,9 @@
 package com.kiloit.onlyadmin.base;
-
 import lombok.Setter;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-
 import java.util.List;
-
-/**
- * @author Sombath
- * create at 22/11/22 3:38 PM
- */
 
 @Setter
 public class BaseListingRQ {

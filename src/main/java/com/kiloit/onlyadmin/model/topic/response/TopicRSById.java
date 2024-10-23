@@ -1,5 +1,4 @@
 package com.kiloit.onlyadmin.model.topic.response;
-import com.kiloit.onlyadmin.database.entity.FileMedia;
 import com.kiloit.onlyadmin.model.filemedia.response.FileMediaResponse;
 import lombok.Data;
 

@@ -1,7 +1,5 @@
 package com.kiloit.onlyadmin.base;
-
 import com.kiloit.onlyadmin.base.BaseEntity;
-
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,13 +8,7 @@ import org.hibernate.annotations.CurrentTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
 import java.time.Instant;
-
-/**
- * @author Sombath
- * create at 23/10/22 6:23 AM
- */
 
 @Getter
 @Setter

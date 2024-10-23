@@ -10,7 +10,6 @@ public class PagingRS {
     private int totalPage;
     private long totals;
 
-    // PagingRS pagingRS = new PagingRS(employee.getNumber(), employee.getSize(), employee.getTotalPages(), employee.getTotalElements());
     public PagingRS(int page, int size, int totalPage, long total) {
         this.page = page;
         this.size = size;

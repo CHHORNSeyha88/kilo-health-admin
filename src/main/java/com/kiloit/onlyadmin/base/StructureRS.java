@@ -15,6 +15,12 @@ public class StructureRS {
     public StructureRS() {
     }
 
+    public<T> StructureRS(HttpStatus httpStatus,T data){
+        this.status = httpStatus.value();
+        this.data=data;
+        this.status=httpStatus.value();
+    }
+
     public <T> StructureRS(T data) {
         this.data = data;
     }
