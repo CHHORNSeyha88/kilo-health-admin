@@ -13,7 +13,7 @@ import java.util.List;
 public class CategoryEntity extends BaseEntity {
 
     private String name;
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "media_id")
     private FileMedia fileMediaId;
 

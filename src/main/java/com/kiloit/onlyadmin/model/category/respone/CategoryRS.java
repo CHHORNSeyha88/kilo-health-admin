@@ -1,6 +1,5 @@
 package com.kiloit.onlyadmin.model.category.respone;
 
-import com.kiloit.onlyadmin.database.entity.FileMedia;
 import com.kiloit.onlyadmin.model.filemedia.response.FileMediaResponse;
 import com.kiloit.onlyadmin.model.post.response.PostListResponse;
 import com.kiloit.onlyadmin.model.topic.response.TopicResponseList;

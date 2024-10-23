@@ -1,5 +1,4 @@
 package com.kiloit.onlyadmin.service;
-
 import com.kiloit.onlyadmin.base.BaseListingRQ;
 import com.kiloit.onlyadmin.base.BaseService;
 import com.kiloit.onlyadmin.base.StructureRS;
@@ -41,30 +40,15 @@ public class UserService extends BaseService {
 
     public StructureRS detail(Long id) {
         Optional<UserEntity> user = userRepository.findByIdAndDeletedAtNull(id);
-        
-        // Validate user id
-        if (user.isEmpty())
-            throw new BadRequestException(MessageConstant.USER.USER_NOT_FOUND);    
+        if (user.isEmpty()) throw new BadRequestException(MessageConstant.USER.USER_NOT_FOUND);    
         return response(userMapper.fromUserList(user.get()));
     }
 
     @Transactional
     public StructureRS create(UserRQ request) {
-        
-        // Validate role id
-        RoleEntity roleEntity = roleRepository.
-                                findById(request.getRoleId()).
-                                orElseThrow(()->new BadRequestException(MessageConstant.ROLE.ROLE_NOT_FOUND));
-
-        // Validate email
-        if(userRepository.existsByEmail(request.getEmail())){
-            throw new BadRequestException("Email has already existing...");
-        }
-
-        // Validate username
-        if(userRepository.existsByUsername(request.getUsername())){
-            throw new BadRequestException("User name not valid...");
-        }
+        RoleEntity roleEntity = roleRepository.findById(request.getRoleId()).orElseThrow(()->new BadRequestException(MessageConstant.ROLE.ROLE_NOT_FOUND));
+        if(userRepository.existsByEmail(request.getEmail())) throw new BadRequestException("Email has already existing...");
+        if(userRepository.existsByUsername(request.getUsername())) throw new BadRequestException("User name not valid...");
         UserEntity userEntity = userMapper.fromUser(request);
         userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
         userEntity.setRole(roleEntity);
@@ -72,30 +56,18 @@ public class UserService extends BaseService {
     }
 
     public StructureRS update(Long id, UserUpdateRequest userUpdateRequest) throws BadRequestException {
-
-        // Validate user id
-        UserEntity user = userRepository
-                          .findByIdAndDeletedAtNull(id)
-                          .orElseThrow(()->new BadRequestException(MessageConstant.USER.USER_NOT_FOUND));
-        
-        // Validate role id
-        RoleEntity roleEntity = roleRepository
-                                .findById(userUpdateRequest.getRoleId())
-                                .orElseThrow(()-> new BadRequestException(MessageConstant.USER.USER_NOT_FOUND));
+        UserEntity user = userRepository.findByIdAndDeletedAtNull(id).orElseThrow(()->new BadRequestException(MessageConstant.USER.USER_NOT_FOUND));
+        RoleEntity roleEntity = roleRepository.findById(userUpdateRequest.getRoleId()).orElseThrow(()-> new BadRequestException(MessageConstant.USER.USER_NOT_FOUND));
         user.setRole(roleEntity);
         userMapper.fromUserUpdateRequest(userUpdateRequest, user);
-
         return response(userMapper.fromUserList(userRepository.save(user)));
     }
 
     public StructureRS delete(Long id){
         Optional<UserEntity> user = userRepository.findByIdAndDeletedAtNull(id);
-        if (user.isEmpty())
-            throw new BadRequestException(MessageConstant.USER.USER_NOT_FOUND);
-
+        if (user.isEmpty()) throw new BadRequestException(MessageConstant.USER.USER_NOT_FOUND);
         user.get().setDeletedAt(Instant.now());
         userRepository.save(user.get());
-        
         return response(MessageConstant.USER.USER_HAS_BEEN_DELETED);
     }
 }

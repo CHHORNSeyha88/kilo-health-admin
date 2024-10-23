@@ -26,6 +26,7 @@ public interface PostMapper {
         @Mapping(target="status",ignore = true),
         @Mapping(target = "topicEntity",ignore = true),
         @Mapping(target="userEntity",ignore=true),
+        @Mapping(target = "time_read",ignore = true)
     })
     PostEntity toEntity(PostCreateRequest request);
 
@@ -53,6 +54,7 @@ public interface PostMapper {
         @Mapping(target="status",ignore = true),
         @Mapping(target = "topicEntity",ignore = true),
         @Mapping(target="userEntity",ignore=true),
+        @Mapping(target = "time_read",ignore = true)
     })
     PostEntity toEntity(PostUpdateRequest request);
 

@@ -2,9 +2,13 @@ package com.kiloit.onlyadmin.exception;
 
 
 import lombok.extern.slf4j.Slf4j;
+import com.kiloit.onlyadmin.base.BaseController;
 import com.kiloit.onlyadmin.base.StructureRS;
+import com.kiloit.onlyadmin.exception.anotation.FileTypeException;
 import com.kiloit.onlyadmin.exception.httpstatus.BadRequestException;
 import com.kiloit.onlyadmin.exception.httpstatus.NotFoundException;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -19,24 +23,20 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
-
 import java.nio.file.AccessDeniedException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-
-/**
- * @author Sombath
- * create at 12/9/23 11:07 PM
- */
+import java.util.Map;
+import java.util.Set;
 
 @ControllerAdvice
 @Slf4j
-public class ExceptionAdvices {
+public class ExceptionAdvices extends BaseController {
 
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<StructureRS> accessDeniedException(AccessDeniedException ex) {
-        log.error(ex.getMessage(), ex);
         StructureRS structureRS = new StructureRS(
                 HttpStatus.UNAUTHORIZED,
                 ex.getMessage()
@@ -44,17 +44,10 @@ public class ExceptionAdvices {
         return new ResponseEntity<>(structureRS, HttpStatus.UNAUTHORIZED);
     }
 
-
-
-
-    // validation
-
     @SuppressWarnings("null")
     @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ResponseEntity<StructureRS> httpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException ex) {
-        log.error(ex.getMessage(), ex);
-
         final StringBuilder builder = new StringBuilder();
         builder.append(ex.getMethod());
         builder.append(" method is not supported for this request. Supported methods are ");
@@ -72,14 +65,10 @@ public class ExceptionAdvices {
     @ResponseStatus(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
     @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
     public ResponseEntity<StructureRS> httpMediaTypeNotSupportedException(HttpMediaTypeNotSupportedException ex) {
-        log.error(ex.getMessage(), ex);
-
         final StringBuilder builder = new StringBuilder();
         builder.append(ex.getContentType());
         builder.append(" media type is not supported. Supported media types are ");
-
         ex.getSupportedMediaTypes().forEach(t -> builder.append(t).append(" "));
-
         StructureRS structureRS = new StructureRS(
                 HttpStatus.UNSUPPORTED_MEDIA_TYPE,
                 builder.toString()
@@ -91,8 +80,6 @@ public class ExceptionAdvices {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<StructureRS> methodArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex) {
-        log.error(ex.getMessage(), ex);
-
         String message = ex.getName() + " should be of type ";
         if(ex.getRequiredType() != null)
             message +=  ex.getRequiredType().getName();
@@ -106,8 +93,6 @@ public class ExceptionAdvices {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public ResponseEntity<Object> missingServletRequestParameterException(MissingServletRequestParameterException ex) {
-        log.error(ex.getMessage(), ex);
-
         StructureRS structureRS = new StructureRS(
                 HttpStatus.BAD_REQUEST,
                 ex.getMessage()
@@ -119,8 +104,6 @@ public class ExceptionAdvices {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<Object> httpMessageNotReadableException(HttpMessageNotReadableException ex) {
-        log.error(ex.getMessage(), ex);
-
         StructureRS structureRS = new StructureRS(
                 HttpStatus.BAD_REQUEST,
                 ex.getMessage()
@@ -131,8 +114,6 @@ public class ExceptionAdvices {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(BindException.class)
     public ResponseEntity<Object> methodArgumentNotValidException(BindException ex) {
-        log.error(ex.getMessage(), ex);
-
         List<String> errors = new ArrayList<>();
         List<String> addedField = new ArrayList<>();
 
@@ -156,13 +137,9 @@ public class ExceptionAdvices {
         return new ResponseEntity<>(structureRS, HttpStatus.BAD_REQUEST);
     }
 
-
-    // custom
-
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<StructureRS> badRequestException(BadRequestException ex) {
-        log.error(ex.getMessage(), ex);
         StructureRS structureRS = new StructureRS(
                 HttpStatus.BAD_REQUEST,
                 ex.getMessage()
@@ -172,7 +149,6 @@ public class ExceptionAdvices {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<StructureRS> notFoundException(NotFoundException ex) {
-        log.error(ex.getMessage(), ex);
         StructureRS structureRS = new StructureRS(
                 HttpStatus.NOT_FOUND,
                 ex.getMessage()
@@ -183,6 +159,31 @@ public class ExceptionAdvices {
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     public ResponseEntity<String> handleMaxSizeException(MaxUploadSizeExceededException exc) {
         return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE)
-                .body("File size exceeds the maximum limit! Please upload a smaller file.");
+                .body(exc.getMessage());
     }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<StructureRS> handleConstraintViolationException(ConstraintViolationException ex) {
+        Map<String,String> errors = new HashMap<>();
+
+        Set<ConstraintViolation<?>> violations = ex.getConstraintViolations();
+        for (ConstraintViolation<?> violation : violations) {
+            String fieldName = violation.getPropertyPath().toString();
+            String errorMessage = violation.getMessage();
+            errors.put(fieldName,errorMessage);
+        }
+        return new ResponseEntity<>(new StructureRS(HttpStatus.BAD_REQUEST,"Validation failed",errors),HttpStatus.BAD_REQUEST);
+     
+    }
+
+    @ExceptionHandler(FileTypeException.class)
+    public ResponseEntity<StructureRS> handleFileTypeException(FileTypeException ex) {
+        Map<String, String> errorResponse = new HashMap<>();
+        errorResponse.put("fileName", ex.getFileName());
+        errorResponse.put("contentType", ex.getContentType() != null ? ex.getContentType() : "unknown");
+        errorResponse.put("message", ex.getMessage());
+        
+        return new ResponseEntity<>(new StructureRS(HttpStatus.BAD_REQUEST,"Validatio failed",errorResponse), HttpStatus.BAD_REQUEST);
+    }
+
 }

@@ -7,8 +7,6 @@ import com.kiloit.onlyadmin.model.filemedia.request.FileUploadForm;
 import com.kiloit.onlyadmin.service.FileMediaService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -16,17 +14,12 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("api/v1/files")
 @RequiredArgsConstructor
-@Slf4j
 public class FileMediaController extends BaseController {
     private final FileMediaService fileMediaService;
 
     @PostMapping("/upload")
-    public ResponseEntity<StructureRS> uploadMultipleFiles(@Valid @ModelAttribute FileUploadForm form, BindingResult result) {
-        if (result.hasErrors()) {
-            return response(result.getAllErrors());
-        }
-
-        return response(fileMediaService.uploadMulitipartFile(form.getFiles()));
+    public ResponseEntity<StructureRS> upload(@Valid @ModelAttribute FileUploadForm form, BindingResult result) {
+        return response(fileMediaService.upload(form.files()));
     }
 
     @GetMapping("/{id}")
@@ -43,4 +36,5 @@ public class FileMediaController extends BaseController {
     public ResponseEntity<StructureRS> delete(@PathVariable Long id){
         return response(fileMediaService.delete(id));
     }
+
 }

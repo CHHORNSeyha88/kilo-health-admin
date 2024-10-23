@@ -20,7 +20,6 @@ import lombok.RequiredArgsConstructor;
 public class SecurityConfig {
 
     private final UserDetailsService userDetailsService;
-
     @Bean
     DaoAuthenticationProvider configureDaoAuthenticationProvider(){
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
@@ -28,42 +27,39 @@ public class SecurityConfig {
         authenticationProvider.setPasswordEncoder(passwordEncoder());
         return authenticationProvider;
     }
-    
     @Bean
     public PasswordEncoder passwordEncoder() {
        return new BCryptPasswordEncoder();
     }
-
     @Bean
     public JwtAuthenticationProvider configAuthenticationProvider(@Qualifier("refreshTokenJwtDecoder")JwtDecoder refreshTokenJwtDecoder){
         return new JwtAuthenticationProvider(refreshTokenJwtDecoder);
     }
-
     @Bean
     SecurityFilterChain configureApiSecurity(HttpSecurity httpSecurity,@Qualifier("accessTokenJwtDecoder") JwtDecoder jwtDecoder) throws Exception{
 
-        httpSecurity.authorizeHttpRequests(endpoint-> endpoint
+        // httpSecurity.authorizeHttpRequests(endpoint-> endpoint
 
-        .requestMatchers("api/v1/auth/**")
-        .permitAll()
+        // .requestMatchers("api/v1/auth/**")
+        // .permitAll()
 
-        .requestMatchers("api/v1/files/**")
-        .permitAll()
+        // .requestMatchers("api/v1/files/**")
+        // .permitAll()
          
-        .requestMatchers("/upload/**")
-        .permitAll()
+        // .requestMatchers("/upload/**")
+        // .permitAll()
 
 
-        .requestMatchers("api/v1/users/**")
-        .hasAuthority("SCOPE_ROLE_Administrator")
+        // .requestMatchers("api/v1/users/**")
+        // .hasAuthority("SCOPE_ROLE_Administrator")
 
-        .anyRequest().authenticated());
+        // .anyRequest().authenticated());
         httpSecurity.csrf(token -> token.disable());
 
-        httpSecurity.oauth2ResourceServer(jwt->jwt.jwt(jwtConfigurer->jwtConfigurer.decoder(jwtDecoder)));
+        // httpSecurity.oauth2ResourceServer(jwt->jwt.jwt(jwtConfigurer->jwtConfigurer.decoder(jwtDecoder)));
 
         httpSecurity.sessionManagement(session-> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-        
+         
         return httpSecurity.build();
     }
     

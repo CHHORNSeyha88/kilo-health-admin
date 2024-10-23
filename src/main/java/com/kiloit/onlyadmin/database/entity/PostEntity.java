@@ -15,7 +15,7 @@ public class PostEntity extends BaseEntity {
     private String description;
     private Boolean status;
     private Integer time_read;
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "media_id")
     private FileMedia fileMedia;
 

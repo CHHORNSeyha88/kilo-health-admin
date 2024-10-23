@@ -3,13 +3,7 @@ import com.kiloit.onlyadmin.constant.MessageConstant;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-
-/**
- * @author Sombath
- * create at 23/10/22 6:01 PM
- */
 public class BaseController {
-
     protected ResponseEntity<StructureRS> response(StructureRS structureRS) {
         return ResponseEntity
                 .status(structureRS.getStatus())

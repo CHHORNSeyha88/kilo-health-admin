@@ -1,13 +1,7 @@
 package com.kiloit.onlyadmin.exception.anotation;
 
-/**
- * @author Sombath
- * create at 30/9/23 1:05 PM
- */
-
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
-
 import java.lang.annotation.*;
 
 @Target({ ElementType.FIELD, ElementType.METHOD, ElementType.ANNOTATION_TYPE, ElementType.PARAMETER })
@@ -15,11 +9,9 @@ import java.lang.annotation.*;
 @Constraint(validatedBy = FileSizeValidator.class)
 public @interface FileSize {
 
-    Class<? extends Payload>[] payload() default {};
-
+    String message() default "File size exceeds the maximum allowed size";
     Class<?>[] groups() default {};
+    Class<? extends Payload>[] payload() default {};
+    long maxSize();
 
-    long maxSizeInMB() default 5 * 1024 * 1024;
-
-    String message() default "Max file size exceed";
 }

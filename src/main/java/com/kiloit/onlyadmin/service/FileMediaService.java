@@ -10,6 +10,7 @@ import com.kiloit.onlyadmin.exception.httpstatus.NotFoundException;
 import com.kiloit.onlyadmin.model.filemedia.mapper.FileMediaMapper;
 import com.kiloit.onlyadmin.model.filemedia.response.FileMediaResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -22,59 +23,43 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class FileMediaService extends BaseService {
     private final FileMediaRepository fileMediaRepository;
     private final FileMediaMapper fileMediaMapper;
-
-   @Value("${file-upload.server-path}")
+    @Value("${file-upload.server-path}")
     private String serverPath;
-
     @Value("${file-upload.base-uri}")
     private String baseUri;
 
     public FileMediaResponse FileUpload(MultipartFile fileUpload){
-        String newName = UUID.randomUUID().toString();
-
         @SuppressWarnings("null")
         String extension = fileUpload.getContentType().split("/")[1];
-        Path path = Paths.get(serverPath+String.format("%s.%s",newName,extension));
-
+        String newName = UUID.randomUUID().toString();
         try {
-            Files.copy(fileUpload.getInputStream(),path);
+            Files.copy(fileUpload.getInputStream(),Paths.get(serverPath+newName+"."+extension));
         } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"File upload has not been found...");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,MessageConstant.FILEMEDIA.FILE_MEDIA_NOT_FOUNT);
         }
-        
-        return FileMediaResponse.builder()
-                                 .fileName(String.format("%s.%s",newName,extension))
-                                 .fileUrl(baseUri+String.format("%s.%s",newName,extension))
-                                 .fileType(fileUpload.getContentType())
-                                 .fileSize(fileUpload.getSize())
-                                 .build();
+        return FileMediaResponse.builder().fileName(newName+"."+extension).fileUrl(baseUri+newName+"."+extension).fileType(fileUpload.getContentType()).fileSize(fileUpload.getSize()).build();
     }
 
-    public StructureRS uploadMulitipartFile(List<MultipartFile> multipartFile) {
-
+    @Transactional
+    public StructureRS upload(List<MultipartFile> multipartFile) {
+        List<FileMediaResponse> fileMediaResponses = new ArrayList<>();
         multipartFile.forEach(file->{
-
-            FileMedia fileMedia = new FileMedia();
-            FileMediaResponse fileUploadResponse = FileUpload(file);
-
-            fileMedia = fileMediaMapper.fromFileMediaResponse(fileUploadResponse);
+            FileMedia fileMedia = fileMediaMapper.fromFileMediaResponse(FileUpload(file));
             fileMedia.setCreatedAt(Instant.now());
-            fileMedia.setModifiedAt(Instant.now()); 
-
-            fileMediaRepository.save(fileMedia);
-            
+            fileMediaResponses.add(fileMediaMapper.toFileMediaResponse(fileMediaRepository.save(fileMedia)));
         });
-        return response(MessageConstant.FILEMEDIA.FILE_MEDIA_HAS_BEEN_CREATED);
-        
+        return response(fileMediaResponses);
     }
 
     public StructureRS deleteFile(String fileName) {
@@ -83,18 +68,16 @@ public class FileMediaService extends BaseService {
             try{
                 Files.delete(path);
             }catch(IOException e){
-                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,"File is failed to delete");
+                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,MessageConstant.FILEMEDIA.FILE_MEDIA_NOT_FOUNT);
             }
         }
-        return response("File has been deleted successfully");
+        return response(MessageConstant.FILEMEDIA.FILE_MEDIA_HAS_BEEN_DELETE);
     }
 
     @Transactional(readOnly = true)
     public StructureRS findById(Long id){
         Optional<FileMedia> fileMedia = fileMediaRepository.findById(id);
-        if (fileMedia.isEmpty()){
-            throw new NotFoundException(MessageConstant.FILEMEDIA.FILE_MEDIA_NOT_FOUNT);
-        }
+        if (fileMedia.isEmpty()) throw new NotFoundException(MessageConstant.FILEMEDIA.FILE_MEDIA_NOT_FOUNT);
         return response(fileMediaMapper.toFileMediaResponse(fileMedia.get()));
     }
 
