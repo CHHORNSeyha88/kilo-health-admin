@@ -15,7 +15,7 @@ public class PostDetailResponse {
     private Integer time_read;
     private LocalDateTime publicAt;
 
-    private UserListResponse userListResponse;
-    private TopicResponseList topicRSById;
-    private CategoryRS_List categoryRS;
+    private UserListResponse user;
+    private TopicResponseList topic;
+    private CategoryRS_List category;
 }

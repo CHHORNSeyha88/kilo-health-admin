@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface CategoryRepository extends JpaRepository<CategoryEntity, Long>, JpaSpecificationExecutor<CategoryEntity> {
 
-    @Query("select c from CategoryEntity c left join fetch FileMedia m on c.fileMediaId.id = m.id where c.id = :id and c.deletedAt is null")
+    @Query("select c from CategoryEntity c left join fetch c.user u left join fetch c.fileMediaId where c.id = :id and c.deletedAt is null")
     Optional<CategoryEntity> findByID(Long id);
 
 }

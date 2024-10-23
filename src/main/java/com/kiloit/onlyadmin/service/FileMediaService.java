@@ -34,10 +34,8 @@ import java.util.UUID;
 public class FileMediaService extends BaseService {
     private final FileMediaRepository fileMediaRepository;
     private final FileMediaMapper fileMediaMapper;
-    @Value("${file-upload.server-path}")
-    private String serverPath;
-    @Value("${file-upload.base-uri}")
-    private String baseUri;
+    private String serverPath = "D:\\Java";
+    private String baseUri = "http://localhost:8080/upload/";
 
     public FileMediaResponse FileUpload(MultipartFile fileUpload){
         @SuppressWarnings("null")

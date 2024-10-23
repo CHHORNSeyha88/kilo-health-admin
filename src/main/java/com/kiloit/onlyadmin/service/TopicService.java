@@ -59,7 +59,7 @@ public class TopicService extends BaseService {
 
     @Transactional(readOnly = true)
     public StructureRS getById(Long id) {
-        Optional<TopicEntity> topicEntity = topicRepository.findByIdAndDeletedAtNull(id);
+        Optional<TopicEntity> topicEntity = topicRepository.findTopicEntityById(id);
         if (topicEntity.isEmpty()) {
            throw new NotFoundException(MessageConstant.TOPIC.TOPIC_NOT_FOUND);
         }

@@ -18,7 +18,7 @@ public class RoleEntity extends BaseEntity implements GrantedAuthority{
     private String name;
     private String module;
 
-    @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JoinTable(
             name = "role_has_permission",
             joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"),
@@ -26,7 +26,7 @@ public class RoleEntity extends BaseEntity implements GrantedAuthority{
     )
     Set<PermissionEntity> permissions = new HashSet<>();
 
-    @OneToMany(mappedBy = "role")
+    @OneToMany(mappedBy = "role", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     Set<UserEntity> users = new HashSet<>();
 
     @Override
