@@ -1,5 +1,4 @@
 package com.kiloit.onlyadmin.model.role.mapper;
-
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -11,6 +10,7 @@ import com.kiloit.onlyadmin.database.entity.RoleEntity;
 import com.kiloit.onlyadmin.model.role.request.RoleRQ;
 import com.kiloit.onlyadmin.model.role.request.RoleRequestUpdate;
 import com.kiloit.onlyadmin.model.role.response.PermissionRS;
+import com.kiloit.onlyadmin.model.role.response.RoleCreateResponse;
 import com.kiloit.onlyadmin.model.role.response.RoleListResponse;
 import com.kiloit.onlyadmin.model.role.response.RoleRS;
 
@@ -18,10 +18,9 @@ import com.kiloit.onlyadmin.model.role.response.RoleRS;
 public interface RoleMapper {
 
     RoleRS fromRoleEntity(RoleEntity roleEntity);
-
-    @Mapping(target = "status",ignore = true)
     PermissionRS from(PermissionEntity permissionEntity);
 
+    RoleCreateResponse toRoleCreateResponse(RoleEntity roleEntity);
     @Mappings({
       @Mapping(target = "createdAt",ignore = true),
       @Mapping(target = "deletedAt",ignore = true),

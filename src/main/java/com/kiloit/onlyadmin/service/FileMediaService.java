@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -60,6 +61,7 @@ public class FileMediaService extends BaseService {
         return response(fileMediaResponses);
     }
 
+    @Transactional
     public StructureRS deleteFile(String fileName) {
         Path path = Paths.get(serverPath+fileName);
         if(Files.exists(path)){
@@ -72,16 +74,16 @@ public class FileMediaService extends BaseService {
         return response(MessageConstant.FILEMEDIA.FILE_MEDIA_HAS_BEEN_DELETE);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public StructureRS findById(Long id){
         Optional<FileMedia> fileMedia = fileMediaRepository.findById(id);
         if (fileMedia.isEmpty()) throw new NotFoundException(MessageConstant.FILEMEDIA.FILE_MEDIA_NOT_FOUNT);
         return response(fileMediaMapper.toFileMediaResponse(fileMedia.get()));
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public StructureRS findAll(BaseListingRQ request){
-        Page<FileMedia> list = fileMediaRepository.findAll(FileMediaSpecification.filter(request.getQuery()),request.getPageable());
+        Page<FileMedia> list = fileMediaRepository.findAll(FileMediaSpecification.hasNotBeenDeleted().and(FileMediaSpecification.dynamicQuery(request.getQuery())),(PageRequest)request.getPageable("id"));
         return response(list.getContent().stream().map(fileMediaMapper::toFileMediaResponse),list);
     }
 

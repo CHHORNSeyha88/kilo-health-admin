@@ -1,5 +1,4 @@
 package com.kiloit.onlyadmin.security;
-
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,7 +11,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationProvider;
-
 import lombok.RequiredArgsConstructor;
 
 @Configuration
@@ -37,29 +35,16 @@ public class SecurityConfig {
     }
     @Bean
     SecurityFilterChain configureApiSecurity(HttpSecurity httpSecurity,@Qualifier("accessTokenJwtDecoder") JwtDecoder jwtDecoder) throws Exception{
-
-        // httpSecurity.authorizeHttpRequests(endpoint-> endpoint
-
-        // .requestMatchers("api/v1/auth/**")
-        // .permitAll()
-
-        // .requestMatchers("api/v1/files/**")
-        // .permitAll()
-         
-        // .requestMatchers("/upload/**")
-        // .permitAll()
-
-
-        // .requestMatchers("api/v1/users/**")
-        // .hasAuthority("SCOPE_ROLE_Administrator")
-
-        // .anyRequest().authenticated());
+        httpSecurity.authorizeHttpRequests(endpoint-> endpoint
+        .requestMatchers("api/v1/auth/**","api/v1/files/**","/upload/**")
+        .permitAll()
+        .requestMatchers("api/v1/users/**")
+        .hasAuthority("SCOPE_ROLE_Administrator")
+        .anyRequest().authenticated());
+        
         httpSecurity.csrf(token -> token.disable());
-
-        // httpSecurity.oauth2ResourceServer(jwt->jwt.jwt(jwtConfigurer->jwtConfigurer.decoder(jwtDecoder)));
-
+        httpSecurity.oauth2ResourceServer(jwt->jwt.jwt(jwtConfigurer->jwtConfigurer.decoder(jwtDecoder)));
         httpSecurity.sessionManagement(session-> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-         
         return httpSecurity.build();
     }
     

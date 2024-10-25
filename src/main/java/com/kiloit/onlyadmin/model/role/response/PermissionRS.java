@@ -6,5 +6,4 @@ public class PermissionRS {
     private String name;
     private String code;
     private String module;
-    private boolean status;
 }

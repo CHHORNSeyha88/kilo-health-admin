@@ -17,7 +17,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.time.Instant;
@@ -33,13 +32,12 @@ public class UserService extends BaseService {
     private final PasswordEncoder passwordEncoder;
 
     public StructureRS list(BaseListingRQ request){
-        Specification<UserEntity> specification = UserSpecification.hasNotBeenDeleted().and(UserSpecification.dynamicQuery(request.getQuery()));
-        Page<UserEntity> userEntitys = userRepository.findAll(specification,(PageRequest)(request.getPageable("id")));
+        Page<UserEntity> userEntitys = userRepository.findAll(UserSpecification.hasNotBeenDeleted().and(UserSpecification.dynamicQuery(request.getQuery())),(PageRequest)(request.getPageable("id")));
         return response(userEntitys.map(userMapper::fromUserList).getContent(),userEntitys);
     }
 
     public StructureRS detail(Long id) {
-        Optional<UserEntity> user = userRepository.findByIdAndDeletedAtNull(id);
+        Optional<UserEntity> user = userRepository.findById(id);
         if (user.isEmpty()) throw new BadRequestException(MessageConstant.USER.USER_NOT_FOUND);    
         return response(userMapper.fromUserList(user.get()));
     }
@@ -56,7 +54,7 @@ public class UserService extends BaseService {
     }
 
     public StructureRS update(Long id, UserUpdateRequest userUpdateRequest) throws BadRequestException {
-        UserEntity user = userRepository.findByIdAndDeletedAtNull(id).orElseThrow(()->new BadRequestException(MessageConstant.USER.USER_NOT_FOUND));
+        UserEntity user = userRepository.findById(id).orElseThrow(()->new BadRequestException(MessageConstant.USER.USER_NOT_FOUND));
         RoleEntity roleEntity = roleRepository.findById(userUpdateRequest.getRoleId()).orElseThrow(()-> new BadRequestException(MessageConstant.USER.USER_NOT_FOUND));
         user.setRole(roleEntity);
         userMapper.fromUserUpdateRequest(userUpdateRequest, user);
@@ -64,7 +62,7 @@ public class UserService extends BaseService {
     }
 
     public StructureRS delete(Long id){
-        Optional<UserEntity> user = userRepository.findByIdAndDeletedAtNull(id);
+        Optional<UserEntity> user = userRepository.findById(id);
         if (user.isEmpty()) throw new BadRequestException(MessageConstant.USER.USER_NOT_FOUND);
         user.get().setDeletedAt(Instant.now());
         userRepository.save(user.get());

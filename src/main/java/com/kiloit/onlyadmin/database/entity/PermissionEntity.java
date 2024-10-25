@@ -1,5 +1,4 @@
 package com.kiloit.onlyadmin.database.entity;
-
 import java.util.HashSet;
 import java.util.Set;
 import com.kiloit.onlyadmin.base.BaseEntity;
