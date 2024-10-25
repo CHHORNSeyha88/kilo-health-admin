@@ -33,7 +33,7 @@ public class CategoryService extends BaseService {
 
     @Transactional
     public StructureRS create(CategoryRQ request){
-        Optional<UserEntity> user = userRepository.findByIdAndDeletedAtNull(request.getUserId());
+        Optional<UserEntity> user = userRepository.findById(request.getUserId());
         if(user.isEmpty()){
             throw new NotFoundException(MessageConstant.USER.USER_NOT_FOUND);
         }
@@ -49,7 +49,7 @@ public class CategoryService extends BaseService {
 
     @Transactional(readOnly = true)
     public StructureRS getList(BaseListingRQ request){
-        Page<CategoryEntity> listCategory = categoryRepository.findAll(filter(request.getQuery()), request.getPageable());
+        Page<CategoryEntity> listCategory = categoryRepository.findAll(filter(request.getQuery()),request.getPageable());
         return response(listCategory.stream().map(categoryMapper::toResponse),listCategory);
 
     }

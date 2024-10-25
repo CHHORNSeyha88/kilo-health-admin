@@ -33,7 +33,7 @@ public class UserEntity extends BaseEntity {
     @OneToMany(mappedBy = "user")
     private List<PostViewEntity> postViews ;
 
-    @OneToMany(fetch = FetchType.EAGER,mappedBy = "user")
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "user")
     private List<TopicEntity> topics ;
 
 }

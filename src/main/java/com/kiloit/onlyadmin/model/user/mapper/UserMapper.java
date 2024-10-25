@@ -1,5 +1,4 @@
 package com.kiloit.onlyadmin.model.user.mapper;
-
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -29,9 +28,6 @@ public interface UserMapper {
     })
     UserEntity fromUser(UserRQ request);
 
-    @Mapping(target = "status",ignore = true)
-    PermissionRS from(PermissionEntity permissionEntity);
-
     @Mapping(target = "roleId",source = "role.id")
     @Mapping(target = "roleName",source = "role.name")
     UserListRS fromUserList(UserEntity entity);
@@ -53,7 +49,6 @@ public interface UserMapper {
     })
     void fromUserUpdateRequest(UserUpdateRequest userUpdateRequest,@MappingTarget UserEntity userEntity);
 
-
     @Mappings({
         @Mapping(target = "createdAt",ignore = true),
         @Mapping(target = "deletedAt",ignore = true),
@@ -70,5 +65,7 @@ public interface UserMapper {
         @Mapping(target="photo",ignore=true)
     })
     UserEntity fromRegisterRequest(RegisterRequest registerRequest);
+
+    PermissionRS from(PermissionEntity permissionEntity);
 
 }

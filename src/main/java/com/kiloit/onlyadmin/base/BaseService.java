@@ -1,21 +1,15 @@
 package com.kiloit.onlyadmin.base;
-
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 
-/**
- * @author Sombath
- * create at 23/10/22 5:57 PM
- */
 public class BaseService {
-
 
     protected StructureRS response() {
         return new StructureRS();
     }
 
-    protected <T> StructureRS response(T data) {
-        return new StructureRS(data);
+    protected <T> StructureRS response(Object object) {
+        return new StructureRS(object);
     }
 
     protected <T> StructureRS response(T data, PagingRS pagingRS) {

@@ -1,5 +1,4 @@
 package com.kiloit.onlyadmin.database.entity;
-
 import java.util.HashSet;
 import java.util.Set;
 import com.kiloit.onlyadmin.base.BaseEntity;
@@ -19,6 +18,6 @@ public class PermissionEntity extends BaseEntity {
     private String name;
     private String module;
 
-    @ManyToMany(mappedBy = "permissions",fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "permissions",fetch = FetchType.LAZY)
     Set<RoleEntity> roles = new HashSet<>();
 }

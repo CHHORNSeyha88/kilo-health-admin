@@ -1,5 +1,4 @@
 package com.kiloit.onlyadmin.database.entity;
-
 import com.kiloit.onlyadmin.base.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -18,5 +17,6 @@ public class FileMedia extends BaseEntity {
     private String fileUrl;
     @Column(nullable = false)
     private Long fileSize;
+    
 
 }
