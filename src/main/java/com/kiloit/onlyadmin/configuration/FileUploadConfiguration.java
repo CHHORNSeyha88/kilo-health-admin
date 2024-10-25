@@ -7,11 +7,11 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class FileUploadConfiguration  implements WebMvcConfigurer{
-    private String serverPath = "D:\\Java";
+    @Value("${file-upload.server-path}")
+    private String serverPath ;
 
     @Override
     public void addResourceHandlers(@SuppressWarnings("null") ResourceHandlerRegistry resourceHandlerRegistry){
-     resourceHandlerRegistry.addResourceHandler("/upload/**")
-                            .addResourceLocations("file:"+serverPath);
+     resourceHandlerRegistry.addResourceHandler("/upload/**").addResourceLocations("file:"+serverPath);
     }
 }

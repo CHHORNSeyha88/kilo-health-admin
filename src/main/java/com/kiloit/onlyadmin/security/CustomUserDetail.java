@@ -15,7 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 @NoArgsConstructor
 @Slf4j
 public class CustomUserDetail implements UserDetails{
-
     private UserEntity user;
     private String type;
 
@@ -36,13 +35,11 @@ public class CustomUserDetail implements UserDetails{
 
     @Override
     public String getUsername() {
-        if(type=="email"){
-            return user.getEmail();
-        }
+        if(type=="email") return user.getEmail();
         return user.getUsername();
     }
+
     @Override
-    
     public boolean isAccountNonExpired() {
 		return true;
 	}

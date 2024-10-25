@@ -20,18 +20,9 @@ public class UserDetailServiceImplementation implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
         String type="";
-        Optional<UserEntity> user = userRepository
-        .findUserOrEmail(userName);
-
-        try {
-            if(user.isEmpty())
-            throw new BadRequestException(MessageConstant.USER.USER_NOT_FOUND);
-        } catch (BadRequestException e) {
-            e.printStackTrace();
-        }
-
+        Optional<UserEntity> user = userRepository.findUserOrEmail(userName);
+        try {if(user.isEmpty()) throw new BadRequestException(MessageConstant.USER.USER_NOT_FOUND);} catch (BadRequestException e) {e.printStackTrace();}
         if(userName.contains("@gmail.com")) type="email";
-        
         CustomUserDetail customUserDetail = new CustomUserDetail(type);
         customUserDetail.setUser(user.get());
         return customUserDetail;
