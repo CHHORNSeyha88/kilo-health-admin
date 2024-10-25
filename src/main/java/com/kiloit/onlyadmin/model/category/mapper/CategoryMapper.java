@@ -32,8 +32,6 @@ public interface CategoryMapper {
 
     @Mapping(target = "fileMedia", source = "fileMediaId")
     @Mapping(target = "user", source = "user")
-    @Mapping(target = "topicResponseLists", source = "topicList")
-    @Mapping(target = "postResponseLists", source = "postEntities")
     CategoryRS from(CategoryEntity entity);
 
     @Mapping(target = "categoryName", source = "category.name")

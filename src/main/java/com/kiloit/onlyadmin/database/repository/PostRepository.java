@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.Optional;
 
 public interface PostRepository extends JpaRepository<PostEntity,Long>, JpaSpecificationExecutor<PostEntity> {
-    @Query("select p from PostEntity p join fetch TopicEntity t on t.id = p.topicEntity.id join fetch CategoryEntity c on c.id = p.categoryEntity.id join fetch UserEntity u on u.id = p.userEntity.id where p.id = :id and p.deletedAt is null")
+    @Query("select p from PostEntity p left join fetch p.userEntity u left join fetch p.topicEntity t left join fetch p.categoryEntity c where p.id = :id and p.deletedAt is null")
     Optional<PostEntity> findPostById(Long id);
 
     Optional<PostEntity> findByIdAndDeletedAtNull(Long id);

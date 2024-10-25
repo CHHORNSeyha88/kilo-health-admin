@@ -30,9 +30,9 @@ public interface PostMapper {
     PostEntity toEntity(PostCreateRequest request);
 
     @Mappings({
-        @Mapping(target = "userListResponse",source = "userEntity"),
-        @Mapping(target = "topicRSById", source = "topicEntity"),
-        @Mapping(target = "categoryRS",source = "categoryEntity"),
+        @Mapping(target = "user",source = "userEntity"),
+        @Mapping(target = "topic", source = "topicEntity"),
+        @Mapping(target = "category",source = "categoryEntity"),
     })
     PostDetailResponse toResponse(PostEntity postEntity);
 

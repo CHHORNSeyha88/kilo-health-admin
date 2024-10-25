@@ -7,6 +7,6 @@ public class TopicRSById {
     private Long id;
     private String name;
     private CustomTopicCategory category;
-    private CustomTopicUser userEntity;
+    private CustomTopicUser user;
     private FileMediaResponse fileMedia;
 }

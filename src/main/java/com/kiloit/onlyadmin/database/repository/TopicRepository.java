@@ -10,6 +10,6 @@ import java.util.Optional;
 public interface TopicRepository extends JpaRepository<TopicEntity, Long> , JpaSpecificationExecutor<TopicEntity> {
     Optional<TopicEntity> findByIdAndDeletedAtNull(Long id);
 
-    @Query("select t from TopicEntity t left join fetch FileMedia m on t.id = m.id ")
+    @Query("select t from TopicEntity t left join fetch t.fileMediaId f left join fetch t.category left join fetch t.user u where t.id = :id and t.deletedAt is null ")
     Optional<TopicEntity> findTopicEntityById(Long id);
 }

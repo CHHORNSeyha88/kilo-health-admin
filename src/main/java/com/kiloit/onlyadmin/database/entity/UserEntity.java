@@ -23,14 +23,14 @@ public class UserEntity extends BaseEntity {
     private LocalDate dob;
     private Boolean isVerification;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id")
     private RoleEntity role;
 
-    @OneToMany(mappedBy = "userEntity")
+    @OneToMany(mappedBy = "userEntity", fetch = FetchType.LAZY)
     private Set<PostEntity> postEntities = new HashSet<>();
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<PostViewEntity> postViews ;
 
     @OneToMany(fetch = FetchType.LAZY,mappedBy = "user")

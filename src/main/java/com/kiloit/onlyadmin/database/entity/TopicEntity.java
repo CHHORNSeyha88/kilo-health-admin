@@ -19,15 +19,15 @@ public class TopicEntity extends BaseEntity {
     @JoinColumn(name = "media_id")
     private FileMedia fileMediaId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private CategoryEntity category;
 
-    @OneToMany(mappedBy = "topicEntity")
+    @OneToMany(mappedBy = "topicEntity", fetch = FetchType.LAZY)
     List<PostEntity> postEntities;
 
 }
