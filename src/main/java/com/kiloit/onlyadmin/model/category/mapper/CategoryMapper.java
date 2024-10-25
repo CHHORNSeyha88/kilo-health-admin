@@ -32,16 +32,21 @@ public interface CategoryMapper {
 
     @Mapping(target = "fileMedia", source = "fileMediaId")
     @Mapping(target = "user", source = "user")
+<<<<<<< Updated upstream
+=======
+    @Mapping(target = "topics", source = "topicList")
+    @Mapping(target = "posts", source = "postEntities")
+>>>>>>> Stashed changes
     CategoryRS from(CategoryEntity entity);
 
     @Mapping(target = "categoryName", source = "category.name")
     @Mapping(target = "userName", source = "user.username")
-    TopicResponseList toTopicResponseList(TopicEntity topic);
+    TopicResponseList toTopics(TopicEntity topic);
 
     @Mapping(target = "categoryName", source = "categoryEntity.name")
     @Mapping(target = "userName", source = "userEntity.username")
     @Mapping(target = "topicName", source = "topicEntity.name")
-    PostListResponse toPostListResponse(PostEntity post);
+    PostListResponse toPosts(PostEntity post);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mappings({

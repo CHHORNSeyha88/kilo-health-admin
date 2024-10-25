@@ -35,12 +35,37 @@ public class SecurityConfig {
     }
     @Bean
     SecurityFilterChain configureApiSecurity(HttpSecurity httpSecurity,@Qualifier("accessTokenJwtDecoder") JwtDecoder jwtDecoder) throws Exception{
+<<<<<<< Updated upstream
         httpSecurity.authorizeHttpRequests(endpoint-> endpoint
         .requestMatchers("api/v1/auth/**","api/v1/files/**","/upload/**")
         .permitAll()
         .requestMatchers("api/v1/users/**")
         .hasAuthority("SCOPE_ROLE_Administrator")
         .anyRequest().authenticated());
+=======
+
+//        httpSecurity.authorizeHttpRequests(endpoint-> endpoint
+//
+//        .requestMatchers("api/v1/auth/**")
+//        .permitAll()
+//
+//        .requestMatchers("api/v1/files/**")
+//        .permitAll()
+//
+//        .requestMatchers("/upload/**")
+//        .permitAll()
+//
+//
+//        .requestMatchers("api/v1/users/**")
+//        .hasAuthority("SCOPE_ROLE_Administrator")
+//
+//        .anyRequest().authenticated());
+        httpSecurity.csrf(token -> token.disable());
+
+//        httpSecurity.oauth2ResourceServer(jwt->jwt.jwt(jwtConfigurer->jwtConfigurer.decoder(jwtDecoder)));
+
+        httpSecurity.sessionManagement(session-> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+>>>>>>> Stashed changes
         
         httpSecurity.csrf(token -> token.disable());
         httpSecurity.oauth2ResourceServer(jwt->jwt.jwt(jwtConfigurer->jwtConfigurer.decoder(jwtDecoder)));

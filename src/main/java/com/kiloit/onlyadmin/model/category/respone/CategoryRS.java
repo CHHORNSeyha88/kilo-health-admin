@@ -13,4 +13,10 @@ public class CategoryRS {
     private String name;
     private FileMediaResponse fileMedia;
     private CategoryRS_user user;
+<<<<<<< Updated upstream
+=======
+    private List<TopicResponseList> topics;
+    private List<PostListResponse> posts;
+
+>>>>>>> Stashed changes
 }
