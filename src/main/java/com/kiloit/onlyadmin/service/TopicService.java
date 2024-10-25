@@ -63,6 +63,7 @@ public class TopicService extends BaseService {
         if (topicEntity.isEmpty()) {
            throw new NotFoundException(MessageConstant.TOPIC.TOPIC_NOT_FOUND);
         }
+        System.out.println(topicEntity.get().getCategory());
         return response(topicMapper.to(topicEntity.get()));
     }
 

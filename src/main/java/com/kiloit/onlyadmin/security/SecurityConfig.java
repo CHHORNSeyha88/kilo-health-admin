@@ -41,7 +41,6 @@ public class SecurityConfig {
         .requestMatchers("api/v1/users/**","api/v1/roles/**")
         .hasAuthority("SCOPE_ROLE_Administrator")
         .anyRequest().authenticated());
-        
         httpSecurity.csrf(token -> token.disable());
         httpSecurity.oauth2ResourceServer(jwt->jwt.jwt(jwtConfigurer->jwtConfigurer.decoder(jwtDecoder)));
         httpSecurity.sessionManagement(session-> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
