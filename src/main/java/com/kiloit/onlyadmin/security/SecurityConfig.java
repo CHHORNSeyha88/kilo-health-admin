@@ -38,7 +38,7 @@ public class SecurityConfig {
         httpSecurity.authorizeHttpRequests(endpoint-> endpoint
         .requestMatchers("api/v1/auth/**","api/v1/files/**","/upload/**")
         .permitAll()
-        .requestMatchers("api/v1/users/**")
+        .requestMatchers("api/v1/users/**","api/v1/roles/**")
         .hasAuthority("SCOPE_ROLE_Administrator")
         .anyRequest().authenticated());
         

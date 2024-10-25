@@ -6,6 +6,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -49,7 +50,6 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.HashMap;
 import java.time.*;
-import java.util.List;
 import java.time.temporal.ChronoUnit;
 
 @Service
@@ -74,7 +74,7 @@ public class AuthServices extends BaseService{
 
     public StructureRS register(RegisterRequest registerRequest) {
         if(userRepository.existsByPhone(registerRequest.phone())) throw new BadRequestException("Phone Number has been already exist");
-        if(userRepository.existsByEmail(registerRequest.email())) throw new BadRequestException("Emaile has been already exist");
+        if(userRepository.existsByEmail(registerRequest.email())) throw new BadRequestException("Email has been already exist");
         if(!registerRequest.confirmPassword().equals(registerRequest.password())) throw new BadRequestException("Password has not been match");
         
         UserEntity user = userMapper.fromRegisterRequest(registerRequest);
@@ -150,16 +150,17 @@ public class AuthServices extends BaseService{
     }
 
     public StructureRS login(LoginRequest loginRequest) {
-        if(userRepository.existsByEmailAndIsVerification(loginRequest.phoneNumber(),true)){
-            Authentication authentication= new UsernamePasswordAuthenticationToken(loginRequest.phoneNumber(),loginRequest.password());
-            authentication=daoAuthenticationProvider.authenticate(authentication);
-            String scope = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(" "));
-            String accessToken =  createToken(accessTokenJwtEncoder, createClaimsSet(authentication,scope,"dao"));
-            String refreshToken = createToken(refreshTokenJwtEncoder, createClaimsSet(authentication,scope,"dao-jwt"));
-            return response(AuthResponse.builder().accessToken(accessToken).refeshToken(refreshToken).tokenType("Bearer").build());
-        }
-        else throw new BadRequestException("Invalid username or password");
-        
+        if(userRepository.existsByEmailAndIsVerificationAndDeletedAt(loginRequest.phoneNumber(),true,null)){
+            try{
+                Authentication authentication= new UsernamePasswordAuthenticationToken(loginRequest.phoneNumber(),loginRequest.password());
+                authentication = daoAuthenticationProvider.authenticate(authentication);
+                if(!authentication.isAuthenticated()) throw new BadRequestException("Invalid email or password");
+                String scope = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(" "));
+                return response(AuthResponse.builder().accessToken(createToken(accessTokenJwtEncoder, createClaimsSet(authentication, scope, "dao"))).refeshToken(createToken(refreshTokenJwtEncoder, createClaimsSet(authentication, scope, "dao-jwt"))).tokenType("Bearer").build());
+            }catch(AuthenticationException e){
+                throw new BadRequestException("Invalid email or password");
+            }
+        } else throw new BadRequestException("Username has not been found");
     }
 
     public StructureRS refreshToken(RefreshTokenRequest refreshTokenRequest) {
@@ -180,7 +181,6 @@ public class AuthServices extends BaseService{
         String subject_="Access APIs";
         String issuer=id;
         Instant issueAt=Instant.now();
-        List<String> audience=List.of("NextJs","Android","IOS");
         Boolean claimValue1=true;
         String claimValue2=scope;
 
@@ -190,10 +190,9 @@ public class AuthServices extends BaseService{
             issuer=id;
             expired=Instant.now().plus(30,ChronoUnit.DAYS);
             claimValue2=jwt.getClaimAsString("scope");
-            audience=jwt.getAudience();
         }
         else if(type=="dao-jwt") expired= Instant.now().plus(30,ChronoUnit.DAYS);
-        return JwtClaimsSet.builder().id(id).subject(subject_).issuer(issuer).issuedAt(issueAt).expiresAt(expired).audience(audience).claim("isAdmin", claimValue1).claim("scope", claimValue2).build();
+        return JwtClaimsSet.builder().id(id).subject(subject_).issuer(issuer).issuedAt(issueAt).expiresAt(expired).claim("isAdmin", claimValue1).claim("scope", claimValue2).build();
     }
 
     public StructureRS resetPassword(ResetPasswordRequest resetPasswordRequest){

@@ -10,6 +10,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 
@@ -21,7 +23,7 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> ,JpaSpec
     @Query("SELECT u FROM UserEntity AS u JOIN FETCH u.role WHERE u.deletedAt IS NULL")
     Page<UserEntity> findAll(Specification<UserEntity> specification,PageRequest pageRequest);
     
-    @Query("SELECT u FROM UserEntity AS u WHERE email=:userName OR username=:userName")
+    @Query("SELECT u FROM UserEntity AS u JOIN FETCH u.role AS r WHERE email=:userName OR username=:userName")
     Optional<UserEntity> findUserOrEmail(@Param("userName") String userName);
 
     boolean existsByPhone(String phoneNumber);
@@ -30,5 +32,5 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> ,JpaSpec
     Optional<UserEntity> findByPhone(String phoneNumber);
     boolean existsByUsername(String username);
 
-    boolean existsByEmailAndIsVerification(@NotBlank(message = "Phone Number is required") String phoneNumber,boolean b);
+    boolean existsByEmailAndIsVerificationAndDeletedAt(@NotBlank(message = "Phone Number is required") String phoneNumber,boolean isVerification,LocalDateTime date);
 }

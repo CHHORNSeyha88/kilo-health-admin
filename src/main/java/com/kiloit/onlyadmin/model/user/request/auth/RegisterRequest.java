@@ -13,10 +13,10 @@ public record RegisterRequest(
     @NotBlank(message = "Email is required")
     String email,
     @NotBlank(message = "Password is required")
-    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{4,12}$")
+    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{4,12}$",message = "Password must contain at least 6 characters one uppercase letter, one lowercase letter, one digit, one special character")
     String password,
     @NotBlank(message = "Confirm Password is required")
-    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{4,12}$")
+    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{4,12}$",message = "Password must contain at least 6 characters one uppercase letter, one lowercase letter, one digit, one special character")
     String confirmPassword,
     @NotBlank(message = "Name is required")
     String username,
