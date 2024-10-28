@@ -34,7 +34,7 @@ build-system-service:
     - make-artifact
   script:
     - chmod +x mvnw
-    - cd $SYS_DIR && ./mvnw clean package -DskipTests && mv target/*.jar $CI_PROJECT_DIR/artifacts/kilo-health-admin.jar
+    - cd $SYS_DIR && mvnw clean package -DskipTests && mv target/*.jar $CI_PROJECT_DIR/artifacts/kilo-health-admin.jar
   artifacts:
     paths:
       - $CI_PROJECT_DIR/artifacts/*.jar
