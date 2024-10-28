@@ -28,7 +28,7 @@ make-artifact:
 #----build-jar--------
 #---------------------
 build-system-service:
-  image: maven:3.9.4-amazoncorretto-20-al2023
+  image: maven:3.9.4-amazoncorretto-21-al2023
   stage: build-jar-system
   dependencies:
     - make-artifact
