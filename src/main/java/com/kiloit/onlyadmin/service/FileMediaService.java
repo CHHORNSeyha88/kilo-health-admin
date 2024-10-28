@@ -11,6 +11,7 @@ import com.kiloit.onlyadmin.model.filemedia.mapper.FileMediaMapper;
 import com.kiloit.onlyadmin.model.filemedia.response.FileMediaResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
@@ -34,7 +35,9 @@ import java.util.UUID;
 public class FileMediaService extends BaseService {
     private final FileMediaRepository fileMediaRepository;
     private final FileMediaMapper fileMediaMapper;
+    @Value(value = "${spring.file-upload.server-path}")
     private String serverPath;
+    @Value(value = "${spring.file-upload.base-uri}")
     private String baseUri;
 
     public FileMediaResponse FileUpload(MultipartFile fileUpload){
