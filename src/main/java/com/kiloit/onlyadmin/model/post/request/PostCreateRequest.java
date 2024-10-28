@@ -15,8 +15,6 @@ public class PostCreateRequest {
     @NotNull(message = MessageConstant.POST.POST_PUBLIC_AT_IS_NULL)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime publicAt;
-    @NotNull(message = MessageConstant.POST.POST_STATUS_IS_NULL)
-    private Boolean status;
     @NotNull(message = MessageConstant.FILEMEDIA.FILE_MEDIA_ID_IS_NULL)
     private Long mediaId;
     @NotNull(message = MessageConstant.TOPIC.TOPIC_ID_IS_NULL)

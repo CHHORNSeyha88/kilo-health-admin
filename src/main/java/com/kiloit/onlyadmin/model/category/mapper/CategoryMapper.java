@@ -18,7 +18,6 @@ public interface CategoryMapper {
             @Mapping(target = "createdAt", ignore = true),
             @Mapping(target = "deletedAt", ignore = true),
             @Mapping(target = "id", ignore = true),
-            @Mapping(target = "user.id", source = "userId"),
             @Mapping(target = "modifiedAt", ignore = true),
             @Mapping(target = "fileMediaId", ignore = true),
             @Mapping(target = "postEntities", ignore = true),

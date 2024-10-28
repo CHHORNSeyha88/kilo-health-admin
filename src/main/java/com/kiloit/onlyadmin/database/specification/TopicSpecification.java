@@ -19,8 +19,8 @@ public class TopicSpecification {
                 Predicate predicateName = cb.like(root.get("name"), "%" + query + "%");
                 predicates.add(cb.or(predicateName));
             }
-            Join<TopicEntity, CategoryEntity> joinCategoryEntity = root.join(("category"), JoinType.INNER);
             if(categoryId != null && categoryId != 0){
+                Join<TopicEntity, CategoryEntity> joinCategoryEntity = root.join(("category"), JoinType.INNER);
                 predicates.add(cb.equal(joinCategoryEntity.get("id"),categoryId));
             }
             Join<TopicEntity, UserEntity> joinUserEntity = root.join(("user"), JoinType.INNER);

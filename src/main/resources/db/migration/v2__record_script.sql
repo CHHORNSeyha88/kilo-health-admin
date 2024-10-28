@@ -47,11 +47,13 @@ VALUES
 INSERT INTO user (id, photo, firstname, lastname, username, password, email, phone, address, gender, dob,
                   is_verification, role_id, created_at, modified_at, deleted_at)
 VALUES
-    (1, 'https://example.com/images/user_photo_01.jpg', 'John', 'Doe', 'johndoe', 'hashedpassword1', 'john.doe@example.com', '1234567890', '123 Main St, City', 'Male', '1990-05-15', TRUE, 1, '2024-10-20 10:15:00', NULL, NULL),
-    (2, 'https://example.com/images/user_photo_02.jpg', 'Jane', 'Smith', 'janesmith', 'hashedpassword2', 'jane.smith@example.com', '1234567891', '456 Maple St, City', 'Female', '1992-07-25', TRUE, 2, '2024-10-20 10:45:00', NULL, NULL),
-    (3, 'https://example.com/images/user_photo_03.jpg', 'Emily', 'Johnson', 'emilyj', 'hashedpassword3', 'emily.j@example.com', '1234567892', '789 Oak St, City', 'Female', '1988-12-11', FALSE, 3, '2024-10-20 11:15:00', NULL, NULL),
-    (4, 'https://example.com/images/user_photo_04.jpg', 'Michael', 'Brown', 'mikeb', 'hashedpassword4', 'michael.b@example.com', '1234567893', '321 Pine St, City', 'Male', '1985-03-30', TRUE, 2, '2024-10-20 11:45:00', NULL, NULL),
-    (5, 'https://example.com/images/user_photo_05.jpg', 'Laura', 'Wilson', 'lauraw', 'hashedpassword5', 'laura.w@example.com', '1234567894', '654 Cedar St, City', 'Female', '1994-09-10', TRUE, 1, '2024-10-20 12:15:00', NULL, NULL);
+#     password : Admin@168
+    (1, 'https://example.com/images/user_photo_01.jpg', 'admin', 'admin', 'admin', '$2a$10$z1a.ODGFkXKi5m4MhbIA.uKACxWkyy2xMMKn2FzUhTfEZ2bAIv1yq', 'admin@gmail.com', '012345678', '123 Main St, City', 'Male', '1990-05-15', TRUE, 1, '2024-10-20 10:15:00', NULL, NULL),
+#     password : Metor@168
+    (2, 'https://example.com/images/user_photo_02.jpg', 'metor', 'metor', 'metor', '$2a$10$qoBefwRyFR8qma3FBF0xAeZhyYakF9cyqmD2PHa7vTt4bDp.jAOTm', 'metor@gmail.com', '0123456789', '456 Maple St, City', 'Female', '1992-07-25', TRUE, 2, '2024-10-20 10:45:00', NULL, NULL),
+#     password : User@168
+    (3, 'https://example.com/images/user_photo_03.jpg', 'user', 'user', 'user', '$2a$10$PI.WolyuFl9lR8v3iGUDy.9dfZoJvs.LRUw/HBS50UEv5Lf/Xe.SS', 'user@gmail.com', '0123456798', '789 Oak St, City', 'Female', '1988-12-11', TRUE, 3, '2024-10-20 11:15:00', NULL, NULL);
+
 
 -- Inserting file medias
 INSERT INTO file_medias (id, file_name, file_type, file_url, file_size, created_at, modified_at, deleted_at)
@@ -105,7 +107,33 @@ VALUES
     (47, 'image_47.jpg', 'image/jpeg', 'https://example.com/media/image_47.jpg', 550, '2024-10-20 15:55:00', NULL, NULL),
     (48, 'image_48.jpg', 'image/jpeg', 'https://example.com/media/image_48.jpg', 700, '2024-10-20 16:00:00', NULL, NULL),
     (49, 'image_49.jpg', 'image/jpeg', 'https://example.com/media/image_49.jpg', 620, '2024-10-20 16:05:00', NULL, NULL),
-    (50, 'image_50.jpg', 'image/jpeg', 'https://example.com/media/image_50.jpg', 450, '2024-10-20 16:10:00', NULL, NULL);
+    (50, 'image_50.jpg', 'image/jpeg', 'https://example.com/media/image_50.jpg', 450, '2024-10-20 16:10:00', NULL, NULL),
+    (51, 'image_51.jpg', 'image/jpeg', 'https://example.com/media/image_51.jpg', 500, '2024-10-20 16:15:00', NULL, NULL),
+    (52, 'image_52.jpg', 'image/jpeg', 'https://example.com/media/image_52.jpg', 510, '2024-10-20 16:20:00', NULL, NULL),
+    (53, 'image_53.jpg', 'image/jpeg', 'https://example.com/media/image_53.jpg', 480, '2024-10-20 16:25:00', NULL, NULL),
+    (54, 'image_54.jpg', 'image/jpeg', 'https://example.com/media/image_54.jpg', 495, '2024-10-20 16:30:00', NULL, NULL),
+    (55, 'image_55.jpg', 'image/jpeg', 'https://example.com/media/image_55.jpg', 600, '2024-10-20 16:35:00', NULL, NULL),
+    (56, 'image_56.jpg', 'image/jpeg', 'https://example.com/media/image_56.jpg', 465, '2024-10-20 16:40:00', NULL, NULL),
+    (57, 'image_57.jpg', 'image/jpeg', 'https://example.com/media/image_57.jpg', 475, '2024-10-20 16:45:00', NULL, NULL),
+    (58, 'image_58.jpg', 'image/jpeg', 'https://example.com/media/image_58.jpg', 620, '2024-10-20 16:50:00', NULL, NULL),
+    (59, 'image_59.jpg', 'image/jpeg', 'https://example.com/media/image_59.jpg', 450, '2024-10-20 16:55:00', NULL, NULL),
+    (60, 'image_60.jpg', 'image/jpeg', 'https://example.com/media/image_60.jpg', 530, '2024-10-20 17:00:00', NULL, NULL),
+    (61, 'image_61.jpg', 'image/jpeg', 'https://example.com/media/image_61.jpg', 470, '2024-10-20 17:05:00', NULL, NULL),
+    (62, 'image_62.jpg', 'image/jpeg', 'https://example.com/media/image_62.jpg', 485, '2024-10-20 17:10:00', NULL, NULL),
+    (63, 'image_63.jpg', 'image/jpeg', 'https://example.com/media/image_63.jpg', 540, '2024-10-20 17:15:00', NULL, NULL),
+    (64, 'image_64.jpg', 'image/jpeg', 'https://example.com/media/image_64.jpg', 510, '2024-10-20 17:20:00', NULL, NULL),
+    (65, 'image_65.jpg', 'image/jpeg', 'https://example.com/media/image_65.jpg', 495, '2024-10-20 17:25:00', NULL, NULL),
+    (66, 'image_66.jpg', 'image/jpeg', 'https://example.com/media/image_66.jpg', 620, '2024-10-20 17:30:00', NULL, NULL),
+    (67, 'image_67.jpg', 'image/jpeg', 'https://example.com/media/image_67.jpg', 460, '2024-10-20 17:35:00', NULL, NULL),
+    (68, 'image_68.jpg', 'image/jpeg', 'https://example.com/media/image_68.jpg', 475, '2024-10-20 17:40:00', NULL, NULL),
+    (69, 'image_69.jpg', 'image/jpeg', 'https://example.com/media/image_69.jpg', 530, '2024-10-20 17:45:00', NULL, NULL),
+    (70, 'image_70.jpg', 'image/jpeg', 'https://example.com/media/image_70.jpg', 490, '2024-10-20 17:50:00', NULL, NULL),
+    (71, 'image_71.jpg', 'image/jpeg', 'https://example.com/media/image_71.jpg', 500, '2024-10-20 17:55:00', NULL, NULL),
+    (72, 'image_72.jpg', 'image/jpeg', 'https://example.com/media/image_72.jpg', 480, '2024-10-20 18:00:00', NULL, NULL),
+    (73, 'image_73.jpg', 'image/jpeg', 'https://example.com/media/image_73.jpg', 505, '2024-10-20 18:05:00', NULL, NULL),
+    (74, 'image_74.jpg', 'image/jpeg', 'https://example.com/media/image_74.jpg', 600, '2024-10-20 18:10:00', NULL, NULL),
+    (75, 'image_75.jpg', 'image/jpeg', 'https://example.com/media/image_75.jpg', 465, '2024-10-20 18:15:00', NULL, NULL);
+
 
 INSERT INTO category (id, name, media_id, user_id, created_at, modified_at, deleted_at) VALUES
     (1, 'Physical Health', 1, 1, '2024-10-20 10:00:00', NULL, NULL),
@@ -154,7 +182,7 @@ INSERT INTO posts (id, title, description, status, time_read, media_id, public_a
 (8, 'Mindfulness Exercises for Beginners', 'A beginner’s guide to simple mindfulness exercises to reduce stress.', true, 6, 28, '2024-10-20 12:35:00', 3, 4, 2, '2024-10-20 12:35:00', NULL, NULL),
 
 -- Posts for Topic 5: 'Coping with Anxiety'
-(9, 'Coping Strategies for Anxiety', 'Effective strategies to help cope with anxiety and stress.', true, 7, 29, '2024-10-20 12:40:00', 4, 5, 2, '2024-10-20 12:40:00', NULL, NULL),
+(9, 'Coping Strategies for Anxiety', 'Effective strategies to help cope with anxiety and stress.', true, 7, 29, '2024-10-20 12:40:00', 3, 5, 2, '2024-10-20 12:40:00', NULL, NULL),
 (10, 'Understanding Your Anxiety Triggers', 'Identifying and managing anxiety triggers in your daily life.', true, 5, 30, '2024-10-20 12:45:00', 1, 5, 2, '2024-10-20 12:45:00', NULL, NULL),
 
 -- Posts for Topic 6: 'The Importance of Therapy'
@@ -167,7 +195,7 @@ INSERT INTO posts (id, title, description, status, time_read, media_id, public_a
 
 -- Posts for Topic 8: 'Understanding Nutritional Labels'
 (15, 'How to Read Nutritional Labels', 'Learn how to properly read and understand nutritional labels.', true, 5, 35, '2024-10-20 13:10:00', 1, 8, 3, '2024-10-20 13:10:00', NULL, NULL),
-(16, 'Common Misconceptions About Nutrition', 'Debunking common misconceptions surrounding nutrition.', true, 6, 36, '2024-10-20 13:15:00', 4, 8, 3, '2024-10-20 13:15:00', NULL, NULL),
+(16, 'Common Misconceptions About Nutrition', 'Debunking common misconceptions surrounding nutrition.', true, 6, 36, '2024-10-20 13:15:00', 3, 8, 3, '2024-10-20 13:15:00', NULL, NULL),
 
 -- Posts for Topic 9: 'How to Balance Macronutrients'
 (17, 'Understanding Macronutrients', 'A comprehensive guide to understanding macronutrients and their role in nutrition.', true, 5, 37, '2024-10-20 13:20:00', 2, 9, 3, '2024-10-20 13:20:00', NULL, NULL),
@@ -175,7 +203,7 @@ INSERT INTO posts (id, title, description, status, time_read, media_id, public_a
 
 -- Posts for Topic 10: 'Home Workout Routines'
 (19, 'The Best Home Workout Routines', 'A list of effective workout routines you can do at home.', true, 5, 39, '2024-10-20 13:30:00', 1, 10, 4, '2024-10-20 13:30:00', NULL, NULL),
-(20, 'Staying Motivated to Work Out at Home', 'Tips on how to stay motivated to exercise at home.', true, 6, 40, '2024-10-20 13:35:00', 3, 10, 4, '2024-10-20 13:35:00', NULL, NULL),
+(20, 'Staying Motivated to Work Out at Home', 'Tips on how to stay motivated to exercise at home.', true, 6, 40, '2024-10-20 13:35:00', 2, 10, 4, '2024-10-20 13:35:00', NULL, NULL),
 
 -- Posts for Topic 11: 'The Role of Cardio in Fitness'
 (21, 'Benefits of Cardio Exercises', 'Exploring the numerous benefits of cardio exercises for overall health.', true, 5, 41, '2024-10-20 13:40:00', 1, 11, 4, '2024-10-20 13:40:00', NULL, NULL),

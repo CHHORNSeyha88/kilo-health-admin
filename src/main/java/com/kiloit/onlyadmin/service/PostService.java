@@ -55,7 +55,7 @@ public class PostService extends BaseService {
             throw new NotFoundException(MessageConstant.FILEMEDIA.FILE_MEDIA_NOT_FOUNT);
         }
         int timeRead = calculateReadingTime(request.getDescription());
-        postEntityList.setStatus(request.getStatus());
+        postEntityList.setStatus(true);
         postEntityList.setPublicAt(request.getPublicAt());
         postEntityList.setTime_read(timeRead);
         postEntityList.setUserEntity(userEntity.get());
