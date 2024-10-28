@@ -17,24 +17,24 @@ import org.springframework.web.bind.annotation.*;
 public class FileMediaController extends BaseController {
     private final FileMediaService fileMediaService;
 
-    @PostMapping("/upload")
-    public ResponseEntity<StructureRS> upload(@Valid @ModelAttribute FileUploadForm form, BindingResult result) {
-        return response(fileMediaService.upload(form.files()));
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<StructureRS> getDetail(@PathVariable Long id){
-        return response(fileMediaService.findById(id));
-    }
-
-    @GetMapping
-    public ResponseEntity<StructureRS> getAll(BaseListingRQ request){
-        return response(fileMediaService.findAll(request));
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<StructureRS> delete(@PathVariable Long id){
-        return response(fileMediaService.delete(id));
-    }
+//    @PostMapping("/upload")
+//    public ResponseEntity<StructureRS> upload(@Valid @ModelAttribute FileUploadForm form, BindingResult result) {
+//        return response(fileMediaService.upload(form.files()));
+//    }
+//
+//    @GetMapping("/{id}")
+//    public ResponseEntity<StructureRS> getDetail(@PathVariable Long id){
+//        return response(fileMediaService.findById(id));
+//    }
+//
+//    @GetMapping
+//    public ResponseEntity<StructureRS> getAll(BaseListingRQ request){
+//        return response(fileMediaService.findAll(request));
+//    }
+//
+//    @DeleteMapping("/{id}")
+//    public ResponseEntity<StructureRS> delete(@PathVariable Long id){
+//        return response(fileMediaService.delete(id));
+//    }
 
 }

@@ -14,6 +14,7 @@ import com.kiloit.onlyadmin.exception.httpstatus.NotFoundException;
 import com.kiloit.onlyadmin.model.category.mapper.CategoryMapper;
 import com.kiloit.onlyadmin.model.category.request.CategoryRQ;
 import com.kiloit.onlyadmin.model.category.request.CategoryRQ_Update;
+import com.kiloit.onlyadmin.util.GetUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -30,10 +31,12 @@ public class CategoryService extends BaseService {
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
     private final FileMediaRepository fileMediaRepository;
+    private final GetUser getUser;
+
 
     @Transactional
     public StructureRS create(CategoryRQ request){
-        Optional<UserEntity> user = userRepository.findById(request.getUserId());
+        Optional<UserEntity> user = userRepository.findByEmail(getUser.getEmailUser());
         if(user.isEmpty()){
             throw new NotFoundException(MessageConstant.USER.USER_NOT_FOUND);
         }
@@ -49,13 +52,13 @@ public class CategoryService extends BaseService {
 
     @Transactional(readOnly = true)
     public StructureRS getList(BaseListingRQ request){
-        Page<CategoryEntity> listCategory = categoryRepository.findAll(filter(request.getQuery()),request.getPageable());
+        Page<CategoryEntity> listCategory = categoryRepository.findAll(filter(getUser.getRoleUser(),getUser.getEmailUser(),request.getQuery()),request.getPageable());
         return response(listCategory.stream().map(categoryMapper::toResponse),listCategory);
 
     }
     @Transactional(readOnly = true)
     public StructureRS getDetail(Long id){
-        Optional<CategoryEntity> categoryEntity = categoryRepository.findByID(id);
+        Optional<CategoryEntity> categoryEntity = categoryRepository.findCategory(id,getUser.getEmailUser(), getUser.getRoleUser());
         if(categoryEntity.isEmpty()){
             throw new NotFoundException(MessageConstant.CATEGORY.CATEGORY_COULD_NOT_BE_FOUND);
         }
@@ -64,7 +67,7 @@ public class CategoryService extends BaseService {
 
     @Transactional
     public StructureRS updateById(Long id, CategoryRQ_Update request){
-        Optional<CategoryEntity> categoryEntity = categoryRepository.findByID(id);
+        Optional<CategoryEntity> categoryEntity = categoryRepository.findCategory(id,getUser.getEmailUser(), getUser.getRoleUser());
         if(categoryEntity.isEmpty()){
             throw new NotFoundException(MessageConstant.CATEGORY.CATEGORY_COULD_NOT_BE_FOUND);
         }
@@ -76,7 +79,7 @@ public class CategoryService extends BaseService {
 
     @Transactional
     public StructureRS deleteById(Long id){
-        Optional<CategoryEntity> categoryEntity = categoryRepository.findById(id);
+        Optional<CategoryEntity> categoryEntity = categoryRepository.findCategory(id,getUser.getEmailUser(), getUser.getRoleUser());
         if(categoryEntity.isEmpty()){
             throw new NotFoundException(MessageConstant.CATEGORY.CATEGORY_COULD_NOT_BE_FOUND);
         }

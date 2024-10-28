@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PostSpecification {
-    public static Specification<PostEntity> filter(String query,Boolean status,Long userId, Long categoryId , Long topicId) {
+    public static Specification<PostEntity> filter(String role,String email,String query,Boolean status,Long userId, Long categoryId , Long topicId) {
         return (root, cq, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
 
@@ -25,9 +25,14 @@ public class PostSpecification {
                 predicates.add(statusPredicate);
             }
             Join<PostEntity, UserEntity> joinUserEntity = root.join("userEntity", JoinType.INNER);
-            if(userId != null && userId != 0){
-                predicates.add(cb.equal(joinUserEntity.get("id"),userId));
+            if ("Administrator".equals(role)) {
+                if(userId != null && userId != 0){
+                    predicates.add(cb.equal(joinUserEntity.get("id"),userId));
+                }
+            }else {
+                predicates.add(cb.equal(joinUserEntity.get("email"),email));
             }
+
             Join<PostEntity, CategoryEntity> joinCategoryEntity = root.join("categoryEntity", JoinType.INNER);
             if(categoryId != null && categoryId!= 0){
                 predicates.add(cb.equal(joinCategoryEntity.get("id"),categoryId));

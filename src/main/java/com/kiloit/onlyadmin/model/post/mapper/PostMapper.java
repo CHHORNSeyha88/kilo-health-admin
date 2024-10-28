@@ -33,6 +33,7 @@ public interface PostMapper {
         @Mapping(target = "user",source = "userEntity"),
         @Mapping(target = "topic", source = "topicEntity"),
         @Mapping(target = "category",source = "categoryEntity"),
+            @Mapping(target = "fileMedia", source = "fileMedia"),
     })
     PostDetailResponse toResponse(PostEntity postEntity);
 
@@ -67,5 +68,6 @@ public interface PostMapper {
     @Mapping(target = "userName",source = "userEntity.firstname")
     @Mapping(target = "topicName", source = "topicEntity.name")
     @Mapping(target = "categoryName", source = "categoryEntity.name")
+    @Mapping(target = "url",source = "fileMedia.fileUrl")
     PostListResponse from(PostEntity postEntity);
 }

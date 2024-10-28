@@ -17,6 +17,7 @@ import com.kiloit.onlyadmin.model.topic.mapper.TopicMapper;
 import com.kiloit.onlyadmin.model.topic.request.TopicRQ;
 import com.kiloit.onlyadmin.model.topic.request.TopicUpdateRQ;
 import com.kiloit.onlyadmin.util.FilterTopic;
+import com.kiloit.onlyadmin.util.GetUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -34,11 +35,12 @@ public class TopicService extends BaseService {
     private final TopicRepository topicRepository;
     private final TopicMapper topicMapper;
     private final UserRepository userRepository;
+    private final GetUser getUser;
 
     @Transactional(readOnly = false)
     public StructureRS createTopic (TopicRQ topicRQ){
         TopicEntity topicEntity = topicMapper.to(topicRQ);
-        Optional<UserEntity> user = userRepository.findById(topicRQ.getUserId());
+        Optional<UserEntity> user = userRepository.findByEmail(getUser.getEmailUser());
         if (user.isEmpty()) {
             throw new NotFoundException(MessageConstant.USER.USER_NOT_FOUND);
         }
@@ -59,7 +61,7 @@ public class TopicService extends BaseService {
 
     @Transactional(readOnly = true)
     public StructureRS getById(Long id) {
-        Optional<TopicEntity> topicEntity = topicRepository.findTopicEntityById(id);
+        Optional<TopicEntity> topicEntity = topicRepository.findTopic(id,getUser.getEmailUser(), getUser.getRoleUser());
         if (topicEntity.isEmpty()) {
            throw new NotFoundException(MessageConstant.TOPIC.TOPIC_NOT_FOUND);
         }
@@ -69,7 +71,7 @@ public class TopicService extends BaseService {
 
     @Transactional(readOnly = false)
     public StructureRS updateTopicById(Long id, TopicUpdateRQ topicUpdateRQ) {
-        Optional<TopicEntity> topicEntity = topicRepository.findByIdAndDeletedAtNull(id);
+        Optional<TopicEntity> topicEntity = topicRepository.findTopic(id,getUser.getEmailUser(), getUser.getRoleUser());
         if (topicEntity.isEmpty()) {
             throw new NotFoundException(MessageConstant.TOPIC.TOPIC_NOT_FOUND);
         }
@@ -78,16 +80,15 @@ public class TopicService extends BaseService {
     }
     @Transactional(readOnly = false)
     public StructureRS deleteTopicByIdNotNull(Long id){
-        Optional<TopicEntity> topicEntity = topicRepository.findByIdAndDeletedAtNull(id);
+        Optional<TopicEntity> topicEntity = topicRepository.findTopic(id,getUser.getEmailUser(), getUser.getRoleUser());
         if (topicEntity.isEmpty())
             throw new BadRequestException(MessageConstant.USER.USER_NOT_FOUND);
-        // topicEntity.get().setDeletedAt();
         topicRepository.save(topicEntity.get());
         return response(HttpStatus.ACCEPTED,MessageConstant.TOPIC.TOPIC_HAVE_BEEN_DELETED);
     }
     @Transactional(readOnly = true)
     public StructureRS getTopicList(FilterTopic filterTopic){
-        Page<TopicEntity> topicList = topicRepository.findAll(filter(filterTopic.getQuery(),filterTopic.getUserId(),filterTopic.getCategoryId()),filterTopic.getPageable());
+        Page<TopicEntity> topicList = topicRepository.findAll(filter(getUser.getRoleUser(),getUser.getEmailUser(),filterTopic.getQuery(),filterTopic.getUserId(),filterTopic.getCategoryId()),filterTopic.getPageable());
         return response(topicList.stream().map(topicMapper::toResponse),topicList);
     }
 

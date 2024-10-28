@@ -9,7 +9,9 @@ import com.kiloit.onlyadmin.model.post.mapper.PostMapper;
 import com.kiloit.onlyadmin.model.post.request.PostCreateRequest;
 import com.kiloit.onlyadmin.model.post.request.PostUpdateRequest;
 import com.kiloit.onlyadmin.util.FilterPost;
+import com.kiloit.onlyadmin.util.GetUser;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -19,8 +21,10 @@ import java.util.Optional;
 import static com.kiloit.onlyadmin.database.specification.PostSpecification.filter;
 import static com.kiloit.onlyadmin.util.CalculateWordAndTime.*;
 
+
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PostService extends BaseService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
@@ -29,11 +33,12 @@ public class PostService extends BaseService {
     private final FileMediaRepository fileMediaRepository;
     private final PostViewRepository postViewRepository;
     private final PostMapper postMapper;
+    private final GetUser getUser;
 
     @Transactional
     public StructureRS createPost(PostCreateRequest request) {
         PostEntity postEntityList = postMapper.toEntity(request);
-        Optional<UserEntity> userEntity = userRepository.findById(request.getUser_id());
+        Optional<UserEntity> userEntity = userRepository.findByEmail(getUser.getEmailUser());
         if (userEntity.isEmpty()) {
             throw new NotFoundException(MessageConstant.USER.USER_NOT_FOUND);
         }
@@ -62,7 +67,7 @@ public class PostService extends BaseService {
     }
     @Transactional
     public StructureRS PostUpdate(Long id, PostUpdateRequest request) {
-        Optional<PostEntity> postEntity = postRepository.findById(id);
+        Optional<PostEntity> postEntity = postRepository.findPost(id,getUser.getEmailUser(), getUser.getRoleUser());
         if (postEntity.isEmpty()) {
             throw new NotFoundException(MessageConstant.POST.POST_ID_NOT_FOUND);
         }
@@ -99,7 +104,7 @@ public class PostService extends BaseService {
     }
     @Transactional(readOnly = true)
     public StructureRS getDetail(Long id){
-        Optional<PostEntity> postEntities = postRepository.findPostById(id);
+        Optional<PostEntity> postEntities = postRepository.findPost(id,getUser.getEmailUser(), getUser.getRoleUser());
         if (postEntities.isEmpty()) {
             throw new NotFoundException(MessageConstant.POST.POST_COULD_NOT_BE_FOUND);
         }
@@ -108,13 +113,13 @@ public class PostService extends BaseService {
 
     @Transactional(readOnly = true)
     public StructureRS getList(FilterPost filterPost){
-        Page<PostEntity> postList = postRepository.findAll(filter(filterPost.getQuery(),filterPost.getStatus(),filterPost.getUserId(),filterPost.getCategoryId(),filterPost.getTopicId()), filterPost.getPageable());
-        return response(postList.stream().map(postMapper::toResponse),postList);
+        Page<PostEntity> postList = postRepository.findAll(filter(getUser.getRoleUser(),getUser.getEmailUser(),filterPost.getQuery(),filterPost.getStatus(),filterPost.getUserId(),filterPost.getCategoryId(),filterPost.getTopicId()), filterPost.getPageable());
+        return response(postList.stream().map(postMapper::from),postList);
     }
 
     @Transactional
     public StructureRS deletePostById(Long id){
-        Optional<PostEntity> postEntity = postRepository.findByIdAndDeletedAtNull(id);
+        Optional<PostEntity> postEntity = postRepository.findPost(id,getUser.getEmailUser(), getUser.getRoleUser());
         if(postEntity.isEmpty()){
             throw new NotFoundException(MessageConstant.POST.POST_HAS_BEEN_DELETED);
         }

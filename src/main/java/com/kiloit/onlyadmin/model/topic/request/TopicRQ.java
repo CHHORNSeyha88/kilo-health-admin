@@ -9,8 +9,6 @@ public class TopicRQ {
     private String name;
     @NotNull(message = MessageConstant.CATEGORY.CATEGORY_ID_IS_NULL)
     private Long categoryId;
-    @NotNull(message = MessageConstant.CATEGORY.USER_ID_IS_NULL)
-    private Long userId;
     @NotNull(message = MessageConstant.CATEGORY.MEDIA_ID_IS_NULL)
     private Long fileMediaId;
 }

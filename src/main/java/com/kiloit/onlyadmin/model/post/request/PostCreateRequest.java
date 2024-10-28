@@ -19,8 +19,6 @@ public class PostCreateRequest {
     private Boolean status;
     @NotNull(message = MessageConstant.FILEMEDIA.FILE_MEDIA_ID_IS_NULL)
     private Long mediaId;
-    @NotNull(message = MessageConstant.USER.USER_ID_IS_NULL)
-    private Long user_id;
     @NotNull(message = MessageConstant.TOPIC.TOPIC_ID_IS_NULL)
     private Long topic_id;
 }

@@ -1,6 +1,7 @@
 package com.kiloit.onlyadmin.model.post.response;
 
 import com.kiloit.onlyadmin.model.category.respone.CategoryRS_List;
+import com.kiloit.onlyadmin.model.filemedia.response.FileMediaResponse;
 import com.kiloit.onlyadmin.model.topic.response.TopicResponseList;
 import com.kiloit.onlyadmin.model.user.respone.UserListResponse;
 import lombok.Data;
@@ -18,4 +19,5 @@ public class PostDetailResponse {
     private UserListResponse user;
     private TopicResponseList topic;
     private CategoryRS_List category;
+    private FileMediaResponse fileMedia;
 }

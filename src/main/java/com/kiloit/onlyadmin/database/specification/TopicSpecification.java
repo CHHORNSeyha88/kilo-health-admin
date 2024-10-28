@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TopicSpecification {
-    public static Specification<TopicEntity> filter(String query,Long userId,Long categoryId){
+    public static Specification<TopicEntity> filter(String role,String email,String query,Long userId,Long categoryId){
         return (root, cq, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
             if(query!=null && !query.equalsIgnoreCase("ALL")){
@@ -24,8 +24,12 @@ public class TopicSpecification {
                 predicates.add(cb.equal(joinCategoryEntity.get("id"),categoryId));
             }
             Join<TopicEntity, UserEntity> joinUserEntity = root.join(("user"), JoinType.INNER);
-            if(userId != null && userId != 0){
-                predicates.add(cb.equal(joinUserEntity.get("id"), userId));
+            if ("Administrator".equals(role)) {
+                if(userId != null && userId != 0){
+                    predicates.add(cb.equal(joinUserEntity.get("id"),userId));
+                }
+            }else {
+                predicates.add(cb.equal(joinUserEntity.get("email"),email));
             }
             predicates.add(cb.isNull(root.get("deletedAt")));
 
