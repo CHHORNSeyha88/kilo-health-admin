@@ -1,4 +1,4 @@
-FROM openjdk:21-jdk-slim
+FROM openjdk:21-jdk
 
 ARG JAR_FILE=artifacts/kilo-health-admin.jar
 
