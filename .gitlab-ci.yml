@@ -33,7 +33,6 @@ build-system-service:
   dependencies:
     - make-artifact
   script:
-    - chmod +x mvn
     - cd $SYS_DIR && mvn clean package -DskipTests && mv target/*.jar $CI_PROJECT_DIR/artifacts/kilo-health-admin.jar
   artifacts:
     paths:
