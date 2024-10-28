@@ -1,0 +1,40 @@
+spring:
+  application:
+    name: Only-Admin
+  datasource:
+    url: ${JDBC_URL:jdbc:mysql://96.9.77.143:3306}/${DB_NAME:kilo_health_service}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    # Mail server configuration
+  mail:
+    username: chhanratta92000@gmail.com
+    password: ablu ngch ukta susu
+    host: smtp.gmail.com
+    port: 587
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+    debug: true
+
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    url: ${spring.datasource.url}
+    user: ${spring.datasource.username}
+    password: ${spring.datasource.password}
+
+
+  jpa:
+    show-sql: true
+    open-in-view: false
+    properties:
+      hibernate:
+        jdbc:
+          batch_size: 100
+        order_updates: true
+        order_inserts: true
