@@ -31,7 +31,7 @@ spring:
     password: ${spring.datasource.password}
     clean-disabled: true
   file-upload:
-    server-path: /home/media/
+    server-path: /files/
     base-uri: http://96.9.77.143:7002/kilo-health-admin/upload/
 
 
