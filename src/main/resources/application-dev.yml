@@ -31,8 +31,8 @@ spring:
     password: ${spring.datasource.password}
     clean-disabled: true
   file-upload:
-    server-path: D:/Java
-    base-uri: http://localhost:8080/upload/
+    server-path: /files/
+    base-uri: http://96.9.77.143:7002/kilo-health-admin/upload/
 
 
   jpa:
