@@ -43,8 +43,19 @@ public class FileMediaService extends BaseService {
     public FileMediaResponse FileUpload(MultipartFile fileUpload){
         String extension = fileUpload.getContentType().split("/")[1];
         String newName = UUID.randomUUID().toString();
-        try {Files.copy(fileUpload.getInputStream(),Paths.get(serverPath+newName+"."+extension));} catch (Exception e) {throw new ResponseStatusException(HttpStatus.NOT_FOUND,MessageConstant.FILEMEDIA.FILE_MEDIA_NOT_FOUNT);}
-        return FileMediaResponse.builder().fileName(newName+"."+extension).fileUrl(baseUri+newName+"."+extension).fileType(fileUpload.getContentType()).fileSize(fileUpload.getSize()).build();
+        if (Files.notExists(Path.get(serverPath))) Files.createDirectories(uploadPath);
+        
+        try {
+            Files.copy(fileUpload.getInputStream(),Paths.get(serverPath+newName+"."+extension));
+            } catch (Exception e) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND,MessageConstant.FILEMEDIA.FILE_MEDIA_NOT_FOUNT);
+            }
+        return FileMediaResponse.builder()
+        .fileName(newName+"."+extension)
+        .fileUrl(baseUri+newName+"."+extension)
+        .fileType(fileUpload.getContentType())
+        .fileSize(fileUpload.getSize())
+        .build();
     }
 
     @Transactional
