@@ -9,6 +9,7 @@ import com.kiloit.onlyadmin.util.FilterPost;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -31,7 +32,9 @@ public class PostController extends BaseController {
     public ResponseEntity<StructureRS> PostUpdate(@Valid @PathVariable Long id,@RequestBody PostUpdateRequest request){
         return response(postService.PostUpdate(id,request));
     }
+
     @GetMapping
+    @Transactional(readOnly = true)
     public ResponseEntity<StructureRS> getPostList(FilterPost filterPost){
         return response(postService.getList(filterPost));
     }

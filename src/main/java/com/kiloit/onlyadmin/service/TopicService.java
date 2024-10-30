@@ -86,7 +86,6 @@ public class TopicService extends BaseService {
         topicRepository.save(topicEntity.get());
         return response(HttpStatus.ACCEPTED,MessageConstant.TOPIC.TOPIC_HAVE_BEEN_DELETED);
     }
-    @Transactional(readOnly = true)
     public StructureRS getTopicList(FilterTopic filterTopic){
         Page<TopicEntity> topicList = topicRepository.findAll(filter(getUser.getRoleUser(),getUser.getEmailUser(),filterTopic.getQuery(),filterTopic.getUserId(),filterTopic.getCategoryId()),filterTopic.getPageable());
         return response(topicList.stream().map(topicMapper::toResponse),topicList);

@@ -5,6 +5,7 @@ import com.kiloit.onlyadmin.base.StructureRS;
 import com.kiloit.onlyadmin.model.topic.request.TopicRQ;
 import com.kiloit.onlyadmin.model.topic.request.TopicUpdateRQ;
 import com.kiloit.onlyadmin.service.TopicService;
+import com.kiloit.onlyadmin.service.Transactional;
 import com.kiloit.onlyadmin.util.FilterTopic;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +40,7 @@ public class TopicController extends BaseController {
     }
 
     @GetMapping()
+    @Transactional(readOnly = true)
     public ResponseEntity<StructureRS>getList(FilterTopic filterTopic){
         return response(topicService.getTopicList(filterTopic));
     }

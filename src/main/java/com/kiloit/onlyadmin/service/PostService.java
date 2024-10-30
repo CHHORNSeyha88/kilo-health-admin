@@ -102,7 +102,6 @@ public class PostService extends BaseService {
         }
         return response(postMapper.toResponse(postEntities.get()));
     }
-    @Transactional(readOnly = true)
     public StructureRS getDetail(Long id){
         Optional<PostEntity> postEntities = postRepository.findPost(id,getUser.getEmailUser(), getUser.getRoleUser());
         if (postEntities.isEmpty()) {
