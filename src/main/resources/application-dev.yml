@@ -30,6 +30,9 @@ spring:
     user: ${spring.datasource.username}
     password: ${spring.datasource.password}
     clean-disabled: true
+  file-upload:
+    server-path: D:/Java
+    base-uri: http://localhost:8080/upload/
 
 
   jpa:
