@@ -40,10 +40,15 @@ public class FileMediaService extends BaseService {
     @Value(value = "${spring.file-upload.base-uri}")
     private String baseUri;
 
-    public FileMediaResponse FileUpload(MultipartFile fileUpload){
+    public FileMediaResponse FileUpload(MultipartFile fileUpload) {
         String extension = fileUpload.getContentType().split("/")[1];
         String newName = UUID.randomUUID().toString();
-        if (Files.notExists(Paths.get(serverPath))) Files.createDirectories(Paths.get(serverPath));
+        try {
+            if (Files.notExists(Paths.get(serverPath))) Files.createDirectories(Paths.get(serverPath));
+        }catch (Exception e){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"File path not found");
+        }
+
         
         try {
             Files.copy(fileUpload.getInputStream(),Paths.get(serverPath+newName+"."+extension));
