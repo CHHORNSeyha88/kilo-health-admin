@@ -1,5 +1,6 @@
 package com.kiloit.onlyadmin.service;
-import java.util.Date;
+import java.util.*;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -44,12 +45,10 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
-import java.util.HashMap;
+import jakarta.transaction.Transactional;
 import java.time.*;
+
 import java.time.temporal.ChronoUnit;
 
 @Service
@@ -72,14 +71,17 @@ public class AuthServices extends BaseService{
     @Value("${spring.mail.username}")
     private String adminEmail;
 
+    @Transactional
     public StructureRS register(RegisterRequest registerRequest) {
         if(userRepository.existsByPhone(registerRequest.phone())) throw new BadRequestException("Phone Number has been already exist");
         if(userRepository.existsByEmail(registerRequest.email())) throw new BadRequestException("Email has been already exist");
+        if(userRepository.existsByPhone(registerRequest.username())) throw new BadRequestException("Username has been already exist");
         if(!registerRequest.confirmPassword().equals(registerRequest.password())) throw new BadRequestException("Password has not been match");
         
         UserEntity user = userMapper.fromRegisterRequest(registerRequest);
         Optional<RoleEntity> role = roleRepository.findByCodeAndDeletedAtNull("USER");
         if(role.isEmpty()) throw new BadRequestException(MessageConstant.ROLE.ROLE_NOT_FOUND);
+        user.setIsVerification(false);
         user.setPassword(passwordEncoder.encode(registerRequest.password()));
         user.setRole(role.get());
         user.setCreatedAt(Instant.now());
@@ -89,7 +91,7 @@ public class AuthServices extends BaseService{
 
     public StructureRS sendVerification(String email) throws MessagingException{
         String codeRandom= RandomUntil.random6Digits();
-        UserEntity user = userRepository.findByEmail(email).orElseThrow(()-> new BadRequestException("Email has not been found"));
+        UserEntity user = userRepository.findByEmailAndIsVerificationAndDeletedAtNull(email,false).orElseThrow(()-> new BadRequestException("Email has not been found"));
         UserVerification userVerification = new UserVerification();
         userVerification.setUser(user);
         userVerification.setVerifiedCode(codeRandom);
@@ -124,13 +126,13 @@ public class AuthServices extends BaseService{
         mimeMessageHelper.setTo(toMail);
         mimeMessageHelper.setSubject(subject);
 
-        if(type=="html") mimeMessageHelper.setText(htmlContent,true);
+        if(type.equals("html")) mimeMessageHelper.setText(htmlContent,true);
         else mimeMessageHelper.setText(htmlContent);
         javaMailSender.send(message);
     }
-
+    @Transactional
     public StructureRS verify(VerificationRequest verificationRequest) {
-        UserEntity user = userRepository.findByEmail(verificationRequest.email()).orElseThrow(()-> new BadRequestException("Email has not been found"));
+        UserEntity user = userRepository.findByEmailAndIsVerificationAndDeletedAtNull(verificationRequest.email(),false).orElseThrow(()-> new BadRequestException("Email has not been found"));
         UserVerification verification = userVerificationRepository.findByUserAndVerifiedCode(user,verificationRequest.verifiedCode()).orElseThrow(()-> new BadRequestException("Verified code has expired"));
         if(LocalTime.now().isAfter(verification.getExpiryTime())) throw new BadRequestException("Verified code has expired");
         user.setIsVerification(true);
@@ -141,7 +143,7 @@ public class AuthServices extends BaseService{
 
     public StructureRS resendVerification(SendVerificationRequest sendVerificationRequest) {
         String codeRandom= RandomUntil.random6Digits();
-        UserEntity user = userRepository.findByEmail(sendVerificationRequest.email()).orElseThrow(()-> new BadRequestException("Email has not been found"));
+        UserEntity user = userRepository.findByEmailAndIsVerificationAndDeletedAtNull(sendVerificationRequest.email(),false).orElseThrow(()-> new BadRequestException("Email has not been found"));
         UserVerification verification = userVerificationRepository.findByUser(user).orElseThrow(()-> new BadRequestException("Verified code has been expired"));
         verification.setVerifiedCode(codeRandom);
         verification.setExpiryTime(LocalTime.now().plusSeconds(60));
@@ -150,7 +152,7 @@ public class AuthServices extends BaseService{
     }
 
     public StructureRS login(LoginRequest loginRequest) {
-        if(userRepository.existsByEmailAndIsVerificationAndDeletedAt(loginRequest.phoneNumber(),true,null)){
+        if(userRepository.existsByEmailAndIsVerificationAndDeletedAtNull(loginRequest.phoneNumber(),true)){
             try{
                 Authentication authentication= new UsernamePasswordAuthenticationToken(loginRequest.phoneNumber(),loginRequest.password());
                 authentication = daoAuthenticationProvider.authenticate(authentication);
@@ -184,19 +186,19 @@ public class AuthServices extends BaseService{
         Boolean claimValue1=true;
         String claimValue2=scope;
 
-        if(type=="jwt"){
+        if(type.equals("jwt")){
             Jwt jwt= (Jwt)authentication.getPrincipal();
             id=jwt.getId();
             issuer=id;
             expired=Instant.now().plus(30,ChronoUnit.DAYS);
             claimValue2=jwt.getClaimAsString("scope");
         }
-        else if(type=="dao-jwt") expired= Instant.now().plus(30,ChronoUnit.DAYS);
+        else if(type.equals( "dao-jwt")) expired= Instant.now().plus(30,ChronoUnit.DAYS);
         return JwtClaimsSet.builder().id(id).subject(subject_).issuer(issuer).issuedAt(issueAt).expiresAt(expired).claim("isAdmin", claimValue1).claim("scope", claimValue2).build();
     }
 
     public StructureRS resetPassword(ResetPasswordRequest resetPasswordRequest){
-        UserEntity user = userRepository.findByEmail(resetPasswordRequest.email()).orElseThrow(()-> new BadRequestException("Email has not been found"));
+        UserEntity user = userRepository.findByEmailAndIsVerificationAndDeletedAtNull(resetPasswordRequest.email(),false).orElseThrow(()-> new BadRequestException("Email has not been found"));
         String token = UUID.randomUUID().toString();
         PasswordResetTokenEntity passwordResetToken = new PasswordResetTokenEntity();
         passwordResetToken.setToken(token);
@@ -213,7 +215,7 @@ public class AuthServices extends BaseService{
         }
     }
 
-    @Transactional(readOnly = false)
+    @Transactional
     public StructureRS handlePasswordReset(String token,String newPassword){
         Optional<PasswordResetTokenEntity> passwordResetToken = passwordResetTokenRepository.findByToken(token);
         if (passwordResetToken.isEmpty()) throw new BadRequestException("Invalid Token");

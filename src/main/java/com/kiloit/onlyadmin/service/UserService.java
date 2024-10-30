@@ -32,7 +32,7 @@ public class UserService extends BaseService {
     private final PasswordEncoder passwordEncoder;
 
     public StructureRS list(BaseListingRQ request){
-        Page<UserEntity> userEntitys = userRepository.findAll(UserSpecification.hasNotBeenDeleted().and(UserSpecification.dynamicQuery(request.getQuery())),(PageRequest)(request.getPageable("id")));
+        Page<UserEntity> userEntitys = userRepository.findAll(UserSpecification.dynamicQuery(request.getQuery()),(PageRequest)(request.getPageable("id")));
         return response(userEntitys.map(userMapper::fromUserList).getContent(),userEntitys);
     }
 
@@ -47,12 +47,15 @@ public class UserService extends BaseService {
         RoleEntity roleEntity = roleRepository.findById(request.getRoleId()).orElseThrow(()->new BadRequestException(MessageConstant.ROLE.ROLE_NOT_FOUND));
         if(userRepository.existsByEmail(request.getEmail())) throw new BadRequestException("Email has already existing...");
         if(userRepository.existsByUsername(request.getUsername())) throw new BadRequestException("User name not valid...");
+        if(userRepository.existsByPhone(request.getPhone())) throw new BadRequestException("Phone number not valid...");
         UserEntity userEntity = userMapper.fromUser(request);
+        userEntity.setIsVerification(false);
         userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
         userEntity.setRole(roleEntity);
         return response(userMapper.fromUserList(userRepository.save(userEntity)));
     }
 
+    @Transactional
     public StructureRS update(Long id, UserUpdateRequest userUpdateRequest) throws BadRequestException {
         UserEntity user = userRepository.findById(id).orElseThrow(()->new BadRequestException(MessageConstant.USER.USER_NOT_FOUND));
         RoleEntity roleEntity = roleRepository.findById(userUpdateRequest.getRoleId()).orElseThrow(()-> new BadRequestException(MessageConstant.USER.USER_NOT_FOUND));
@@ -60,7 +63,7 @@ public class UserService extends BaseService {
         userMapper.fromUserUpdateRequest(userUpdateRequest, user);
         return response(userMapper.fromUserList(userRepository.save(user)));
     }
-
+    @Transactional
     public StructureRS delete(Long id){
         Optional<UserEntity> user = userRepository.findById(id);
         if (user.isEmpty()) throw new BadRequestException(MessageConstant.USER.USER_NOT_FOUND);

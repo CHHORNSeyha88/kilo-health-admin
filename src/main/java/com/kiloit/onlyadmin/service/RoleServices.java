@@ -1,4 +1,6 @@
 package com.kiloit.onlyadmin.service;
+import java.util.Optional;
+import java.util.OptionalInt;
 import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -31,23 +33,27 @@ public class RoleServices extends BaseService {
     private final RoleMapper roleMapper;
     private final PermissionRepository permissionRepository;
 
+    @Transactional
     public StructureRS getAll(BaseListingRQ request) {
         Page<RoleEntity> roleEntities = roleRepository.findByNameContainsOrderByNameAsc(request.getQuery(), request.getPageable("id"));
         return response(roleEntities.map(roleMapper::toRoleListResponse).getContent(),roleEntities);
     }
-    
+
+    @Transactional
     public StructureRS getRoleById(Long Id) {
-        RoleEntity roleEntity = roleRepository.findByIdFetchPermission(Id).get();
-        if(roleEntity==null) throw new BadRequestException(MessageConstant.ROLE.ROLE_NOT_FOUND);
-        return response(roleMapper.fromRoleEntity(roleEntity));
+        Optional<RoleEntity> roleEntity = roleRepository.findByIdFetchPermission(Id);
+        if(roleEntity.isEmpty()) throw new BadRequestException(MessageConstant.ROLE.ROLE_NOT_FOUND);
+        return response(roleMapper.fromRoleEntity(roleEntity.get()));
     }
 
+    @Transactional
     public StructureRS create(RoleRQ roleRQ) {
         RoleEntity roleEntity = roleMapper.fromRequest(roleRQ);
         roleEntity.setCreatedAt(Instant.now());
         return response(HttpStatus.OK, MessageConstant.ROLE.ROLE_CREATED_SUCCESSFULLY,roleMapper.toRoleCreateResponse(roleRepository.save(roleEntity)));
     }
 
+    @Transactional
     public StructureRS update(Long id,RoleRequestUpdate roleRequestUpdate) {
         RoleEntity roleEntity = roleRepository.findByIdAndDeletedAtNull(id).orElseThrow(() -> new BadRequestException(MessageConstant.ROLE.ROLE_NOT_FOUND));
         roleMapper.fromRoleRequestUpdate(roleRequestUpdate, roleEntity);
@@ -55,6 +61,7 @@ public class RoleServices extends BaseService {
         return response(HttpStatus.OK, MessageConstant.ROLE.ROLE_UPDATED_SUCCESSFULLY);
     }
 
+    @Transactional
     public StructureRS delete(Long Id) {
         RoleEntity roleEntity = roleRepository.findByIdAndDeletedAtNull(Id).orElseThrow(() -> new BadRequestException(MessageConstant.ROLE.ROLE_NOT_FOUND));
         roleEntity.setDeletedAt(Instant.now());
@@ -64,8 +71,8 @@ public class RoleServices extends BaseService {
 
     @Transactional
     public StructureRS setPermission(SetPermissionRequest setPermissionRequest) {
-        RoleEntity roleEntity = roleRepository.findByIdFetchPermission(setPermissionRequest.getRoleId()).get();
-        if (roleEntity == null) return response(HttpStatus.NOT_FOUND, MessageConstant.ROLE.ROLE_NOT_FOUND);
+        Optional<RoleEntity> roleEntity = roleRepository.findByIdFetchPermission(setPermissionRequest.getRoleId());
+        if (roleEntity.isEmpty()) return response(HttpStatus.NOT_FOUND, MessageConstant.ROLE.ROLE_NOT_FOUND);
 
         Set<Long> requestedPermissionIds = setPermissionRequest.getItems().stream().map(SetPermissionItemRequest::getId).collect(Collectors.toSet());
         Set<PermissionEntity> requestedPermissions = permissionRepository.findAllByIdIn(requestedPermissionIds);
@@ -74,9 +81,9 @@ public class RoleServices extends BaseService {
         Set<Long> removeIds = setPermissionRequest.getItems().stream().filter(item -> !item.getStatus()).map(SetPermissionItemRequest::getId).collect(Collectors.toSet());
         Set<PermissionEntity> toRemove = requestedPermissions.stream().filter(permission -> removeIds.contains(permission.getId())).collect(Collectors.toSet());
         
-        roleEntity.getPermissions().addAll(requestedPermissions);
-        roleEntity.getPermissions().removeAll(toRemove);
-        roleRepository.save(roleEntity);
+        roleEntity.get().getPermissions().addAll(requestedPermissions);
+        roleEntity.get().getPermissions().removeAll(toRemove);
+        roleRepository.save(roleEntity.get());
         return response(HttpStatus.OK, MessageConstant.ROLE.ROLE_UPDATED_SUCCESSFULLY);
     }
 

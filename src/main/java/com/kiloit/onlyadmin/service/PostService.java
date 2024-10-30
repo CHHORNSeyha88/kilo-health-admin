@@ -38,7 +38,7 @@ public class PostService extends BaseService {
     @Transactional
     public StructureRS createPost(PostCreateRequest request) {
         PostEntity postEntityList = postMapper.toEntity(request);
-        Optional<UserEntity> userEntity = userRepository.findByEmail(getUser.getEmailUser());
+        Optional<UserEntity> userEntity = userRepository.findByEmailAndIsVerificationAndDeletedAtNull(getUser.getEmailUser(),false);
         if (userEntity.isEmpty()) {
             throw new NotFoundException(MessageConstant.USER.USER_NOT_FOUND);
         }

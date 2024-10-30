@@ -36,7 +36,7 @@ public class CategoryService extends BaseService {
 
     @Transactional
     public StructureRS create(CategoryRQ request){
-        Optional<UserEntity> user = userRepository.findByEmail(getUser.getEmailUser());
+        Optional<UserEntity> user = userRepository.findByEmailAndIsVerificationAndDeletedAtNull(getUser.getEmailUser(),false);
         if(user.isEmpty()){
             throw new NotFoundException(MessageConstant.USER.USER_NOT_FOUND);
         }

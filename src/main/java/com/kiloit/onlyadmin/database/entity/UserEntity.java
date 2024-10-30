@@ -27,7 +27,7 @@ public class UserEntity extends BaseEntity {
     @JoinColumn(name = "role_id")
     private RoleEntity role;
 
-    @OneToMany(mappedBy = "userEntity", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "userEntity", fetch = FetchType.LAZY)
     private Set<PostEntity> postEntities = new HashSet<>();
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
