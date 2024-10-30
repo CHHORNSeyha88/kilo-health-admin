@@ -78,7 +78,7 @@ public class AuthServices extends BaseService{
         if(!registerRequest.confirmPassword().equals(registerRequest.password())) throw new BadRequestException("Password has not been match");
         
         UserEntity user = userMapper.fromRegisterRequest(registerRequest);
-        Optional<RoleEntity> role = roleRepository.findById(Long.parseLong("3"));
+        Optional<RoleEntity> role = roleRepository.findByCodeAndDeletedAtNull("USER");
         if(role.isEmpty()) throw new BadRequestException(MessageConstant.ROLE.ROLE_NOT_FOUND);
         user.setPassword(passwordEncoder.encode(registerRequest.password()));
         user.setRole(role.get());

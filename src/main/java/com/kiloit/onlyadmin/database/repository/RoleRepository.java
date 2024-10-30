@@ -17,7 +17,7 @@ public interface RoleRepository extends JpaRepository<RoleEntity, Long> {
     Page<RoleEntity> findByNameContainsOrderByNameAsc(@Param("name") String name, Pageable pageable);
 
     Optional<RoleEntity> findByIdAndDeletedAtNull(Long id);
-    RoleEntity findByUsers(UserEntity userEntity);
-    RoleEntity findByName( String roleName);
+
+    Optional<RoleEntity> findByCodeAndDeletedAtNull(String code);
 
 }
