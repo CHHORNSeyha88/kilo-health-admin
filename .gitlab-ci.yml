@@ -1,0 +1,62 @@
+image: docker:latest
+
+services:
+  - docker:stable-dind
+
+variables:
+  SYS_DIR: $CI_PROJECT_DIR
+  DOCKER_DRIVER: overlay2
+
+stages:
+  - make-artifacts
+  - build-jar-system
+  - push-image-system
+
+make-artifact:
+  stage: make-artifacts
+  script:
+    - mkdir artifacts
+    - cd artifacts && touch test.jar
+  artifacts:
+    paths:
+      - $CI_PROJECT_DIR/artifacts/*.jar
+    expire_in: 30 days
+  only:
+    - dev
+
+#---------------------
+#----build-jar--------
+#---------------------
+build-system-service:
+  image: maven:3.9.4-amazoncorretto-21-al2023
+  stage: build-jar-system
+  dependencies:
+    - make-artifact
+  script:
+    - cd $SYS_DIR && mvn clean package -DskipTests && mv target/*.jar $CI_PROJECT_DIR/artifacts/kilo-health-admin.jar
+  artifacts:
+    paths:
+      - $CI_PROJECT_DIR/artifacts/*.jar
+    expire_in: 30 days
+  only:
+    - dev
+
+#---------------------
+#----push-image-------
+#---------------------
+push-system-service:
+  image:
+    name: docker:latest
+  services:
+    - docker:stable-dind
+  stage: push-image-system
+  dependencies:
+    - build-system-service
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+  script:
+    - cd $SYS_DIR && docker build -t $CI_REGISTRY_IMAGE:dev -f ./Dockerfile .
+    - docker push "$CI_REGISTRY_IMAGE" -a
+  only:
+    refs:
+      - dev
