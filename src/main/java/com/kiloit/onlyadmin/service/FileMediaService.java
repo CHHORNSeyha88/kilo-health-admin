@@ -6,6 +6,7 @@ import com.kiloit.onlyadmin.constant.MessageConstant;
 import com.kiloit.onlyadmin.database.entity.FileMedia;
 import com.kiloit.onlyadmin.database.repository.FileMediaRepository;
 import com.kiloit.onlyadmin.database.specification.FileMediaSpecification;
+import com.kiloit.onlyadmin.exception.httpstatus.BadRequestException;
 import com.kiloit.onlyadmin.exception.httpstatus.NotFoundException;
 import com.kiloit.onlyadmin.model.filemedia.mapper.FileMediaMapper;
 import com.kiloit.onlyadmin.model.filemedia.response.FileMediaResponse;
@@ -46,14 +47,13 @@ public class FileMediaService extends BaseService {
         try {
             if (Files.notExists(Paths.get(serverPath))) Files.createDirectories(Paths.get(serverPath));
         }catch (Exception e){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"File path not found");
+            throw new BadRequestException("File path not found");
         }
 
-        
         try {
             Files.copy(fileUpload.getInputStream(),Paths.get(serverPath+newName+"."+extension));
             } catch (Exception e) {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND,MessageConstant.FILEMEDIA.FILE_MEDIA_NOT_FOUNT);
+                throw new BadRequestException(MessageConstant.FILEMEDIA.FILE_MEDIA_NOT_FOUNT);
             }
         return FileMediaResponse.builder()
         .fileName(newName+"."+extension)
@@ -66,11 +66,16 @@ public class FileMediaService extends BaseService {
     @Transactional
     public StructureRS upload(List<MultipartFile> multipartFile) {
         List<FileMediaResponse> fileMediaResponses = new ArrayList<>();
-        multipartFile.forEach(file->{
-            FileMedia fileMedia = fileMediaMapper.fromFileMediaResponse(FileUpload(file));
-            fileMedia.setCreatedAt(Instant.now());
-            fileMediaResponses.add(fileMediaMapper.toFileMediaResponse(fileMediaRepository.save(fileMedia)));
-        });
+        try{
+            multipartFile.forEach(file->{
+                FileMedia fileMedia = fileMediaMapper.fromFileMediaResponse(FileUpload(file));
+                fileMedia.setCreatedAt(Instant.now());
+                fileMediaResponses.add(fileMediaMapper.toFileMediaResponse(fileMediaRepository.save(fileMedia)));
+            });
+        }
+        catch (Exception e){
+            throw new BadRequestException(MessageConstant.FILEMEDIA.FILE_MEDIA_NOT_FOUNT);
+        }
         return response(fileMediaResponses);
     }
 

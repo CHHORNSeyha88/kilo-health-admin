@@ -9,6 +9,12 @@ spring:
     password: ${DB_PASSWORD}
 
     driver-class-name: com.mysql.cj.jdbc.Driver
+
+  servlet:
+    multipart:
+      max-request-size: 2MB
+      max-file-size: 2MB
+
     # Mail server configuration
   mail:
     username: chhanratta92000@gmail.com
