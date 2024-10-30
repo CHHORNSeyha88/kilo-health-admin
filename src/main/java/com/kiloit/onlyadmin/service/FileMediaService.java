@@ -43,7 +43,7 @@ public class FileMediaService extends BaseService {
     public FileMediaResponse FileUpload(MultipartFile fileUpload){
         String extension = fileUpload.getContentType().split("/")[1];
         String newName = UUID.randomUUID().toString();
-        if (Files.notExists(Path.get(serverPath))) Files.createDirectories(serverPath);
+        if (Files.notExists(Paths.get(serverPath))) Files.createDirectories(Paths.get(serverPath));
         
         try {
             Files.copy(fileUpload.getInputStream(),Paths.get(serverPath+newName+"."+extension));
