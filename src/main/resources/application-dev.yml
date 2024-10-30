@@ -37,7 +37,7 @@ spring:
 
   jpa:
     show-sql: true
-    open-in-view: false
+    open-in-view: true
     properties:
       hibernate:
         jdbc:
