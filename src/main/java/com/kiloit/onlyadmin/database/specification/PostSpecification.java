@@ -43,6 +43,8 @@ public class PostSpecification {
                 predicates.add(cb.equal(joinTopicEntity.get("id"),topicId));
             }
             predicates.add(cb.isNull(root.get("deletedAt")));
+            predicates.add(cb.isNull(joinCategoryEntity.get("deletedAt")));
+            predicates.add(cb.isNull(joinTopicEntity.get("deletedAt")));
 
             return cb.and(predicates.toArray(new Predicate[0]));
         };

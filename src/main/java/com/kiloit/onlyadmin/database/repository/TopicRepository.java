@@ -14,7 +14,7 @@ public interface TopicRepository extends JpaRepository<TopicEntity, Long> , JpaS
     @Query("select t from TopicEntity t left join fetch t.fileMediaId f left join fetch t.category left join fetch t.user u where t.id = :id and t.deletedAt is null ")
     Optional<TopicEntity> findTopicEntityById(Long id);
 
-    @Query("select t from TopicEntity t left join fetch t.fileMediaId f left join fetch t.category left join fetch t.user u " +
-            "where (( :role = 'Administrator' ) or ( :role != 'Administrator' and u.email = :email)) and t.id = :id and t.deletedAt is null ")
+    @Query("select t from TopicEntity t left join fetch t.fileMediaId f left join fetch t.category c left join fetch t.user u " +
+            "where (( :role = 'Administrator' ) or ( :role != 'Administrator' and u.email = :email)) and t.id = :id and t.deletedAt is null and c.deletedAt is null")
     Optional<TopicEntity> findTopic(@Param("id") Long id, @Param("email") String email, @Param("role") String role);
 }
