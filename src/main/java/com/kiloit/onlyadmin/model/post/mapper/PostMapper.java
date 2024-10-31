@@ -39,7 +39,7 @@ public interface PostMapper {
 
 
     @Mapping(target = "userId", source = "user.id")
-    @Mapping(target = "mediaId", source = "fileMediaId.id")
+    @Mapping(target = "mediaId", source = "fileMediaId")
     CategoryRS_List from(CategoryEntity categoryEntity);
 
     @Mappings({
