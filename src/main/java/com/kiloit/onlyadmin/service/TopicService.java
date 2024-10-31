@@ -40,7 +40,7 @@ public class TopicService extends BaseService {
     @Transactional(readOnly = false)
     public StructureRS createTopic (TopicRQ topicRQ){
         TopicEntity topicEntity = topicMapper.to(topicRQ);
-        Optional<UserEntity> user = userRepository.findByEmailAndIsVerificationAndDeletedAtNull(getUser.getEmailUser(),false);
+        Optional<UserEntity> user = userRepository.findByEmailAndIsVerificationAndDeletedAtNull(getUser.getEmailUser(),true);
         if (user.isEmpty()) {
             throw new NotFoundException(MessageConstant.USER.USER_NOT_FOUND);
         }
