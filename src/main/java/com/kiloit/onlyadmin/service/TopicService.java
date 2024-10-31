@@ -23,6 +23,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+
+import java.time.Instant;
 import java.util.Optional;
 import static com.kiloit.onlyadmin.database.specification.TopicSpecification.filter;
 
@@ -83,6 +85,7 @@ public class TopicService extends BaseService {
         Optional<TopicEntity> topicEntity = topicRepository.findTopic(id,getUser.getEmailUser(), getUser.getRoleUser());
         if (topicEntity.isEmpty())
             throw new BadRequestException(MessageConstant.USER.USER_NOT_FOUND);
+        topicEntity.get().setDeletedAt(Instant.now());
         topicRepository.save(topicEntity.get());
         return response(HttpStatus.ACCEPTED,MessageConstant.TOPIC.TOPIC_HAVE_BEEN_DELETED);
     }
