@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface PostRepository extends JpaRepository<PostEntity,Long>, JpaSpecificationExecutor<PostEntity> {
     @Query("select p from PostEntity p left join fetch p.userEntity u left join fetch p.topicEntity t left join fetch p.categoryEntity c left join fetch p.fileMedia f where p.id = :id and p.deletedAt is null")
-    Optional<PostEntity> findPostById(Long id);
+    Optional<PostEntity> findPostByIdAndAndDeletedAtIsNull(Long id);
 
 
     Optional<PostEntity> findByIdAndDeletedAtNull(Long id);

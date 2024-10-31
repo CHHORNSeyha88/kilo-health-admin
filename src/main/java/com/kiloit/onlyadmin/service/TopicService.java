@@ -46,7 +46,7 @@ public class TopicService extends BaseService {
         if (user.isEmpty()) {
             throw new NotFoundException(MessageConstant.USER.USER_NOT_FOUND);
         }
-        Optional<CategoryEntity> categoryEntity = categoryRepository.findByID(topicRQ.getCategoryId());
+        Optional<CategoryEntity> categoryEntity = categoryRepository.findByIDAndDeletedAtIsNull(topicRQ.getCategoryId());
         if(categoryEntity.isEmpty()){
             throw new NotFoundException(MessageConstant.CATEGORY.CATEGORY_COULD_NOT_BE_FOUND);
         }

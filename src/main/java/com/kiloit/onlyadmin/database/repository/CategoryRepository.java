@@ -11,7 +11,7 @@ import java.util.Optional;
 public interface CategoryRepository extends JpaRepository<CategoryEntity, Long>, JpaSpecificationExecutor<CategoryEntity> {
 
     @Query("select c from CategoryEntity c left join fetch c.user u left join fetch c.fileMediaId where c.id = :id and c.deletedAt is null")
-    Optional<CategoryEntity> findByID(Long id);
+    Optional<CategoryEntity> findByIDAndDeletedAtIsNull(Long id);
 
     @Query("select c from CategoryEntity c left join fetch c.user u left join fetch c.fileMediaId f " +
             "where (( :role = 'Administrator' ) or ( :role != 'Administrator' and u.email = :email)) and c.id = :id and c.deletedAt is null")

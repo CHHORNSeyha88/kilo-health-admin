@@ -42,15 +42,15 @@ public class PostService extends BaseService {
         if (userEntity.isEmpty()) {
             throw new NotFoundException(MessageConstant.USER.USER_NOT_FOUND);
         }
-        Optional<TopicEntity> topicEntity = topicRepository.findById(request.getTopic_id());
+        Optional<TopicEntity> topicEntity = topicRepository.findByIdAndDeletedAtNull(request.getTopic_id());
         if (topicEntity.isEmpty()) {
             throw new NotFoundException(MessageConstant.TOPIC.TOPIC_NOT_FOUND);
         }
-        Optional<CategoryEntity> categoryEntity = categoryRepository.findById(topicEntity.get().getCategory().getId());
+        Optional<CategoryEntity> categoryEntity = categoryRepository.findByIDAndDeletedAtIsNull(topicEntity.get().getCategory().getId());
         if (categoryEntity.isEmpty()) {
             throw new NotFoundException(MessageConstant.CATEGORY.CATEGORY_COULD_NOT_BE_FOUND);
         }
-        Optional<FileMedia> fileMedia = fileMediaRepository.findById(request.getMediaId());
+        Optional<FileMedia> fileMedia = fileMediaRepository.findByIdAndDeletedAtIsNull(request.getMediaId());
         if (fileMedia.isEmpty()) {
             throw new NotFoundException(MessageConstant.FILEMEDIA.FILE_MEDIA_NOT_FOUNT);
         }
@@ -71,7 +71,7 @@ public class PostService extends BaseService {
         if (postEntity.isEmpty()) {
             throw new NotFoundException(MessageConstant.POST.POST_ID_NOT_FOUND);
         }
-        Optional<FileMedia> fileMedia = fileMediaRepository.findById(request.getMediaId());
+        Optional<FileMedia> fileMedia = fileMediaRepository.findByIdAndDeletedAtIsNull(request.getMediaId());
         if(fileMedia.isEmpty()){
             throw new NotFoundException(MessageConstant.FILEMEDIA.FILE_MEDIA_NOT_FOUNT);
         }
@@ -84,7 +84,7 @@ public class PostService extends BaseService {
 
     @Transactional
     public StructureRS getView(Long id, Long userId) {
-        Optional<PostEntity> postEntities = postRepository.findPostById(id);
+        Optional<PostEntity> postEntities = postRepository.findPostByIdAndAndDeletedAtIsNull(id);
         if (postEntities.isEmpty()) {
             throw new NotFoundException(MessageConstant.POST.POST_ID_NOT_FOUND);
         }
