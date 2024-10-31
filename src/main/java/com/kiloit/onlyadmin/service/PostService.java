@@ -84,7 +84,7 @@ public class PostService extends BaseService {
 
     @Transactional
     public StructureRS getView(Long id, Long userId) {
-        Optional<PostEntity> postEntities = postRepository.findPostByIdAndAndDeletedAtIsNull(id);
+        Optional<PostEntity> postEntities = postRepository.findPostByIdAndDeletedAtIsNull(id);
         if (postEntities.isEmpty()) {
             throw new NotFoundException(MessageConstant.POST.POST_ID_NOT_FOUND);
         }
