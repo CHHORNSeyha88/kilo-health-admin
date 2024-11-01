@@ -1,6 +1,5 @@
 package com.kiloit.onlyadmin.service;
 import java.util.Optional;
-import java.util.OptionalInt;
 import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -15,11 +14,14 @@ import com.kiloit.onlyadmin.database.entity.RoleEntity;
 import com.kiloit.onlyadmin.database.repository.PermissionRepository;
 import com.kiloit.onlyadmin.database.repository.RoleRepository;
 import com.kiloit.onlyadmin.exception.httpstatus.BadRequestException;
+import com.kiloit.onlyadmin.model.role.mapper.PermissionMapper;
 import com.kiloit.onlyadmin.model.role.mapper.RoleMapper;
 import com.kiloit.onlyadmin.model.role.request.RoleRQ;
 import com.kiloit.onlyadmin.model.role.request.RoleRequestUpdate;
 import com.kiloit.onlyadmin.model.role.request.SetPermissionItemRequest;
 import com.kiloit.onlyadmin.model.role.request.SetPermissionRequest;
+import com.kiloit.onlyadmin.model.role.response.PermissionStatusResponse;
+
 import java.time.Instant;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +33,7 @@ import java.util.Set;
 public class RoleServices extends BaseService {
     private final RoleRepository roleRepository;
     private final RoleMapper roleMapper;
+    private final PermissionMapper permissionMapper;
     private final PermissionRepository permissionRepository;
 
     @Transactional
@@ -85,6 +88,16 @@ public class RoleServices extends BaseService {
         roleEntity.get().getPermissions().removeAll(toRemove);
         roleRepository.save(roleEntity.get());
         return response(HttpStatus.OK, MessageConstant.ROLE.ROLE_UPDATED_SUCCESSFULLY);
+    }
+
+    @Transactional
+    public StructureRS listAllPermissions(BaseListingRQ request,Long roleId,String module){
+        if(roleId!=null && module!=null){
+            roleId=null;
+            module=null;
+        }
+        Page<PermissionStatusResponse> listPermission = permissionRepository.findAllPermission(roleId,module,request.getPageable());
+        return response(listPermission.getContent(),listPermission);
     }
 
 }

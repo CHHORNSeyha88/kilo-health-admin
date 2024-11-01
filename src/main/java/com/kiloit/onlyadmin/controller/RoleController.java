@@ -8,6 +8,7 @@ import com.kiloit.onlyadmin.model.role.request.RoleRequestUpdate;
 import com.kiloit.onlyadmin.model.role.request.SetPermissionRequest;
 import com.kiloit.onlyadmin.service.RoleServices;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Null;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 
@@ -55,5 +57,11 @@ public class RoleController extends BaseController {
     @PutMapping("/assignPermission")
     public ResponseEntity<StructureRS> assignPermission(@RequestBody SetPermissionRequest setPermissionRequest) {
         return response(roleServices.setPermission(setPermissionRequest));
+    }
+
+    @GetMapping("/listPermissions")
+    public ResponseEntity<StructureRS> listAllPermissions(BaseListingRQ baseListingRQ,@RequestParam(value = "roleId",required = false) String roleId,@RequestParam(value="module",required = false) String module){
+    
+        return response(roleServices.listAllPermissions(baseListingRQ,roleId!=null?Long.parseLong(roleId):null,module));
     }
 }

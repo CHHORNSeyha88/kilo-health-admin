@@ -18,9 +18,9 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class PasswordResetTokenEntity extends BaseEntity{
+public class PasswordResetEntity extends BaseEntity{
     
-    private String token;
+    private String code;
     private LocalTime expiryTime;
 
     @OneToOne

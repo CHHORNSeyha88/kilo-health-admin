@@ -36,7 +36,7 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain configureApiSecurity(HttpSecurity httpSecurity,@Qualifier("accessTokenJwtDecoder") JwtDecoder jwtDecoder) throws Exception{
         httpSecurity.authorizeHttpRequests(endpoint-> endpoint
-        .requestMatchers("api/v1/auth/**","api/v1/files/**","/upload/**")
+        .requestMatchers("api/v1/auth/**","api/v1/files/**","/upload/**","api/v1/roles/**")
         .permitAll()
         .requestMatchers("api/v1/users/**","api/v1/roles/**")
         .hasAuthority("SCOPE_ROLE_Administrator")
