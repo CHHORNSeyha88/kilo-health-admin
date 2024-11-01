@@ -40,6 +40,7 @@ public interface TopicMapper {
     
     @Mapping(target = "categoryName",source = "category.name")
     @Mapping(target = "userName" , source = "user.firstname")
+    @Mapping(target = "url", source = "fileMediaId.fileUrl")
     TopicResponseList toResponse(TopicEntity topicEntity);
 
 }
