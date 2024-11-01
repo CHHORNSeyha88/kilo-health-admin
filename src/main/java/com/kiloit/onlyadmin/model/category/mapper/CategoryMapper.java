@@ -26,7 +26,7 @@ public interface CategoryMapper {
     CategoryEntity toEntity(CategoryRQ request);
 
     @Mapping(target = "userId", source = "user.id")
-    @Mapping(target = "mediaId", source = "fileMediaId")
+    @Mapping(target = "url", source = "fileMediaId.fileUrl")
     CategoryRS_List toResponse(CategoryEntity categoryEntity);
 
     @Mapping(target = "fileMedia", source = "fileMediaId")

@@ -6,6 +6,7 @@ import lombok.Data;
 public class TopicResponseList {
     private Long id;
     private String name;
+    private String url;
     private String categoryName;
     private String  userName;
 
