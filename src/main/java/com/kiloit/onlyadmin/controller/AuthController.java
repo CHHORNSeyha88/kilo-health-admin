@@ -15,6 +15,7 @@ import com.kiloit.onlyadmin.model.user.request.auth.RegisterRequest;
 import com.kiloit.onlyadmin.model.user.request.auth.ResetPasswordRequest;
 import com.kiloit.onlyadmin.model.user.request.auth.SendVerificationRequest;
 import com.kiloit.onlyadmin.model.user.request.auth.VerificationRequest;
+import com.kiloit.onlyadmin.model.user.request.auth.VerifyCode;
 import com.kiloit.onlyadmin.service.AuthServices;
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
@@ -66,7 +67,7 @@ public class AuthController extends BaseController {
     }
 
     @PostMapping("/reset-password")
-    public ResponseEntity<StructureRS> handlePasswordReset(@RequestParam("token") String token,@RequestParam("password") String newPassword){
-        return response(authService.handlePasswordReset(token,newPassword));
+    public ResponseEntity<StructureRS> handlePasswordReset(@Valid @RequestBody VerifyCode verifyCode){
+        return response(authService.handlePasswordReset(verifyCode));
     }
 }

@@ -22,11 +22,11 @@ import org.thymeleaf.context.Context;
 import com.kiloit.onlyadmin.base.BaseService;
 import com.kiloit.onlyadmin.base.StructureRS;
 import com.kiloit.onlyadmin.constant.MessageConstant;
-import com.kiloit.onlyadmin.database.entity.PasswordResetTokenEntity;
+import com.kiloit.onlyadmin.database.entity.PasswordResetEntity;
 import com.kiloit.onlyadmin.database.entity.RoleEntity;
 import com.kiloit.onlyadmin.database.entity.UserEntity;
 import com.kiloit.onlyadmin.database.entity.UserVerification;
-import com.kiloit.onlyadmin.database.repository.PasswordResetTokenRepository;
+import com.kiloit.onlyadmin.database.repository.PasswordResetRepository;
 import com.kiloit.onlyadmin.database.repository.RoleRepository;
 import com.kiloit.onlyadmin.database.repository.UserRepository;
 import com.kiloit.onlyadmin.database.repository.UserVerificationRepository;
@@ -38,6 +38,7 @@ import com.kiloit.onlyadmin.model.user.request.auth.RegisterRequest;
 import com.kiloit.onlyadmin.model.user.request.auth.ResetPasswordRequest;
 import com.kiloit.onlyadmin.model.user.request.auth.SendVerificationRequest;
 import com.kiloit.onlyadmin.model.user.request.auth.VerificationRequest;
+import com.kiloit.onlyadmin.model.user.request.auth.VerifyCode;
 import com.kiloit.onlyadmin.model.user.respone.auth.AuthResponse;
 import com.kiloit.onlyadmin.model.user.respone.auth.RegisterResponse;
 import com.kiloit.onlyadmin.util.RandomUntil;
@@ -66,7 +67,7 @@ public class AuthServices extends BaseService{
     private final JwtEncoder accessTokenJwtEncoder;
     private final JwtEncoder refreshTokenJwtEncoder;
     private final JwtAuthenticationProvider jwtAuthenticationProvider;
-    private final PasswordResetTokenRepository  passwordResetTokenRepository;
+    private final PasswordResetRepository  passwordResetRepository;
 
     @Value("${spring.mail.username}")
     private String adminEmail;
@@ -95,23 +96,23 @@ public class AuthServices extends BaseService{
         UserVerification userVerification = new UserVerification();
         userVerification.setUser(user);
         userVerification.setVerifiedCode(codeRandom);
-        userVerification.setExpiryTime(LocalTime.now().plusSeconds(60));
+        userVerification.setExpiryTime(LocalTime.now().plusMinutes(5));
         userVerificationRepository.save(userVerification);
-        return prepareTemplateMail(email, user, codeRandom);
+        return prepareTemplateMail(email, user, codeRandom,"User Verification");
     }
     
-    public StructureRS prepareTemplateMail(String email,UserEntity user,String codeRandom){
+    public StructureRS prepareTemplateMail(String email,UserEntity user,String codeRandom,String subject){
         Map<String,Object> templateModel= new HashMap<String, Object>();
         Context context = new Context();
         try {
             templateModel.put("userName", user.getUsername());
             templateModel.put("userEmail", user.getEmail());
-            templateModel.put("registrationDate", new Date());
+            templateModel.put("date", new Date());
             templateModel.put("code",codeRandom);
             context.setVariables(templateModel);
 
             String htmlContent = templateEngine.process("email-template", context);
-            prepareMailSend(email, htmlContent,"User Verification","html");
+            prepareMailSend(email, htmlContent,subject);
             return response(("Email sent!"));
         } catch (MessagingException e) {
             e.printStackTrace();
@@ -119,15 +120,13 @@ public class AuthServices extends BaseService{
         }
     }
 
-    public void prepareMailSend(String toMail,String htmlContent,String subject,String type) throws MessagingException{
+    public void prepareMailSend(String toMail,String htmlContent,String subject) throws MessagingException{
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(message,true);
         mimeMessageHelper.setFrom(adminEmail);
         mimeMessageHelper.setTo(toMail);
         mimeMessageHelper.setSubject(subject);
-
-        if(type.equals("html")) mimeMessageHelper.setText(htmlContent,true);
-        else mimeMessageHelper.setText(htmlContent);
+        mimeMessageHelper.setText(htmlContent,true);
         javaMailSender.send(message);
     }
     @Transactional
@@ -148,7 +147,7 @@ public class AuthServices extends BaseService{
         verification.setVerifiedCode(codeRandom);
         verification.setExpiryTime(LocalTime.now().plusSeconds(60));
         userVerificationRepository.save(verification);
-        return prepareTemplateMail(user.getEmail(), user, codeRandom);
+        return prepareTemplateMail(user.getEmail(), user, codeRandom,"User Verification");
     }
 
     public StructureRS login(LoginRequest loginRequest) {
@@ -198,31 +197,31 @@ public class AuthServices extends BaseService{
     }
 
     public StructureRS resetPassword(ResetPasswordRequest resetPasswordRequest){
-        UserEntity user = userRepository.findByEmailAndIsVerificationAndDeletedAtNull(resetPasswordRequest.email(),false).orElseThrow(()-> new BadRequestException("Email has not been found"));
-        String token = UUID.randomUUID().toString();
-        PasswordResetTokenEntity passwordResetToken = new PasswordResetTokenEntity();
-        passwordResetToken.setToken(token);
-        passwordResetToken.setUser(user);
-        passwordResetToken.setExpiryTime(LocalTime.now().plusHours(24));
-        passwordResetTokenRepository.save(passwordResetToken);
-        try {
-            String resetUrl = "http://localhost:8080/api/v1/auth/reset-password?token=" + token;
-            prepareMailSend(user.getEmail(), resetUrl, "Password Reset Request", "");
-            return response("Password reset email sent.");
-        } catch (MessagingException e) {
-            e.printStackTrace();
-            return response("Error password reset sending email!");
+        UserEntity user = userRepository.findByEmailAndIsVerificationAndDeletedAtNull(resetPasswordRequest.email(),true).orElseThrow(()-> new BadRequestException("Email has not been found"));
+        PasswordResetEntity passwordResetEntity = passwordResetRepository.findByUser(user);
+        String verifyCode = RandomUntil.random6Digits();
+
+        if(passwordResetEntity==null){
+            passwordResetEntity = new PasswordResetEntity();
+            passwordResetEntity.setCode(verifyCode);
+            passwordResetEntity.setUser(user);
         }
+        else{
+            passwordResetEntity.setCode(verifyCode);
+        }
+        passwordResetEntity.setExpiryTime(LocalTime.now().plusMinutes(5));
+        passwordResetRepository.save(passwordResetEntity);
+        return prepareTemplateMail(resetPasswordRequest.email(), user, verifyCode,"Password reset request");
     }
 
     @Transactional
-    public StructureRS handlePasswordReset(String token,String newPassword){
-        Optional<PasswordResetTokenEntity> passwordResetToken = passwordResetTokenRepository.findByToken(token);
-        if (passwordResetToken.isEmpty()) throw new BadRequestException("Invalid Token");
-        UserEntity user = passwordResetToken.get().getUser();
-        user.setPassword(passwordEncoder.encode(newPassword));
+    public StructureRS handlePasswordReset(VerifyCode verifyCode){
+        Optional<PasswordResetEntity> passwordReset = passwordResetRepository.findByCode(verifyCode.code());
+        if (passwordReset.isEmpty()) throw new BadRequestException("Invalid code");
+        UserEntity user = passwordReset.get().getUser();
+        user.setPassword(passwordEncoder.encode(verifyCode.password()));
         userRepository.save(user);
-        passwordResetTokenRepository.delete(passwordResetToken.get());
+        passwordResetRepository.delete(passwordReset.get());
         return response("Password reset successful!");
     }
     
