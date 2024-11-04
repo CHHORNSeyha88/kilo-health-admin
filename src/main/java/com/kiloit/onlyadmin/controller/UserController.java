@@ -1,5 +1,4 @@
 package com.kiloit.onlyadmin.controller;
-
 import com.kiloit.onlyadmin.base.BaseController;
 import com.kiloit.onlyadmin.base.BaseListingRQ;
 import com.kiloit.onlyadmin.base.StructureRS;
@@ -9,6 +8,7 @@ import com.kiloit.onlyadmin.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -18,6 +18,7 @@ public class UserController extends BaseController {
     private final UserService userService;
 
     @GetMapping
+    @Secured({"ROLE_Administrator"})
     public ResponseEntity<StructureRS> list(@Valid BaseListingRQ request) {
         return response(userService.list(request));
     }

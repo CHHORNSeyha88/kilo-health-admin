@@ -151,9 +151,9 @@ public class AuthServices extends BaseService{
     }
 
     public StructureRS login(LoginRequest loginRequest) {
-        if(userRepository.existsByEmailAndIsVerificationAndDeletedAtNull(loginRequest.phoneNumber(),true)){
+        if(userRepository.existsByEmailAndIsVerificationAndDeletedAtNull(loginRequest.email(),true)){
             try{
-                Authentication authentication= new UsernamePasswordAuthenticationToken(loginRequest.phoneNumber(),loginRequest.password());
+                Authentication authentication= new UsernamePasswordAuthenticationToken(loginRequest.email(),loginRequest.password());
                 authentication = daoAuthenticationProvider.authenticate(authentication);
                 if(!authentication.isAuthenticated()) throw new BadRequestException("Invalid email or password");
                 String scope = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(" "));

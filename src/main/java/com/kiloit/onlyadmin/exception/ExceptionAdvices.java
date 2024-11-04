@@ -1,6 +1,7 @@
 package com.kiloit.onlyadmin.exception;
 
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import com.kiloit.onlyadmin.base.BaseController;
 import com.kiloit.onlyadmin.base.StructureRS;
@@ -20,10 +21,12 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
-import java.nio.file.AccessDeniedException;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.AuthenticationException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,16 +36,6 @@ import java.util.Set;
 @ControllerAdvice
 @Slf4j
 public class ExceptionAdvices extends BaseController {
-
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<StructureRS> accessDeniedException(AccessDeniedException ex) {
-        StructureRS structureRS = new StructureRS(
-                HttpStatus.UNAUTHORIZED,
-                ex.getMessage()
-        );
-        return new ResponseEntity<>(structureRS, HttpStatus.UNAUTHORIZED);
-    }
 
     @SuppressWarnings("null")
     @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
@@ -182,7 +175,23 @@ public class ExceptionAdvices extends BaseController {
         errorResponse.put("contentType", ex.getContentType() != null ? ex.getContentType() : "unknown");
         errorResponse.put("message", ex.getMessage());
         
-        return new ResponseEntity<>(new StructureRS(HttpStatus.BAD_REQUEST,"Validatio failed",errorResponse), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new StructureRS(HttpStatus.BAD_REQUEST,"Validation failed",errorResponse), HttpStatus.BAD_REQUEST);
+    }
+
+    // Handler for 403 Forbidden
+    @ExceptionHandler(AccessDeniedException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ResponseBody
+    public ResponseEntity<StructureRS> handleAccessDeniedException(HttpServletRequest request, AccessDeniedException ex) {
+        return new ResponseEntity<>(new StructureRS(HttpStatus.FORBIDDEN,"Forbidden","You do not have permission to access this resource."), HttpStatus.FORBIDDEN);
+    }
+
+    //Handler for 401 Unauthorized
+    @ExceptionHandler(AuthenticationException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ResponseBody
+    public ResponseEntity<StructureRS> handleAuthenticationException(HttpServletRequest request, AuthenticationException ex) {
+        return new ResponseEntity<>(new StructureRS(HttpStatus.UNAUTHORIZED,"Unauthorized","Authentication is required to access this resource."), HttpStatus.UNAUTHORIZED);
     }
 
 }
