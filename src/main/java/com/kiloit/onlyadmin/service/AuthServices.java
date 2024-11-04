@@ -115,7 +115,6 @@ public class AuthServices extends BaseService{
             prepareMailSend(email, htmlContent,subject);
             return response(("Email sent!"));
         } catch (MessagingException e) {
-            e.printStackTrace();
             return response("Error sending email!");
         }
     }

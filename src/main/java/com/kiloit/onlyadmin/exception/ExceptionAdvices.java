@@ -178,7 +178,6 @@ public class ExceptionAdvices extends BaseController {
         return new ResponseEntity<>(new StructureRS(HttpStatus.BAD_REQUEST,"Validation failed",errorResponse), HttpStatus.BAD_REQUEST);
     }
 
-    // Handler for 403 Forbidden
     @ExceptionHandler(AccessDeniedException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ResponseBody
@@ -186,7 +185,6 @@ public class ExceptionAdvices extends BaseController {
         return new ResponseEntity<>(new StructureRS(HttpStatus.FORBIDDEN,"Forbidden","You do not have permission to access this resource."), HttpStatus.FORBIDDEN);
     }
 
-    //Handler for 401 Unauthorized
     @ExceptionHandler(AuthenticationException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ResponseBody

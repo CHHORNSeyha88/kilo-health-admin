@@ -1,5 +1,6 @@
 package com.kiloit.onlyadmin.security;
 import com.kiloit.onlyadmin.exception.CustomAuthenticationEntryPoint;
+import com.kiloit.onlyadmin.security.JWT.RolePermissionService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,6 +25,8 @@ public class SecurityConfig {
 
     private final UserDetailsService userDetailsService;
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+    private final RolePermissionService rolePermissionService;
+
     @Bean
     DaoAuthenticationProvider configureDaoAuthenticationProvider(){
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
@@ -52,7 +55,7 @@ public class SecurityConfig {
 
     private JwtAuthenticationConverter jwtAuthenticationConverter() {
         JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
-        converter.setJwtGrantedAuthoritiesConverter(new CustomJwtGrantedAuthoritiesConverter());
+        converter.setJwtGrantedAuthoritiesConverter(new CustomJwtGrantedAuthoritiesConverter(rolePermissionService));
         return converter;
     }
     

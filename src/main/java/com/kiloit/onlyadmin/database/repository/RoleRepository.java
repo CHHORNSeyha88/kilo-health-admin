@@ -19,4 +19,6 @@ public interface RoleRepository extends JpaRepository<RoleEntity, Long> {
 
     Optional<RoleEntity> findByCodeAndDeletedAtNull(String code);
 
+    @Query("SELECT r FROM RoleEntity r JOIN FETCH r.permissions AS p WHERE r.name = :roleName AND r.deletedAt IS NULL")
+    RoleEntity findByName(String roleName);
 }
