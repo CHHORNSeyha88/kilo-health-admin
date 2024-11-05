@@ -19,6 +19,7 @@ public class RolePermissionService {
             for (PermissionEntity permission : role.getPermissions()) {
                 permissions.add("SCOPE_" + permission.getName());
             }
+            permissions.add("ROLE_" + roleName);
         }
         return permissions;
     }

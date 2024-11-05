@@ -71,10 +71,13 @@ public class CategoryService extends BaseService {
         if(categoryEntity.isEmpty()){
             throw new NotFoundException(MessageConstant.CATEGORY.CATEGORY_COULD_NOT_BE_FOUND);
         }
-        CategoryEntity categoryOld = categoryEntity.get();
-        categoryMapper.fromUpdate(request, categoryOld);
-        categoryOld = categoryRepository.save(categoryOld);
-        return response(categoryMapper.toResponse(categoryOld));
+        Optional<FileMedia> fileMedia = fileMediaRepository.findByIdAndDeletedAtIsNull(request.getFileMediaId());
+        if(fileMedia.isEmpty()){
+            throw new NotFoundException(MessageConstant.FILEMEDIA.FILE_MEDIA_NOT_FOUNT);
+        }
+        categoryEntity.get().setName(request.getName());
+        categoryEntity.get().setFileMediaId(fileMedia.get());
+        return response(categoryMapper.toResponse(categoryRepository.save(categoryEntity.get())));
     }
 
     @Transactional

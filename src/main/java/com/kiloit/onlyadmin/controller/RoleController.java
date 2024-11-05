@@ -11,6 +11,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Null;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,26 +30,31 @@ public class RoleController extends BaseController {
 
     private final RoleServices roleServices;
 
+    @Secured({"SCOPE_Create_Role", "ROLE_Administrator"})
     @PostMapping
     public ResponseEntity<StructureRS> createRole(@Valid @RequestBody RoleRQ roleRQ){
         return response(roleServices.create(roleRQ));
     }
 
+    @Secured({"SCOPE_View_Role", "ROLE_Administrator"})
     @GetMapping("/{id}")
     public ResponseEntity<StructureRS> getRole(@PathVariable("id") String id){
         return response(roleServices.getRoleById(Long.parseLong(id)));
     }
 
+    @Secured({"SCOPE_View_Role", "ROLE_Administrator"})
     @GetMapping
     public ResponseEntity<StructureRS> getAllRoles(BaseListingRQ baseListingRQ){
         return response(roleServices.getAll(baseListingRQ));
     }
 
+    @Secured({"SCOPE_Edit_Role", "ROLE_Administrator"})
     @PutMapping("/{id}")
     public ResponseEntity<StructureRS> updateRole(Long id,@RequestBody RoleRequestUpdate roleRequestUpdate){
         return response(roleServices.update(id,roleRequestUpdate));
     }
 
+    @Secured({"SCOPE_Delete_Role", "ROLE_Administrator"})
     @DeleteMapping("/{id}/soft-delete")
     public ResponseEntity<StructureRS> delete(@PathVariable("id") String id){
         return response(roleServices.delete(Long.parseLong(id)));

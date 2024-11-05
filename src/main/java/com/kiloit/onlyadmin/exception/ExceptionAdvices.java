@@ -35,7 +35,7 @@ import java.util.Set;
 
 @ControllerAdvice
 @Slf4j
-public class ExceptionAdvices extends BaseController {
+public class ExceptionAdvices {
 
     @SuppressWarnings("null")
     @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
