@@ -17,19 +17,19 @@ import org.springframework.web.bind.annotation.*;
 public class UserController extends BaseController {
     private final UserService userService;
 
-    @Secured({"SCOPE_View_User"})
+    @Secured({"SCOPE_View_User" , "ROLE_Administrator"})
     @GetMapping
     public ResponseEntity<StructureRS> list(@Valid BaseListingRQ request) {
         return response(userService.list(request));
     }
 
-    @Secured({"SCOPE_View_User"})
+    @Secured({"SCOPE_View_User","ROLE_Administrator"})
     @GetMapping("/{id}")
     public ResponseEntity<StructureRS> detail(@PathVariable("id") String id) {
         return response(userService.detail(Long.parseLong(id)));
     }
 
-    @Secured({"SCOPE_Create_User"})
+    @Secured({"SCOPE_Create_User","ROLE_Administrator"})
     @PostMapping
     public ResponseEntity<StructureRS> create(@Valid @RequestBody UserRQ request){
         return response(userService.create(request));

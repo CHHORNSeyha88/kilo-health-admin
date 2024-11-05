@@ -24,7 +24,7 @@ public interface PermissionRepository extends JpaRepository<PermissionEntity,Lon
                 END
             )
             FROM PermissionEntity p
-            LEFT JOIN p.roles r ON r.id = :roleId
+            LEFT JOIN p.roles r ON (r.id = :roleId AND r.name != 'Administrator')
             WHERE (
                 (:roleId IS NULL AND :module IS NULL) OR
                 (:roleId IS NULL AND p.module = :module) OR

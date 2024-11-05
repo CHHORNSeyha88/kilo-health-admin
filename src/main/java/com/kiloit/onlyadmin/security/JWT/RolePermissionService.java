@@ -20,6 +20,7 @@ public class RolePermissionService {
                 permissions.add("SCOPE_" + permission.getName());
             }
         }
+        permissions.add("ROLE_" + roleName);
         return permissions;
     }
 }
