@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -18,9 +19,9 @@ import org.springframework.web.bind.annotation.*;
 public class CategoryController extends BaseController {
     private final CategoryService categoryService;
 
-    @Secured({"SCOPE_Create_Category", "ROLE_Administrator"})
+    @Secured({"SCOPE_Create_Category", "SCOPE_Administrator"})
     @PostMapping
-    public ResponseEntity<StructureRS> create(@Valid @RequestBody CategoryRQ request){
+    public ResponseEntity<StructureRS> create(@Valid @RequestBody CategoryRQ request, JwtAuthenticationToken jwt){
         return response(categoryService.create(request));
     }
 

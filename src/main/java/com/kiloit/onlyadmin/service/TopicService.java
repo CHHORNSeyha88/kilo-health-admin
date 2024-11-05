@@ -16,12 +16,14 @@ import com.kiloit.onlyadmin.exception.httpstatus.NotFoundException;
 import com.kiloit.onlyadmin.model.topic.mapper.TopicMapper;
 import com.kiloit.onlyadmin.model.topic.request.TopicRQ;
 import com.kiloit.onlyadmin.model.topic.request.TopicUpdateRQ;
+import com.kiloit.onlyadmin.security.UserPrincipal;
 import com.kiloit.onlyadmin.util.FilterTopic;
 import com.kiloit.onlyadmin.util.GetUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -40,9 +42,10 @@ public class TopicService extends BaseService {
     private final GetUser getUser;
 
     @Transactional(readOnly = false)
-    public StructureRS createTopic (TopicRQ topicRQ){
+    public StructureRS createTopic (TopicRQ topicRQ, JwtAuthenticationToken jwt){
+        UserPrincipal userPrincipal = UserPrincipal.build(jwt);
         TopicEntity topicEntity = topicMapper.to(topicRQ);
-        Optional<UserEntity> user = userRepository.findByEmailAndIsVerificationAndDeletedAtNull(getUser.getEmailUser(),true);
+        Optional<UserEntity> user = userRepository.findByEmailAndIsVerificationAndDeletedAtNull(userPrincipal.getEmail(),true);
         if (user.isEmpty()) {
             throw new NotFoundException(MessageConstant.USER.USER_NOT_FOUND);
         }

@@ -28,11 +28,6 @@ public class AuthController extends BaseController {
     
     private final AuthServices authService;
 
-    @PostMapping("/refresh-token")
-    public ResponseEntity<StructureRS> refreshToken(@Valid @RequestBody RefreshTokenRequest refreshTokenRequest){
-        return response(authService.refreshToken(refreshTokenRequest));
-    }
-
     @PostMapping("/login")
     public ResponseEntity<StructureRS> login(@Valid @RequestBody LoginRequest loginRequest){
         return response(authService.login(loginRequest));

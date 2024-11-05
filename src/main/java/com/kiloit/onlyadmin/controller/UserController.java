@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController extends BaseController {
     private final UserService userService;
 
-    @Secured({"SCOPE_View_User", "ROLE_Administrator"})
+    @Secured({"SCOPE_View_User", "SCOPE_Administrator"})
     @GetMapping
     public ResponseEntity<StructureRS> list(@Valid BaseListingRQ request) {
         return response(userService.list(request));

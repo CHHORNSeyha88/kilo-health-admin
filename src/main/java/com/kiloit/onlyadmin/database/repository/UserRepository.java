@@ -29,10 +29,16 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> ,JpaSpec
 
     Optional<UserEntity> findByEmailAndIsVerificationAndDeletedAtNull(String email,Boolean isVerification);
 
+    Optional<UserEntity> findByUsernameAndIsVerificationAndDeletedAtNull(String username,Boolean isVerification);
+
     boolean existsByUsername(String username);
 
     boolean existsByEmailAndIsVerificationAndDeletedAtNull(String email, Boolean isVerification);
 
     @Query("select u from UserEntity u left join fetch u.role r where u.email = :email")
     Optional<UserEntity> findByEmailAndDeletedAt(String email);
+
+    @Query("select u from UserEntity u join fetch u.role role left join fetch role.permissions where u.username = :username or u.email = :username")
+    UserEntity findByUsernameFetchRolePermission(@Param("username") String username);
+
 }

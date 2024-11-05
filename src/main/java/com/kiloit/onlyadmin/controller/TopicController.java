@@ -11,6 +11,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -22,8 +23,8 @@ public class TopicController extends BaseController {
 
     @Secured({"SCOPE_Create_Topic", "ROLE_Administrator"})
    @PostMapping
-   public ResponseEntity<StructureRS> createTopic(@Valid @RequestBody TopicRQ topicRQ){
-       return response(topicService.createTopic(topicRQ));
+   public ResponseEntity<StructureRS> createTopic(@Valid @RequestBody TopicRQ topicRQ, JwtAuthenticationToken jwtAuthenticationToken){
+       return response(topicService.createTopic(topicRQ, jwtAuthenticationToken));
    }
 
     @Secured({"SCOPE_View_Topic", "ROLE_Administrator"})

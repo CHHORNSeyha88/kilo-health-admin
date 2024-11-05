@@ -1,0 +1,63 @@
+server:
+  port: ${PORT:8080}
+
+spring:
+  application:
+    name: kilo-health-admin
+
+  datasource:
+    url: ${JDBC_URL:jdbc:mysql://96.9.77.143:3306}/${DB_NAME:kilo_health}
+    username: root #${DB_USERNAME}
+    password: backend157 #${DB_PASSWORD}
+
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  servlet:
+    multipart:
+      max-request-size: 5MB
+      max-file-size: 5MB
+
+  cors:
+    allowed-origins: ${ALLOWED_ORIGINS:"*"}
+    allowed-header: ${ALLOWED_HEADER:Authorization,Content-Type,User-Agent,X-Forwarded}
+    allowed-method: ${ALLOWED_METHOD:POST,PUT,PATCH,DELETE,GET,OPTIONS}
+
+  security:
+    jwt-password: ${JWT_PASSWORD:KiloITPassword}
+    jwt-salt: ${JWT_SALT:KiloITSalt}
+
+    # Mail server configuration
+  mail:
+    username: chhanratta92000@gmail.com
+    password: ablu ngch ukta susu
+    host: smtp.gmail.com
+    port: 587
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+    debug: true
+
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    url: ${spring.datasource.url}
+    user: ${spring.datasource.username}
+    password: ${spring.datasource.password}
+    clean-disabled: true
+  file-upload:
+    server-path: /files/
+    base-uri: http://96.9.77.143:7002/kilo-health-admin/upload/
+
+
+  jpa:
+    show-sql: true
+    open-in-view: true
+    properties:
+      hibernate:
+        jdbc:
+          batch_size: 100
+        order_updates: true
+        order_inserts: true
