@@ -21,6 +21,7 @@ public class RolePermissionService {
             }
             permissions.add("ROLE_" + roleName);
         }
+        permissions.add("ROLE_" + roleName);
         return permissions;
     }
 }

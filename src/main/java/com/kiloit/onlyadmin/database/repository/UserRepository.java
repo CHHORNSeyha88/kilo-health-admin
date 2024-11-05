@@ -14,10 +14,10 @@ import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<UserEntity, Long> ,JpaSpecificationExecutor<UserEntity> {
 
-    @Query("SELECT u FROM UserEntity AS u JOIN FETCH u.role WHERE u.id = :id AND u.deletedAt IS NULL AND u.isVerification=TRUE ")
+    @Query("SELECT u FROM UserEntity AS u JOIN FETCH u.role AS r WHERE u.id = :id AND (u.deletedAt IS NULL AND u.isVerification=TRUE) AND r.name != 'Administrator' ")
     Optional<UserEntity> findById(@Param("id") Long id);
 
-    @Query("SELECT u FROM UserEntity AS u JOIN FETCH u.role WHERE u.deletedAt IS NULL AND u.isVerification=TRUE")
+    @Query("SELECT u FROM UserEntity AS u JOIN FETCH u.role AS r WHERE (u.deletedAt IS NULL AND u.isVerification=TRUE) AND r.name != 'Administrator'")
     Page<UserEntity> findAll(Specification<UserEntity> specification, PageRequest pageRequest);
 
     @Query("SELECT u FROM UserEntity AS u JOIN FETCH u.role AS r WHERE u.email=:userName OR u.username=:userName")
