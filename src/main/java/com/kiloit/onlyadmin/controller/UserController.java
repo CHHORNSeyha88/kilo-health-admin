@@ -23,25 +23,25 @@ public class UserController extends BaseController {
         return response(userService.list(request));
     }
 
-    @Secured({"SCOPE_View_User", "ROLE_Administrator"})
+    @Secured({"SCOPE_View_User", "SCOPE_Administrator"})
     @GetMapping("/{id}")
     public ResponseEntity<StructureRS> detail(@PathVariable("id") String id) {
         return response(userService.detail(Long.parseLong(id)));
     }
 
-    @Secured({"SCOPE_Create_User", "ROLE_Administrator"})
+    @Secured({"SCOPE_Create_User", "SCOPE_Administrator"})
     @PostMapping
     public ResponseEntity<StructureRS> create(@Valid @RequestBody UserRQ request){
         return response(userService.create(request));
     }
 
-    @Secured({"SCOPE_Edit_User", "ROLE_Administrator"})
+    @Secured({"SCOPE_Edit_User", "SCOPE_Administrator"})
     @PutMapping("/{id}/update")
     public ResponseEntity<StructureRS> update(@PathVariable("id") String id,@Valid @RequestBody UserUpdateRequest userUpdateRequest){
         return response(userService.update(Long.parseLong(id),userUpdateRequest));
     }
 
-    @Secured({"SCOPE_Delete_User", "ROLE_Administrator"})
+    @Secured({"SCOPE_Delete_User", "SCOPE_Administrator"})
     @DeleteMapping("/{id}/soft-delete")
     public ResponseEntity<StructureRS> delete(@PathVariable("id") Long id){
         return response(userService.delete(id));
