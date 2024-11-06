@@ -1,7 +1,7 @@
 package com.kiloit.onlyadmin.constant;
 
 public class PermissionConstant {
-    public static final String ROLE_ADMIN = "SCOPE_ADMIN";
+    public static final String ROLE_ADMIN = "SCOPE_Administrator";
     public static final class ROLE{
         public static final String VIEW = "SCOPE_view_role";
         public static final String EDIT = "SCOPE_edit_role";
