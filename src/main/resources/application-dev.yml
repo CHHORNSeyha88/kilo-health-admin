@@ -56,3 +56,7 @@ spring:
     allowed-header: ${ALLOWED_HEADER:Authorization,Content-Type,User-Agent,X-Forwarded}
     allowed-method: ${ALLOWED_METHOD:POST,PUT,PATCH,DELETE,GET,OPTIONS}
 
+  security:
+    jwt-password: ${JWT_PASSWORD:KiloITPassword}
+    jwt-salt: ${JWT_SALT:KiloITSalt}
+
