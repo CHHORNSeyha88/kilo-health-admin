@@ -9,7 +9,6 @@ import com.kiloit.onlyadmin.database.entity.TopicEntity;
 import com.kiloit.onlyadmin.database.repository.CategoryRepository;
 import com.kiloit.onlyadmin.database.repository.FileMediaRepository;
 import com.kiloit.onlyadmin.database.repository.TopicRepository;
-import com.kiloit.onlyadmin.database.repository.UserRepository;
 import com.kiloit.onlyadmin.exception.httpstatus.BadRequestException;
 import com.kiloit.onlyadmin.exception.httpstatus.NotFoundException;
 import com.kiloit.onlyadmin.model.topic.mapper.TopicMapper;
@@ -17,7 +16,6 @@ import com.kiloit.onlyadmin.model.topic.request.TopicRQ;
 import com.kiloit.onlyadmin.model.topic.request.TopicUpdateRQ;
 import com.kiloit.onlyadmin.security.UserPrincipal;
 import com.kiloit.onlyadmin.util.FilterTopic;
-import com.kiloit.onlyadmin.util.GetUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -37,8 +35,6 @@ public class TopicService extends BaseService {
     private final FileMediaRepository fileMediaRepository;
     private final TopicRepository topicRepository;
     private final TopicMapper topicMapper;
-    private final UserRepository userRepository;
-    private final GetUser getUser;
 
     @Transactional(readOnly = false)
     public StructureRS createTopic (TopicRQ topicRQ){

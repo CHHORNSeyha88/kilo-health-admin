@@ -14,14 +14,12 @@ import com.kiloit.onlyadmin.database.entity.RoleEntity;
 import com.kiloit.onlyadmin.database.repository.PermissionRepository;
 import com.kiloit.onlyadmin.database.repository.RoleRepository;
 import com.kiloit.onlyadmin.exception.httpstatus.BadRequestException;
-import com.kiloit.onlyadmin.model.role.mapper.PermissionMapper;
 import com.kiloit.onlyadmin.model.role.mapper.RoleMapper;
 import com.kiloit.onlyadmin.model.role.request.RoleRQ;
 import com.kiloit.onlyadmin.model.role.request.RoleRequestUpdate;
 import com.kiloit.onlyadmin.model.role.request.SetPermissionItemRequest;
 import com.kiloit.onlyadmin.model.role.request.SetPermissionRequest;
 import com.kiloit.onlyadmin.model.role.response.PermissionStatusResponse;
-
 import java.time.Instant;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,7 +31,6 @@ import java.util.Set;
 public class RoleServices extends BaseService {
     private final RoleRepository roleRepository;
     private final RoleMapper roleMapper;
-    private final PermissionMapper permissionMapper;
     private final PermissionRepository permissionRepository;
 
     @Transactional
@@ -51,6 +48,12 @@ public class RoleServices extends BaseService {
 
     @Transactional
     public StructureRS create(RoleRQ roleRQ) {
+        if(roleRepository.existsByCode(roleRQ.getCode())){
+            throw new BadRequestException(MessageConstant.ROLEPROPERTY.CODE_HAS_EXISTING);
+        }
+        if(roleRepository.existsByName(roleRQ.getName())){
+            throw new BadRequestException(MessageConstant.ROLEPROPERTY.NAME_HAS_EXISTRING);
+        }
         RoleEntity roleEntity = roleMapper.fromRequest(roleRQ);
         roleEntity.setCreatedAt(Instant.now());
         return response(HttpStatus.OK, MessageConstant.ROLE.ROLE_CREATED_SUCCESSFULLY,roleMapper.toRoleCreateResponse(roleRepository.save(roleEntity)));
@@ -58,7 +61,13 @@ public class RoleServices extends BaseService {
 
     @Transactional
     public StructureRS update(Long id,RoleRequestUpdate roleRequestUpdate) {
-        RoleEntity roleEntity = roleRepository.findByIdAndDeletedAtNull(id).orElseThrow(() -> new BadRequestException(MessageConstant.ROLE.ROLE_NOT_FOUND));
+        if(roleRepository.existsByCode(roleRequestUpdate.code())){
+            throw new BadRequestException(MessageConstant.ROLEPROPERTY.CODE_HAS_EXISTING);
+        }
+        if(roleRepository.existsByName(roleRequestUpdate.name())){
+            throw new BadRequestException(MessageConstant.ROLEPROPERTY.NAME_HAS_EXISTRING);
+        }
+        RoleEntity roleEntity = roleRepository.findById(id).orElseThrow(() -> new BadRequestException(MessageConstant.ROLE.ROLE_NOT_FOUND));
         roleMapper.fromRoleRequestUpdate(roleRequestUpdate, roleEntity);
         roleRepository.save(roleEntity);
         return response(HttpStatus.OK, MessageConstant.ROLE.ROLE_UPDATED_SUCCESSFULLY);
@@ -66,7 +75,7 @@ public class RoleServices extends BaseService {
 
     @Transactional
     public StructureRS delete(Long Id) {
-        RoleEntity roleEntity = roleRepository.findByIdAndDeletedAtNull(Id).orElseThrow(() -> new BadRequestException(MessageConstant.ROLE.ROLE_NOT_FOUND));
+        RoleEntity roleEntity = roleRepository.findById(Id).orElseThrow(() -> new BadRequestException(MessageConstant.ROLE.ROLE_NOT_FOUND));
         roleEntity.setDeletedAt(Instant.now());
         roleRepository.save(roleEntity);
         return response(HttpStatus.OK, MessageConstant.ROLE.ROLE_DELETED_SUCCESSFULLY);
@@ -80,7 +89,7 @@ public class RoleServices extends BaseService {
         Set<Long> requestedPermissionIds = setPermissionRequest.getItems().stream().map(SetPermissionItemRequest::getId).collect(Collectors.toSet());
         Set<PermissionEntity> requestedPermissions = permissionRepository.findAllByIdIn(requestedPermissionIds);
 
-        if (requestedPermissions.isEmpty()) return response(HttpStatus.BAD_REQUEST, "Permission has not been found");
+        if (requestedPermissions.isEmpty()) return response(HttpStatus.NOT_FOUND, MessageConstant.ROLE.PERMISSION_NOT_FOUND);
         Set<Long> removeIds = setPermissionRequest.getItems().stream().filter(item -> !item.getStatus()).map(SetPermissionItemRequest::getId).collect(Collectors.toSet());
         Set<PermissionEntity> toRemove = requestedPermissions.stream().filter(permission -> removeIds.contains(permission.getId())).collect(Collectors.toSet());
         

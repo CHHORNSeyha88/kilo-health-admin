@@ -42,12 +42,13 @@ public class FileMediaService extends BaseService {
     private String baseUri;
 
     public FileMediaResponse FileUpload(MultipartFile fileUpload) {
+        @SuppressWarnings("null")
         String extension = fileUpload.getContentType().split("/")[1];
         String newName = UUID.randomUUID().toString();
         try {
             if (Files.notExists(Paths.get(serverPath))) Files.createDirectories(Paths.get(serverPath));
         }catch (Exception e){
-            throw new BadRequestException("File path not found");
+            throw new BadRequestException(MessageConstant.FILEMEDIA.FILE_PATH_HAS_NOT_FOUND);
         }
 
         try {

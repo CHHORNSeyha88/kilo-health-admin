@@ -3,6 +3,7 @@ package com.kiloit.onlyadmin.service;
 import com.kiloit.onlyadmin.base.BaseService;
 import com.kiloit.onlyadmin.base.StructureRS;
 import com.kiloit.onlyadmin.constant.MessageConstant;
+import com.kiloit.onlyadmin.constant.MessageConstant.REGISTERPROPERTY;
 import com.kiloit.onlyadmin.database.entity.PasswordResetEntity;
 import com.kiloit.onlyadmin.database.entity.RoleEntity;
 import com.kiloit.onlyadmin.database.entity.UserEntity;
@@ -61,24 +62,20 @@ public class AuthServices extends BaseService {
 
     @Transactional
     public StructureRS register(RegisterRequest registerRequest) {
-        if (userRepository.existsByPhone(registerRequest.phone()))
-            throw new BadRequestException("Phone Number has been already exist");
-        if (userRepository.existsByEmail(registerRequest.email()))
-            throw new BadRequestException("Email has been already exist");
-        if (userRepository.existsByPhone(registerRequest.username()))
-            throw new BadRequestException("Username has been already exist");
-        if (!registerRequest.confirmPassword().equals(registerRequest.password()))
-            throw new BadRequestException("Password has not been match");
+        if (userRepository.existsByPhone(registerRequest.phone())) throw new BadRequestException(MessageConstant.REGISTERPROPERTY.PHONE_IS_NOT_VALID);
+        if (userRepository.existsByEmail(registerRequest.email())) throw new BadRequestException(MessageConstant.REGISTERPROPERTY.EMAIL_IS_EXISTING);
+        if (userRepository.existsByPhone(registerRequest.username())) throw new BadRequestException(MessageConstant.REGISTERPROPERTY.USERNAME_IS_NOT_VALID);
+        if (!registerRequest.confirmPassword().equals(registerRequest.password())) throw new BadRequestException(MessageConstant.REGISTERPROPERTY.PASSWORD_NOT_MATCH);
 
         UserEntity user = userMapper.fromRegisterRequest(registerRequest);
-        Optional<RoleEntity> role = roleRepository.findById(Long.parseLong("2"));
+        Optional<RoleEntity> role = roleRepository.findById(2L);
         if (role.isEmpty()) throw new BadRequestException(MessageConstant.ROLE.ROLE_NOT_FOUND);
         user.setIsVerification(false);
         user.setPassword(passwordEncoder.encode(registerRequest.password()));
         user.setRole(role.get());
         user.setCreatedAt(Instant.now());
         userRepository.save(user);
-        return response(RegisterResponse.builder().message("You register has been successfully").email(registerRequest.email()).build());
+        return response(RegisterResponse.builder().message(REGISTERPROPERTY.REGISTER_HAS_BEEN_SUCCESSFULLY).email(registerRequest.email()).build());
     }
 
     public StructureRS sendVerification(String email) throws MessagingException {
@@ -122,10 +119,14 @@ public class AuthServices extends BaseService {
 
     @Transactional
     public StructureRS verify(VerificationRequest verificationRequest) {
-        UserEntity user = userRepository.findByEmailAndIsVerificationAndDeletedAtNull(verificationRequest.email(), false).orElseThrow(() -> new BadRequestException("Email has not been found"));
-        UserVerification verification = userVerificationRepository.findByUserAndVerifiedCode(user, verificationRequest.verifiedCode()).orElseThrow(() -> new BadRequestException("Verified code has expired"));
-        if (LocalTime.now().isAfter(verification.getExpiryTime()))
-            throw new BadRequestException("Verified code has expired");
+        UserEntity user = userRepository
+                         .findByEmailAndIsVerificationAndDeletedAtNull(verificationRequest.email(), false)
+                         .orElseThrow(() -> new BadRequestException(MessageConstant.REGISTERPROPERTY.EMAIL_HAS_NOT_BEEN_FOUND));
+        UserVerification verification = userVerificationRepository
+                                        .findByUserAndVerifiedCode(user, verificationRequest.verifiedCode())
+                                        .orElseThrow(() -> new BadRequestException(MessageConstant.CREDENTIAL.VERIFY_CODE_HAS_BEEN_EXPRIED));
+                                        
+        if (LocalTime.now().isAfter(verification.getExpiryTime())) throw new BadRequestException(MessageConstant.CREDENTIAL.VERIFY_CODE_HAS_BEEN_EXPRIED);
         user.setIsVerification(true);
         userRepository.save(user);
         userVerificationRepository.delete(verification);
@@ -150,7 +151,7 @@ public class AuthServices extends BaseService {
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginRequest.email(), loginRequest.password());
                 Authentication authentication = authenticationManager.authenticate(authenticationToken);
 
-                if (!authentication.isAuthenticated()) throw new BadRequestException("Invalid email or password");
+                if (!authentication.isAuthenticated()) throw new BadRequestException(MessageConstant.CREDENTIAL.INVALID_EMAIL_OR_PASSWORD);
 
                 UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
 
@@ -162,12 +163,12 @@ public class AuthServices extends BaseService {
                 return response(respond);
 
             } catch (AuthenticationException e) {
-                throw new BadRequestException("Invalid email or password");
+                throw new BadRequestException(MessageConstant.CREDENTIAL.INVALID_EMAIL_OR_PASSWORD);
             }
 
         }
 
-        throw new BadRequestException("Invalid email or password");
+        throw new BadRequestException(MessageConstant.CREDENTIAL.INVALID_EMAIL_OR_PASSWORD);
     }
 
 
@@ -191,12 +192,12 @@ public class AuthServices extends BaseService {
     @Transactional
     public StructureRS handlePasswordReset(VerifyCode verifyCode) {
         Optional<PasswordResetEntity> passwordReset = passwordResetRepository.findByCode(verifyCode.code());
-        if (passwordReset.isEmpty()) throw new BadRequestException("Invalid code");
+        if (passwordReset.isEmpty()) throw new BadRequestException(MessageConstant.CREDENTIAL.VERIFY_CODE_HAS_BEEN_EXPRIED);
         UserEntity user = passwordReset.get().getUser();
         user.setPassword(passwordEncoder.encode(verifyCode.password()));
         userRepository.save(user);
         passwordResetRepository.delete(passwordReset.get());
-        return response("Password reset successful!");
+        return response(MessageConstant.RESET_PASSWORD_SUCCESSFULLY);
     }
 
 }

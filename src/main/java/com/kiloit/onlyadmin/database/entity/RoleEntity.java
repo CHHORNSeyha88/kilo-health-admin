@@ -12,6 +12,7 @@ import org.springframework.security.core.GrantedAuthority;
 @Entity
 @Table(name = "role")
 public class RoleEntity extends BaseEntity implements GrantedAuthority{
+    
     private String code;
     private String name;
     private String module;

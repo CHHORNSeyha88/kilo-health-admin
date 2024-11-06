@@ -15,11 +15,14 @@ public interface RoleRepository extends JpaRepository<RoleEntity, Long> {
     @Query("SELECT r FROM RoleEntity AS r WHERE (:name='all' OR r.name LIKE concat('%', :name, '%')) AND r.deletedAt IS NULL AND (r.name != 'Administrator') order by r.id ")
     Page<RoleEntity> findByNameContainsOrderByNameAsc(@Param("name") String name, Pageable pageable);
 
-    Optional<RoleEntity> findByIdAndDeletedAtNull(Long id);
-
     @Query("SELECT r FROM RoleEntity r JOIN FETCH r.permissions AS p WHERE r.name = :roleName AND r.deletedAt IS NULL AND (r.name != 'Administrator')")
     RoleEntity findByName(String roleName);
 
+    @SuppressWarnings("null")
     @Query("SELECT r FROM RoleEntity r LEFT JOIN r.permissions WHERE r.id = :id AND r.deletedAt IS NULL AND (r.name != 'Administrator')")
     Optional<RoleEntity> findById(@Param("id") Long id);
+
+    boolean existsByCode(String code);
+
+    boolean existsByName(String name);
 }

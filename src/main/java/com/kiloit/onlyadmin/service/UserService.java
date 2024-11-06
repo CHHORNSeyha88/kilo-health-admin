@@ -45,9 +45,9 @@ public class UserService extends BaseService {
     @Transactional
     public StructureRS create(UserRQ request) {
         RoleEntity roleEntity = roleRepository.findById(request.getRoleId()).orElseThrow(()->new BadRequestException(MessageConstant.ROLE.ROLE_NOT_FOUND));
-        if(userRepository.existsByEmail(request.getEmail())) throw new BadRequestException("Email has already existing...");
-        if(userRepository.existsByUsername(request.getUsername())) throw new BadRequestException("User name not valid...");
-        if(userRepository.existsByPhone(request.getPhone())) throw new BadRequestException("Phone number not valid...");
+        if(userRepository.existsByEmail(request.getEmail())) throw new BadRequestException(MessageConstant.REGISTERPROPERTY.EMAIL_IS_EXISTING);
+        if(userRepository.existsByUsername(request.getUsername())) throw new BadRequestException(MessageConstant.REGISTERPROPERTY.USERNAME_IS_NOT_VALID);
+        if(userRepository.existsByPhone(request.getPhone())) throw new BadRequestException(MessageConstant.REGISTERPROPERTY.PHONE_IS_NOT_VALID);
         UserEntity userEntity = userMapper.fromUser(request);
         userEntity.setIsVerification(false);
         userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
