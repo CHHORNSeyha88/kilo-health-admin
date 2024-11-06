@@ -50,3 +50,9 @@ spring:
           batch_size: 100
         order_updates: true
         order_inserts: true
+
+  cors:
+    allowed-origins: ${ALLOWED_ORIGINS:"*"}
+    allowed-header: ${ALLOWED_HEADER:Authorization,Content-Type,User-Agent,X-Forwarded}
+    allowed-method: ${ALLOWED_METHOD:POST,PUT,PATCH,DELETE,GET,OPTIONS}
+
