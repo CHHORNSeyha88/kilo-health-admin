@@ -43,7 +43,7 @@ public class UserPrincipal implements UserDetails, Principal {
         this.password = u.getPassword();
         this.authorities = Collections.emptyList();
 
-        Set<String> permissions = u.getRole().getPermissions().stream().map(PermissionEntity::getName).collect(Collectors.toSet());
+        Set<String> permissions = u.getRole().getPermissions().stream().map(PermissionEntity::getCode).collect(Collectors.toSet());
         this.authorities = permissions.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toSet());
     }
 
