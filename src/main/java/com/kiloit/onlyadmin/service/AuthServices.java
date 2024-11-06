@@ -65,7 +65,7 @@ public class AuthServices extends BaseService {
         if (userRepository.existsByPhone(registerRequest.phone())) throw new BadRequestException(MessageConstant.REGISTERPROPERTY.PHONE_IS_NOT_VALID);
         if (userRepository.existsByEmail(registerRequest.email())) throw new BadRequestException(MessageConstant.REGISTERPROPERTY.EMAIL_IS_EXISTING);
         if (userRepository.existsByPhone(registerRequest.username())) throw new BadRequestException(MessageConstant.REGISTERPROPERTY.USERNAME_IS_NOT_VALID);
-        if (!registerRequest.confirmPassword().equals(registerRequest.password())) throw new BadRequestException(MessageConstant.REGISTERPROPERTY.PASSWORD_NOT_MATCH);
+        if (!registerRequest.confirmPassword().equals(registerRequest.password())) throw new BadRequestException(MessageConstant.CREDENTIAL.PASSWORD_NOT_MATCH);
 
         UserEntity user = userMapper.fromRegisterRequest(registerRequest);
         Optional<RoleEntity> role = roleRepository.findById(2L);
