@@ -6,7 +6,6 @@ import com.kiloit.onlyadmin.constant.MessageConstant;
 import com.kiloit.onlyadmin.database.entity.CategoryEntity;
 import com.kiloit.onlyadmin.database.entity.FileMedia;
 import com.kiloit.onlyadmin.database.entity.TopicEntity;
-import com.kiloit.onlyadmin.database.entity.UserEntity;
 import com.kiloit.onlyadmin.database.repository.CategoryRepository;
 import com.kiloit.onlyadmin.database.repository.FileMediaRepository;
 import com.kiloit.onlyadmin.database.repository.TopicRepository;
@@ -42,13 +41,8 @@ public class TopicService extends BaseService {
     private final GetUser getUser;
 
     @Transactional(readOnly = false)
-    public StructureRS createTopic (TopicRQ topicRQ, JwtAuthenticationToken jwt){
-        UserPrincipal userPrincipal = UserPrincipal.build(jwt);
+    public StructureRS createTopic (TopicRQ topicRQ){
         TopicEntity topicEntity = topicMapper.to(topicRQ);
-        Optional<UserEntity> user = userRepository.findByEmailAndIsVerificationAndDeletedAtNull(userPrincipal.getEmail(),true);
-        if (user.isEmpty()) {
-            throw new NotFoundException(MessageConstant.USER.USER_NOT_FOUND);
-        }
         Optional<CategoryEntity> categoryEntity = categoryRepository.findByIDAndDeletedAtIsNull(topicRQ.getCategoryId());
         if(categoryEntity.isEmpty()){
             throw new NotFoundException(MessageConstant.CATEGORY.CATEGORY_COULD_NOT_BE_FOUND);
@@ -58,42 +52,43 @@ public class TopicService extends BaseService {
             throw new NotFoundException(MessageConstant.FILEMEDIA.FILE_MEDIA_NOT_FOUNT);
         }
         topicEntity.setCategory(categoryEntity.get());
-        topicEntity.setUser(user.get());
         topicEntity.setFileMediaId(fileMedia.get());
         topicEntity = topicRepository.save(topicEntity);
         return response(topicMapper.to(topicEntity));
     }
 
     @Transactional(readOnly = true)
-    public StructureRS getById(Long id) {
-        Optional<TopicEntity> topicEntity = topicRepository.findTopic(id,getUser.getEmailUser(), getUser.getRoleUser());
-        if (topicEntity.isEmpty()) {
+    public StructureRS getById(Long id,JwtAuthenticationToken jwt) {
+        UserPrincipal user = UserPrincipal.build(jwt);
+        Optional<TopicEntity> topicEntity = topicRepository.findTopic(id,user.getEmail(), user.getRoleName());
+        if (topicEntity.isEmpty())
            throw new NotFoundException(MessageConstant.TOPIC.TOPIC_NOT_FOUND);
-        }
         System.out.println(topicEntity.get().getCategory());
         return response(topicMapper.to(topicEntity.get()));
     }
 
     @Transactional(readOnly = false)
-    public StructureRS updateTopicById(Long id, TopicUpdateRQ topicUpdateRQ) {
-        Optional<TopicEntity> topicEntity = topicRepository.findTopic(id,getUser.getEmailUser(), getUser.getRoleUser());
-        if (topicEntity.isEmpty()) {
+    public StructureRS updateTopicById(Long id, TopicUpdateRQ topicUpdateRQ,JwtAuthenticationToken jwt) {
+        UserPrincipal user = UserPrincipal.build(jwt);
+        Optional<TopicEntity> topicEntity = topicRepository.findTopic(id,user.getEmail(), user.getRoleName());
+        if (topicEntity.isEmpty())
             throw new NotFoundException(MessageConstant.TOPIC.TOPIC_NOT_FOUND);
-        }
         topicEntity.get().setName(topicUpdateRQ.getName());
         return  response(topicMapper.to(topicRepository.save(topicEntity.get())));
     }
     @Transactional(readOnly = false)
-    public StructureRS deleteTopicByIdNotNull(Long id){
-        Optional<TopicEntity> topicEntity = topicRepository.findTopic(id,getUser.getEmailUser(), getUser.getRoleUser());
+    public StructureRS deleteTopicByIdNotNull(Long id,JwtAuthenticationToken jwt){
+        UserPrincipal user = UserPrincipal.build(jwt);
+        Optional<TopicEntity> topicEntity = topicRepository.findTopic(id,user.getEmail(), user.getRoleName());
         if (topicEntity.isEmpty())
             throw new BadRequestException(MessageConstant.USER.USER_NOT_FOUND);
         topicEntity.get().setDeletedAt(Instant.now());
         topicRepository.save(topicEntity.get());
         return response(HttpStatus.ACCEPTED,MessageConstant.TOPIC.TOPIC_HAVE_BEEN_DELETED);
     }
-    public StructureRS getTopicList(FilterTopic filterTopic){
-        Page<TopicEntity> topicList = topicRepository.findAll(filter(getUser.getRoleUser(),getUser.getEmailUser(),filterTopic.getQuery(),filterTopic.getUserId(),filterTopic.getCategoryId()),filterTopic.getPageable());
+    public StructureRS getTopicList(FilterTopic filterTopic,JwtAuthenticationToken jwt){
+        UserPrincipal user = UserPrincipal.build(jwt);
+        Page<TopicEntity> topicList = topicRepository.findAll(filter(user.getRoleName(),user.getEmail(),filterTopic.getQuery(),filterTopic.getUserId(),filterTopic.getCategoryId()),filterTopic.getPageable());
         return response(topicList.stream().map(topicMapper::toResponse),topicList);
     }
 

@@ -2,6 +2,7 @@ package com.kiloit.onlyadmin.controller;
 
 import com.kiloit.onlyadmin.base.BaseController;
 import com.kiloit.onlyadmin.base.StructureRS;
+import com.kiloit.onlyadmin.constant.PermissionConstant;
 import com.kiloit.onlyadmin.model.post.request.PostCreateRequest;
 import com.kiloit.onlyadmin.model.post.request.PostUpdateRequest;
 import com.kiloit.onlyadmin.service.PostService;
@@ -10,6 +11,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,36 +21,35 @@ import org.springframework.web.bind.annotation.*;
 public class PostController extends BaseController {
     private final PostService postService;
 
-    @Secured({"SCOPE_Create_Post", "ROLE_Administrator"})
+    @Secured({PermissionConstant.POST.CREATE, PermissionConstant.ROLE_ADMIN})
     @PostMapping
     public ResponseEntity<StructureRS> createPost(@Valid @RequestBody PostCreateRequest request){
-        StructureRS post = postService.createPost(request);
-        return response(post);
+        return response(postService.createPost(request));
     }
 
-    @Secured({"SCOPE_Edit_Post", "ROLE_Administrator"})
+    @Secured({PermissionConstant.POST.EDIT, PermissionConstant.ROLE_ADMIN})
     @PutMapping("{id}/update")
-    public ResponseEntity<StructureRS> PostUpdate(@Valid @PathVariable Long id,@RequestBody PostUpdateRequest request){
-        return response(postService.PostUpdate(id,request));
+    public ResponseEntity<StructureRS> PostUpdate(@Valid @PathVariable Long id, @RequestBody PostUpdateRequest request, JwtAuthenticationToken jwt){
+        return response(postService.PostUpdate(id,request,jwt));
     }
 
-    @Secured({"SCOPE_View_Post", "ROLE_Administrator"})
+    @Secured({PermissionConstant.POST.VIEW,PermissionConstant.ROLE_ADMIN })
     @GetMapping
     @Transactional(readOnly = true)
-    public ResponseEntity<StructureRS> getPostList(FilterPost filterPost){
-        return response(postService.getList(filterPost));
+    public ResponseEntity<StructureRS> getPostList(FilterPost filterPost,JwtAuthenticationToken jwt){
+        return response(postService.getList(filterPost,jwt));
     }
 
-    @Secured({"SCOPE_View_Post", "ROLE_Administrator"})
+    @Secured({PermissionConstant.POST.VIEW, PermissionConstant.ROLE_ADMIN})
     @GetMapping("{id}/detail")
-    public ResponseEntity<StructureRS> getDetailById(@PathVariable Long id){
-        return response(postService.getDetail(id));
+    public ResponseEntity<StructureRS> getDetailById(@PathVariable Long id,JwtAuthenticationToken jwt){
+        return response(postService.getDetail(id,jwt));
     }
 
-    @Secured({"SCOPE_Delete_Post", "ROLE_Administrator"})
+    @Secured({PermissionConstant.POST.DELETE, PermissionConstant.ROLE_ADMIN})
     @DeleteMapping("{id}/deletedPost")
-    public ResponseEntity<StructureRS> deletedPost(@PathVariable Long id){
-        return response(postService.deletePostById(id));
+    public ResponseEntity<StructureRS> deletedPost(@PathVariable Long id,JwtAuthenticationToken jwt){
+        return response(postService.deletePostById(id,jwt));
     }
 
 }
