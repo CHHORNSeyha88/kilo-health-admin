@@ -34,7 +34,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
-
 import java.time.Instant;
 import java.time.LocalTime;
 import java.util.Date;
@@ -72,7 +71,7 @@ public class AuthServices extends BaseService {
             throw new BadRequestException("Password has not been match");
 
         UserEntity user = userMapper.fromRegisterRequest(registerRequest);
-        Optional<RoleEntity> role = roleRepository.findByCodeAndDeletedAtNull("USER");
+        Optional<RoleEntity> role = roleRepository.findById(Long.parseLong("2"));
         if (role.isEmpty()) throw new BadRequestException(MessageConstant.ROLE.ROLE_NOT_FOUND);
         user.setIsVerification(false);
         user.setPassword(passwordEncoder.encode(registerRequest.password()));
