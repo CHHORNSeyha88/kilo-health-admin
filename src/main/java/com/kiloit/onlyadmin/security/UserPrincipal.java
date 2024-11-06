@@ -38,6 +38,7 @@ public class UserPrincipal implements UserDetails, Principal {
         this.email = u.getEmail();
         this.phone = u.getPhone();
         this.address = u.getAddress();
+        this.avatar = u.getPhoto();
         this.roleId = u.getRole().getId();
         this.roleName = u.getRole().getName();
         this.password = u.getPassword();
