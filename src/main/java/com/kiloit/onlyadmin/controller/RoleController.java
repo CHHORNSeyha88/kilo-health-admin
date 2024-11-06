@@ -3,6 +3,7 @@ package com.kiloit.onlyadmin.controller;
 import com.kiloit.onlyadmin.base.BaseController;
 import com.kiloit.onlyadmin.base.BaseListingRQ;
 import com.kiloit.onlyadmin.base.StructureRS;
+import com.kiloit.onlyadmin.constant.PermissionConstant;
 import com.kiloit.onlyadmin.model.role.request.RoleRQ;
 import com.kiloit.onlyadmin.model.role.request.RoleRequestUpdate;
 import com.kiloit.onlyadmin.model.role.request.SetPermissionRequest;
@@ -29,41 +30,43 @@ public class RoleController extends BaseController {
 
     private final RoleServices roleServices;
 
-    @Secured({"SCOPE_Create_Role", "ROLE_Administrator"})
+    @Secured({PermissionConstant.ROLE.CREATE, PermissionConstant.ROLE_ADMIN})
     @PostMapping
     public ResponseEntity<StructureRS> createRole(@Valid @RequestBody RoleRQ roleRQ){
         return response(roleServices.create(roleRQ));
     }
 
-    @Secured({"SCOPE_View_Role", "ROLE_Administrator"})
+    @Secured({PermissionConstant.ROLE.VIEW, PermissionConstant.ROLE_ADMIN})
     @GetMapping("/{id}")
     public ResponseEntity<StructureRS> getRole(@PathVariable("id") String id){
         return response(roleServices.getRoleById(Long.parseLong(id)));
     }
 
-    @Secured({"SCOPE_View_Role", "ROLE_Administrator"})
+    @Secured({PermissionConstant.ROLE.VIEW, PermissionConstant.ROLE_ADMIN})
     @GetMapping
     public ResponseEntity<StructureRS> getAllRoles(BaseListingRQ baseListingRQ){
         return response(roleServices.getAll(baseListingRQ));
     }
 
-    @Secured({"SCOPE_Edit_Role", "ROLE_Administrator"})
+    @Secured({PermissionConstant.ROLE.EDIT, PermissionConstant.ROLE_ADMIN})
     @PutMapping("/{id}")
     public ResponseEntity<StructureRS> updateRole(Long id,@RequestBody RoleRequestUpdate roleRequestUpdate){
         return response(roleServices.update(id,roleRequestUpdate));
     }
 
-    @Secured({"SCOPE_Delete_Role", "ROLE_Administrator"})
+    @Secured({PermissionConstant.ROLE.DELETE, PermissionConstant.ROLE_ADMIN})
     @DeleteMapping("/{id}/soft-delete")
     public ResponseEntity<StructureRS> delete(@PathVariable("id") String id){
         return response(roleServices.delete(Long.parseLong(id)));
     }
 
+    @Secured({PermissionConstant.ROLE.SET, PermissionConstant.ROLE_ADMIN})
     @PutMapping("/assignPermission")
     public ResponseEntity<StructureRS> assignPermission(@RequestBody SetPermissionRequest setPermissionRequest) {
         return response(roleServices.setPermission(setPermissionRequest));
     }
 
+    @Secured({PermissionConstant.ROLE.VIEW_PERMISSION, PermissionConstant.ROLE_ADMIN})
     @GetMapping("/listPermissions")
     public ResponseEntity<StructureRS> listAllPermissions(BaseListingRQ baseListingRQ,@RequestParam(value = "roleId",required = false) String roleId,@RequestParam(value="module",required = false) String module){
     

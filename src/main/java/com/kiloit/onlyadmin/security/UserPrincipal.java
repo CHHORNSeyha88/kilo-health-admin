@@ -38,12 +38,13 @@ public class UserPrincipal implements UserDetails, Principal {
         this.email = u.getEmail();
         this.phone = u.getPhone();
         this.address = u.getAddress();
+        this.avatar = u.getPhoto();
         this.roleId = u.getRole().getId();
         this.roleName = u.getRole().getName();
         this.password = u.getPassword();
         this.authorities = Collections.emptyList();
 
-        Set<String> permissions = u.getRole().getPermissions().stream().map(PermissionEntity::getName).collect(Collectors.toSet());
+        Set<String> permissions = u.getRole().getPermissions().stream().map(PermissionEntity::getCode).collect(Collectors.toSet());
         this.authorities = permissions.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toSet());
     }
 

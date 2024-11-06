@@ -2,6 +2,7 @@ package com.kiloit.onlyadmin.controller;
 
 import com.kiloit.onlyadmin.base.BaseController;
 import com.kiloit.onlyadmin.base.StructureRS;
+import com.kiloit.onlyadmin.constant.PermissionConstant;
 import com.kiloit.onlyadmin.model.topic.request.TopicRQ;
 import com.kiloit.onlyadmin.model.topic.request.TopicUpdateRQ;
 import com.kiloit.onlyadmin.service.TopicService;
@@ -21,35 +22,35 @@ public class TopicController extends BaseController {
 
     private final TopicService topicService;
 
-    @Secured({"SCOPE_Create_Topic", "ROLE_Administrator"})
+    @Secured({PermissionConstant.TOPIC.CREATE, PermissionConstant.ROLE_ADMIN})
    @PostMapping
-   public ResponseEntity<StructureRS> createTopic(@Valid @RequestBody TopicRQ topicRQ, JwtAuthenticationToken jwtAuthenticationToken){
-       return response(topicService.createTopic(topicRQ, jwtAuthenticationToken));
+   public ResponseEntity<StructureRS> createTopic(@Valid @RequestBody TopicRQ topicRQ){
+       return response(topicService.createTopic(topicRQ));
    }
 
-    @Secured({"SCOPE_View_Topic", "ROLE_Administrator"})
+    @Secured({PermissionConstant.TOPIC.VIEW, PermissionConstant.ROLE_ADMIN})
    @GetMapping("/{id}")
-   public ResponseEntity<StructureRS> getTopicById(@PathVariable Long id){
-       return response(topicService.getById(id));
+   public ResponseEntity<StructureRS> getTopicById(@PathVariable Long id, JwtAuthenticationToken jwt){
+       return response(topicService.getById(id,jwt));
    }
 
-    @Secured({"SCOPE_Delete_Topic", "ROLE_Administrator"})
+    @Secured({PermissionConstant.TOPIC.DELETE, PermissionConstant.ROLE_ADMIN})
     @DeleteMapping("delete/{id}")
-    public ResponseEntity<StructureRS> DeleteTopicById(@PathVariable Long id){
-        return response(topicService.deleteTopicByIdNotNull(id));
+    public ResponseEntity<StructureRS> DeleteTopicById(@PathVariable Long id, JwtAuthenticationToken jwt){
+        return response(topicService.deleteTopicByIdNotNull(id,jwt));
     }
 
-    @Secured({"SCOPE_Edit_Topic", "ROLE_Administrator"})
+    @Secured({PermissionConstant.TOPIC.EDIT, PermissionConstant.ROLE_ADMIN})
     @PutMapping("update/{id}")
-    public ResponseEntity<StructureRS> updateTopicById(@Valid @PathVariable Long id, @RequestBody TopicUpdateRQ topicRQ){
-        return response(topicService.updateTopicById(id, topicRQ));
+    public ResponseEntity<StructureRS> updateTopicById(@Valid @PathVariable Long id, @RequestBody TopicUpdateRQ topicRQ,JwtAuthenticationToken jwt){
+        return response(topicService.updateTopicById(id, topicRQ,jwt));
     }
 
-    @Secured({"SCOPE_View_Topic", "ROLE_Administrator"})
+    @Secured({PermissionConstant.TOPIC.VIEW, PermissionConstant.ROLE_ADMIN})
     @GetMapping()
     @Transactional(readOnly = true)
-    public ResponseEntity<StructureRS>getList(FilterTopic filterTopic){
-        return response(topicService.getTopicList(filterTopic));
+    public ResponseEntity<StructureRS>getList(FilterTopic filterTopic,JwtAuthenticationToken jwt){
+        return response(topicService.getTopicList(filterTopic,jwt));
     }
 
 }
