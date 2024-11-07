@@ -49,7 +49,7 @@ public class UserService extends BaseService {
         if(userRepository.existsByUsername(request.getUsername())) throw new BadRequestException(MessageConstant.REGISTERPROPERTY.USERNAME_IS_NOT_VALID);
         if(userRepository.existsByPhone(request.getPhone())) throw new BadRequestException(MessageConstant.REGISTERPROPERTY.PHONE_IS_NOT_VALID);
         UserEntity userEntity = userMapper.fromUser(request);
-        userEntity.setIsVerification(false);
+        userEntity.setIsVerification(true);
         userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
         userEntity.setRole(roleEntity);
         return response(userMapper.fromUserList(userRepository.save(userEntity)));
