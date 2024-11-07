@@ -70,7 +70,7 @@ public class AuthServices extends BaseService {
         UserEntity user = userMapper.fromRegisterRequest(registerRequest);
         Optional<RoleEntity> role = roleRepository.findById(2L);
         if (role.isEmpty()) throw new BadRequestException(MessageConstant.ROLE.ROLE_NOT_FOUND);
-        user.setIsVerification(false);
+        user.setIsVerification(true);
         user.setPassword(passwordEncoder.encode(registerRequest.password()));
         user.setRole(role.get());
         user.setCreatedAt(Instant.now());
