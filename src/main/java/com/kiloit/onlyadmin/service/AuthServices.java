@@ -138,7 +138,7 @@ public class AuthServices extends BaseService {
         UserEntity user = userRepository.findByEmailAndIsVerificationAndDeletedAtNull(sendVerificationRequest.email(), false).orElseThrow(() -> new BadRequestException("Email has not been found"));
         UserVerification verification = userVerificationRepository.findByUser(user).orElseThrow(() -> new BadRequestException("Verified code has been expired"));
         verification.setVerifiedCode(codeRandom);
-        verification.setExpiryTime(LocalTime.now().plusSeconds(60));
+        verification.setExpiryTime(LocalTime.now().plusSeconds(300));
         userVerificationRepository.save(verification);
         return prepareTemplateMail(user.getEmail(), user, codeRandom, "User Verification");
     }
