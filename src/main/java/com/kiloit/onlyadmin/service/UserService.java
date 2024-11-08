@@ -44,10 +44,14 @@ public class UserService extends BaseService {
 
     @Transactional
     public StructureRS create(UserRQ request) {
-        RoleEntity roleEntity = roleRepository.findById(request.getRoleId()).orElseThrow(()->new BadRequestException(MessageConstant.ROLE.ROLE_NOT_FOUND));
-        if(userRepository.existsByEmail(request.getEmail())) throw new BadRequestException(MessageConstant.REGISTERPROPERTY.EMAIL_IS_EXISTING);
-        if(userRepository.existsByUsername(request.getUsername())) throw new BadRequestException(MessageConstant.REGISTERPROPERTY.USERNAME_IS_NOT_VALID);
-        if(userRepository.existsByPhone(request.getPhone())) throw new BadRequestException(MessageConstant.REGISTERPROPERTY.PHONE_IS_NOT_VALID);
+        RoleEntity roleEntity = roleRepository.findById(request.getRoleId())
+                .orElseThrow(()->new BadRequestException(MessageConstant.ROLE.ROLE_NOT_FOUND));
+        if(userRepository.existsByEmail(request.getEmail()))
+            throw new BadRequestException(MessageConstant.REGISTERPROPERTY.EMAIL_IS_EXISTING);
+        if(userRepository.existsByUsername(request.getUsername()))
+            throw new BadRequestException(MessageConstant.REGISTERPROPERTY.USERNAME_IS_NOT_VALID);
+        if(userRepository.existsByPhone(request.getPhone()))
+            throw new BadRequestException(MessageConstant.REGISTERPROPERTY.PHONE_IS_NOT_VALID);
         UserEntity userEntity = userMapper.fromUser(request);
         userEntity.setIsVerification(true);
         userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
@@ -57,8 +61,10 @@ public class UserService extends BaseService {
 
     @Transactional
     public StructureRS update(Long id, UserUpdateRequest userUpdateRequest) throws BadRequestException {
-        UserEntity user = userRepository.findById(id).orElseThrow(()->new BadRequestException(MessageConstant.USER.USER_NOT_FOUND));
-        RoleEntity roleEntity = roleRepository.findById(userUpdateRequest.getRoleId()).orElseThrow(()-> new BadRequestException(MessageConstant.USER.USER_NOT_FOUND));
+        UserEntity user = userRepository.findById(id)
+                .orElseThrow(()->new BadRequestException(MessageConstant.USER.USER_NOT_FOUND));
+        RoleEntity roleEntity = roleRepository.findById(userUpdateRequest.getRoleId())
+                .orElseThrow(()-> new BadRequestException(MessageConstant.USER.USER_NOT_FOUND));
         user.setRole(roleEntity);
         userMapper.fromUserUpdateRequest(userUpdateRequest, user);
         return response(userMapper.fromUserList(userRepository.save(user)));

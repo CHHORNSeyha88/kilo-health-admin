@@ -17,27 +17,21 @@ import com.kiloit.onlyadmin.model.user.mapper.UserMapper;
 import com.kiloit.onlyadmin.model.user.request.auth.*;
 import com.kiloit.onlyadmin.model.user.respone.auth.RegisterResponse;
 import com.kiloit.onlyadmin.security.UserPrincipal;
+import com.kiloit.onlyadmin.util.MailSeverTemplate;
 import com.kiloit.onlyadmin.util.RandomUntil;
 import com.kiloit.onlyadmin.util.TokenUtils;
-import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeMessage;
+import com.kiloit.onlyadmin.util.Verification;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.Context;
 import java.time.Instant;
 import java.time.LocalTime;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -50,26 +44,28 @@ public class AuthServices extends BaseService {
     private final UserMapper userMapper;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JavaMailSender javaMailSender;
-    private final TemplateEngine templateEngine;
     private final UserVerificationRepository userVerificationRepository;
     private final PasswordResetRepository passwordResetRepository;
     private final AuthenticationManager authenticationManager;
     private final TokenUtils tokenUtils;
-
-    @Value("${spring.mail.username}")
-    private String adminEmail;
+    private final Verification verification;
+    private final MailSeverTemplate mailSeverTemplate;
 
     @Transactional
     public StructureRS register(RegisterRequest registerRequest) {
-        if (userRepository.existsByPhone(registerRequest.phone())) throw new BadRequestException(MessageConstant.REGISTERPROPERTY.PHONE_IS_NOT_VALID);
-        if (userRepository.existsByEmail(registerRequest.email())) throw new BadRequestException(MessageConstant.REGISTERPROPERTY.EMAIL_IS_EXISTING);
-        if (userRepository.existsByPhone(registerRequest.username())) throw new BadRequestException(MessageConstant.REGISTERPROPERTY.USERNAME_IS_NOT_VALID);
-        if (!registerRequest.confirmPassword().equals(registerRequest.password())) throw new BadRequestException(MessageConstant.CREDENTIAL.PASSWORD_NOT_MATCH);
+        if (userRepository.existsByPhone(registerRequest.phone()))
+            throw new BadRequestException(MessageConstant.REGISTERPROPERTY.PHONE_IS_NOT_VALID);
+        if (userRepository.existsByEmail(registerRequest.email()))
+            throw new BadRequestException(MessageConstant.REGISTERPROPERTY.EMAIL_IS_EXISTING);
+        if (userRepository.existsByPhone(registerRequest.username()))
+            throw new BadRequestException(MessageConstant.REGISTERPROPERTY.USERNAME_IS_NOT_VALID);
+        if (!registerRequest.confirmPassword().equals(registerRequest.password()))
+            throw new BadRequestException(MessageConstant.CREDENTIAL.PASSWORD_NOT_MATCH);
 
         UserEntity user = userMapper.fromRegisterRequest(registerRequest);
         Optional<RoleEntity> role = roleRepository.findById(2L);
-        if (role.isEmpty()) throw new BadRequestException(MessageConstant.ROLE.ROLE_NOT_FOUND);
+        if (role.isEmpty())
+            throw new BadRequestException(MessageConstant.ROLE.ROLE_NOT_FOUND);
         user.setIsVerification(false);
         user.setPassword(passwordEncoder.encode(registerRequest.password()));
         user.setRole(role.get());
@@ -78,43 +74,12 @@ public class AuthServices extends BaseService {
         return response(RegisterResponse.builder().message(REGISTERPROPERTY.REGISTER_HAS_BEEN_SUCCESSFULLY).email(registerRequest.email()).build());
     }
 
-    public StructureRS sendVerification(String email) throws MessagingException {
+    public StructureRS sendVerification(String email){
         String codeRandom = RandomUntil.random6Digits();
-        UserEntity user = userRepository.findByEmailAndIsVerificationAndDeletedAtNull(email, false).orElseThrow(() -> new BadRequestException("Email has not been found"));
-        UserVerification userVerification = new UserVerification();
-        userVerification.setUser(user);
-        userVerification.setVerifiedCode(codeRandom);
-        userVerification.setExpiryTime(LocalTime.now().plusMinutes(5));
-        userVerificationRepository.save(userVerification);
-        return prepareTemplateMail(email, user, codeRandom, "User Verification");
-    }
-
-    public StructureRS prepareTemplateMail(String email, UserEntity user, String codeRandom, String subject) {
-        Map<String, Object> templateModel = new HashMap<String, Object>();
-        Context context = new Context();
-        try {
-            templateModel.put("userName", user.getUsername());
-            templateModel.put("userEmail", user.getEmail());
-            templateModel.put("date", new Date());
-            templateModel.put("code", codeRandom);
-            context.setVariables(templateModel);
-
-            String htmlContent = templateEngine.process("email-template", context);
-            prepareMailSend(email, htmlContent, subject);
-            return response(("Email sent!"));
-        } catch (MessagingException e) {
-            return response("Error sending email!");
-        }
-    }
-
-    public void prepareMailSend(String toMail, String htmlContent, String subject) throws MessagingException {
-        MimeMessage message = javaMailSender.createMimeMessage();
-        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(message, true);
-        mimeMessageHelper.setFrom(adminEmail);
-        mimeMessageHelper.setTo(toMail);
-        mimeMessageHelper.setSubject(subject);
-        mimeMessageHelper.setText(htmlContent, true);
-        javaMailSender.send(message);
+        UserEntity user = userRepository.findByEmailAndIsVerificationAndDeletedAtNull(email, false)
+                .orElseThrow(() -> new BadRequestException(MessageConstant.REGISTERPROPERTY.EMAIL_HAS_NOT_BEEN_FOUND));
+        verification.verification(user,codeRandom);
+        return mailSeverTemplate.prepareTemplateMail(user.getEmail(), user, codeRandom, "User Verification");
     }
 
     @Transactional
@@ -122,58 +87,50 @@ public class AuthServices extends BaseService {
         UserEntity user = userRepository
                          .findByEmailAndIsVerificationAndDeletedAtNull(verificationRequest.email(), false)
                          .orElseThrow(() -> new BadRequestException(MessageConstant.REGISTERPROPERTY.EMAIL_HAS_NOT_BEEN_FOUND));
-        UserVerification verification = userVerificationRepository
-                                        .findByUserAndVerifiedCode(user, verificationRequest.verifiedCode())
-                                        .orElseThrow(() -> new BadRequestException(MessageConstant.CREDENTIAL.VERIFY_CODE_HAS_BEEN_EXPRIED));
-                                        
-        if (LocalTime.now().isAfter(verification.getExpiryTime())) throw new BadRequestException(MessageConstant.CREDENTIAL.VERIFY_CODE_HAS_BEEN_EXPRIED);
-        user.setIsVerification(true);
-        userRepository.save(user);
-        userVerificationRepository.delete(verification);
-        return response();
+        Optional<UserVerification> verification = userVerificationRepository
+                                        .findByUserAndVerifiedCode(user, verificationRequest.verifiedCode());
+        if(verification.isPresent()){
+            if (LocalTime.now().isAfter(verification.get().getExpiryTime()))
+                throw new BadRequestException(MessageConstant.CREDENTIAL.VERIFY_CODE_HAS_BEEN_EXPRIED);
+            user.setIsVerification(true);
+            userRepository.save(user);
+            userVerificationRepository.delete(verification.get());
+        }
+        else throw new BadRequestException(MessageConstant.CREDENTIAL.VERIFY_CODE_HAS_BEEN_EXPRIED);
+        return response(MessageConstant.CREDENTIAL.VERIFY_HAS_BEEN_SUCCESSFULLY);
     }
 
+    @Transactional
     public StructureRS resendVerification(SendVerificationRequest sendVerificationRequest) {
         String codeRandom = RandomUntil.random6Digits();
-        UserEntity user = userRepository.findByEmailAndIsVerificationAndDeletedAtNull(sendVerificationRequest.email(), false).orElseThrow(() -> new BadRequestException("Email has not been found"));
-        UserVerification verification = userVerificationRepository.findByUser(user).orElseThrow(() -> new BadRequestException("Verified code has been expired"));
-        verification.setVerifiedCode(codeRandom);
-        verification.setExpiryTime(LocalTime.now().plusSeconds(300));
-        userVerificationRepository.save(verification);
-        return prepareTemplateMail(user.getEmail(), user, codeRandom, "User Verification");
+        UserEntity user = userRepository.findByEmailAndIsVerificationAndDeletedAtNull(sendVerificationRequest.email(), false)
+                .orElseThrow(() -> new BadRequestException(MessageConstant.REGISTERPROPERTY.EMAIL_HAS_NOT_BEEN_FOUND));
+        verification.verification(user,codeRandom);
+        return mailSeverTemplate.prepareTemplateMail(user.getEmail(), user, codeRandom, "User Verification");
     }
 
     public StructureRS login(LoginRequest loginRequest) {
         if (userRepository.existsByEmailAndIsVerificationAndDeletedAtNull(loginRequest.email(), true)) {
-
             try {
-
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginRequest.email(), loginRequest.password());
                 Authentication authentication = authenticationManager.authenticate(authenticationToken);
-
                 if (!authentication.isAuthenticated()) throw new BadRequestException(MessageConstant.CREDENTIAL.INVALID_EMAIL_OR_PASSWORD);
-
                 UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
-
                 Map<String, Object> respond = new HashMap<>();
-
                 respond.put("user", userPrincipal);
                 respond.put("token", tokenUtils.generateToken(userPrincipal));
-
                 return response(respond);
-
             } catch (AuthenticationException e) {
                 throw new BadRequestException(MessageConstant.CREDENTIAL.INVALID_EMAIL_OR_PASSWORD);
             }
-
         }
-
         throw new BadRequestException(MessageConstant.CREDENTIAL.INVALID_EMAIL_OR_PASSWORD);
     }
 
-
+    @Transactional
     public StructureRS resetPassword(ResetPasswordRequest resetPasswordRequest) {
-        UserEntity user = userRepository.findByEmailAndIsVerificationAndDeletedAtNull(resetPasswordRequest.email(), true).orElseThrow(() -> new BadRequestException("Email has not been found"));
+        UserEntity user = userRepository.findByEmailAndIsVerificationAndDeletedAtNull(resetPasswordRequest.email(), true)
+                .orElseThrow(() -> new BadRequestException(REGISTERPROPERTY.EMAIL_HAS_NOT_BEEN_FOUND));
         PasswordResetEntity passwordResetEntity = passwordResetRepository.findByUser(user);
         String verifyCode = RandomUntil.random6Digits();
 
@@ -186,7 +143,7 @@ public class AuthServices extends BaseService {
         }
         passwordResetEntity.setExpiryTime(LocalTime.now().plusMinutes(5));
         passwordResetRepository.save(passwordResetEntity);
-        return prepareTemplateMail(resetPasswordRequest.email(), user, verifyCode, "Password reset request");
+        return mailSeverTemplate.prepareTemplateMail(resetPasswordRequest.email(), user, verifyCode, "Password reset request");
     }
 
     @Transactional
