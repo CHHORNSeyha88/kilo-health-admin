@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedBy;
+
 import java.util.List;
 
 @Getter
@@ -19,6 +21,7 @@ public class TopicEntity extends BaseEntity {
     @JoinColumn(name = "media_id")
     private FileMedia fileMediaId;
 
+    @CreatedBy
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private UserEntity user;
