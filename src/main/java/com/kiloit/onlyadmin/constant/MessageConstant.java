@@ -27,6 +27,7 @@ public class MessageConstant {
         public static final String VERIFY_CODE_HAS_BEEN_EXPRIED = "Verified code has expired";
         public static final String INVALID_EMAIL_OR_PASSWORD = "Invalid email or password";
         public final static String PASSWORD_NOT_MATCH = "Password has not been match";
+        public final static String VERIFY_HAS_BEEN_SUCCESSFULLY = "Verify has been successfully";
     }
 
     public static class ROLEPROPERTY{
