@@ -82,6 +82,8 @@ public class TopicService extends BaseService {
         topicRepository.save(topicEntity.get());
         return response(HttpStatus.ACCEPTED,MessageConstant.TOPIC.TOPIC_HAVE_BEEN_DELETED);
     }
+
+    @Transactional(readOnly = true)
     public StructureRS getTopicList(FilterTopic filterTopic,JwtAuthenticationToken jwt){
         UserPrincipal user = UserPrincipal.build(jwt);
         Page<TopicEntity> topicList = topicRepository.findAll(filter(user.getRoleName(),user.getEmail(),filterTopic.getQuery(),filterTopic.getUserId(),filterTopic.getCategoryId()),filterTopic.getPageable());

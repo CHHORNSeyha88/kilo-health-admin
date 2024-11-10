@@ -48,7 +48,6 @@ public class TopicController extends BaseController {
 
     @Secured({PermissionConstant.TOPIC.VIEW, PermissionConstant.ROLE_ADMIN})
     @GetMapping()
-    @Transactional(readOnly = true)
     public ResponseEntity<StructureRS>getList(FilterTopic filterTopic,JwtAuthenticationToken jwt){
         return response(topicService.getTopicList(filterTopic,jwt));
     }
