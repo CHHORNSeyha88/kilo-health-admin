@@ -1,4 +1,5 @@
 package com.kiloit.onlyadmin.model.user.mapper;
+import com.kiloit.onlyadmin.model.user.respone.UserDetailRS;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -31,6 +32,8 @@ public interface UserMapper {
     @Mapping(target = "roleId",source = "role.id")
     @Mapping(target = "roleName",source = "role.name")
     UserListRS fromUserList(UserEntity entity);
+
+    UserDetailRS toDetail(UserEntity entity);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mappings({

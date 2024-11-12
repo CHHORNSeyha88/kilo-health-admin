@@ -39,7 +39,7 @@ public class UserService extends BaseService {
     public StructureRS detail(Long id) {
         Optional<UserEntity> user = userRepository.findById(id);
         if (user.isEmpty()) throw new BadRequestException(MessageConstant.USER.USER_NOT_FOUND);    
-        return response(userMapper.fromUserList(user.get()));
+        return response(userMapper.toDetail(user.get()));
     }
 
     @Transactional
