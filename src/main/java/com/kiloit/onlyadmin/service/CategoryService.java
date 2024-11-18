@@ -84,7 +84,7 @@ public class CategoryService extends BaseService {
     @Transactional
     public StructureRS deleteById(Long id, JwtAuthenticationToken jwt) {
         UserPrincipal user = UserPrincipal.build(jwt);
-        Optional<CategoryEntity> categoryEntity = categoryRepository.findCategory(id, user.getRoleName(), user.getEmail());
+        Optional<CategoryEntity> categoryEntity = categoryRepository.findCategory(id,user.getEmail(), user.getRoleName());
         if (categoryEntity.isEmpty())
             throw new NotFoundException(MessageConstant.CATEGORY.CATEGORY_COULD_NOT_BE_FOUND);
         categoryEntity.get().setDeletedAt(Instant.now());
