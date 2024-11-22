@@ -64,7 +64,7 @@ public class PostService extends BaseService {
     @Transactional
     public StructureRS PostUpdate(Long id, PostUpdateRequest request, JwtAuthenticationToken jwt) {
         UserPrincipal user = UserPrincipal.build(jwt);
-        Optional<PostEntity> postEntity = postRepository.findPost(id,user.getRoleName(), user.getEmail());
+        Optional<PostEntity> postEntity = postRepository.findPost(id, user.getEmail(),user.getRoleName());
         if (postEntity.isEmpty()) {
             throw new NotFoundException(MessageConstant.POST.POST_ID_NOT_FOUND);
         }
@@ -80,7 +80,7 @@ public class PostService extends BaseService {
     }
     public StructureRS getDetail(Long id, JwtAuthenticationToken jwt){
         UserPrincipal user = UserPrincipal.build(jwt);
-        Optional<PostEntity> postEntities = postRepository.findPost(id,user.getRoleName(), user.getEmail());
+        Optional<PostEntity> postEntities = postRepository.findPost(id,user.getEmail(),user.getRoleName());
         if (postEntities.isEmpty())
             throw new NotFoundException(MessageConstant.POST.POST_COULD_NOT_BE_FOUND);
         return response(postMapper.toResponse(postEntities.get()));
@@ -96,7 +96,7 @@ public class PostService extends BaseService {
     @Transactional
     public StructureRS deletePostById(Long id,JwtAuthenticationToken jwt){
         UserPrincipal user = UserPrincipal.build(jwt);
-        Optional<PostEntity> postEntity = postRepository.findPost(id,user.getEmail(), user.getRoleName());
+        Optional<PostEntity> postEntity = postRepository.findPost(id,user.getEmail(),user.getRoleName());
         if(postEntity.isEmpty())
             throw new NotFoundException(MessageConstant.POST.POST_HAS_BEEN_DELETED);
         postEntity.get().setDeletedAt(Instant.now());
