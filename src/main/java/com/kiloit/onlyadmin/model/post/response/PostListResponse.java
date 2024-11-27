@@ -6,6 +6,7 @@ import lombok.Data;
 public class PostListResponse {
     private Long id;
     private String title;
+    private String subTitle;
     private String description;
     private String url;
     private boolean status;
