@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 public class PostDetailResponse {
     private Long id;
     private String title;
+    private String subTitle;
     private String description;
     private boolean status;
     private Integer time_read;

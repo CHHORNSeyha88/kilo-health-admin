@@ -1,6 +1,7 @@
 package com.kiloit.onlyadmin.model.post.request;
 
 import com.kiloit.onlyadmin.constant.MessageConstant;
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
@@ -9,6 +10,7 @@ public class PostUpdateRequest {
     @NotNull(message = MessageConstant.POST.POST_TITLE_IS_NULL)
     private String title;
     @NotNull(message = MessageConstant.POST.POST_DESCRIPTION_IS_NULL)
+    private String subTitle;
     private String description;
     @NotNull(message = MessageConstant.FILEMEDIA.FILE_MEDIA_ID_IS_NULL)
     private Long mediaId;

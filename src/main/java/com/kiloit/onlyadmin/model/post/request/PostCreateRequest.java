@@ -2,6 +2,7 @@ package com.kiloit.onlyadmin.model.post.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.kiloit.onlyadmin.constant.MessageConstant;
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import java.time.LocalDateTime;
@@ -11,6 +12,7 @@ public class PostCreateRequest {
     @NotNull(message = MessageConstant.POST.POST_TITLE_IS_NULL)
     private String title;
     @NotNull(message = MessageConstant.POST.POST_DESCRIPTION_IS_NULL)
+    private String subTitle;
     private String description;
     @NotNull(message = MessageConstant.POST.POST_PUBLIC_AT_IS_NULL)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
