@@ -14,6 +14,8 @@ import java.util.List;
 @Table(name = "Posts")
 public class PostEntity extends BaseEntity {
     private String title;
+    private String subTitle;
+    @Column(length = 1000)
     private String description;
     private Boolean status;
     private Integer time_read;
@@ -39,6 +41,4 @@ public class PostEntity extends BaseEntity {
 
     @OneToMany(mappedBy = "post", fetch = FetchType.LAZY)
     List<PostViewEntity> postView;
-
-
 }

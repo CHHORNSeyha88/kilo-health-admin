@@ -17,6 +17,4 @@ public class FileMedia extends BaseEntity {
     private String fileUrl;
     @Column(nullable = false)
     private Long fileSize;
-    
-
 }
