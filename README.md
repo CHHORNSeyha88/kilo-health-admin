@@ -9,3 +9,7 @@ This API serves as the backbone for both the web and mobile applications, provid
 - Optimized for performance and scalability
 
 ![image](https://github.com/CHHORNSeyha88/kilo-health-admin/blob/main/HomeHead.png?raw=true)
+
+![image](https://github.com/CHHORNSeyha88/kilo-health-admin/blob/main/HomeFooter.png?raw=true)
+
+
